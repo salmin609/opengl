@@ -29,7 +29,23 @@ Graphic::Graphic(void)
 	Initialize_Camera();
 
 	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	int stencilTest;
+	glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, 
+		GL_STENCIL, GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE, 
+		&stencilTest);
+	std::cout << "Stencil size in bits : " << stencilTest << std::endl;
+	
+	GLint stencilBits = 0;
+	glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+	std::cout << "Stencil size in bits : " << stencilBits << std::endl;
+	
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 }
 
 Graphic::~Graphic(void)
@@ -72,7 +88,9 @@ void Graphic::ClearBuffers()
 {
 	glClearColor(1, 1, 1, 1.f);
 	glClearDepth(1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | 
+		GL_DEPTH_BUFFER_BIT | 
+		GL_STENCIL_BUFFER_BIT);
 }
 
 void Graphic::Initialize_Camera()

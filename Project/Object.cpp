@@ -151,6 +151,11 @@ Matrix Object::Get_Model_To_World()
 	return translate(objInfo.pos - Point(0, 0, 0)) * rotate(objInfo.rotRate, objInfo.rotAxis) * scale(objInfo.scale.x, objInfo.scale.y, objInfo.scale.z);
 }
 
+Matrix Object::GetModelToWorldOutlineScaling(float increment)
+{
+	return translate(objInfo.pos - Point(0, 0, 0)) * rotate(objInfo.rotRate, objInfo.rotAxis) * scale(objInfo.scale.x + increment, objInfo.scale.y + increment, objInfo.scale.z + increment);
+}
+
 Mesh* Object::Get_Mesh()
 {
 	return mesh;
@@ -211,6 +216,11 @@ Object_ExceptShadow* Object::Get_Shadow()
 	return shadow;
 }
 
+void Object::SetVAO()
+{
+	glBindVertexArray(mesh->Get_VAO_Id());
+}
+
 
 void Object::Initialize_Uniform()
 {
@@ -229,4 +239,13 @@ void Object::Initialize_Uniform()
 	uniforms.AddUniform("color_val", UniformManager::Vector3);
 }
 
+void Object::IncreScale()
+{
+	objInfo.scale.x = 0.45f;
+	objInfo.scale.y = 0.45f;
+}
 
+bool Object::IsElemented()
+{
+	return mesh->IsElemented();
+}

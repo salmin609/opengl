@@ -44,6 +44,7 @@ vec3 Get_Color_Foamshading()
     return result;
 }
 
+
 void main()
 {
     vec3 result = Get_Color_Foamshading();

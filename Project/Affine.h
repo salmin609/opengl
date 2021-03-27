@@ -12,45 +12,51 @@
 
 
 struct Hcoord {
-  float x, y, z, w;
-  explicit Hcoord(float X=0, float Y=0, float Z=0, float W=0);
-  float& operator[](int i) { return *(&x+i); }
-  float operator[](int i) const { return *(&x+i); }
-  void operator+=(const Hcoord& A);
-  void operator/=(const float val);
-  static bool near(float x, float y) { return std::abs(x-y) < 1e-5f; }
+	float x, y, z, w;
+	explicit Hcoord(float X = 0, float Y = 0, float Z = 0, float W = 0);
+	float& operator[](int i) { return *(&x + i); }
+	float operator[](int i) const { return *(&x + i); }
+	void operator+=(const Hcoord& A);
+	void operator/=(const float val);
+	static bool near(float x, float y) { return std::abs(x - y) < 1e-5f; }
 };
 
 
 struct Point : Hcoord {
-  explicit Point(float X=0, float Y=0, float Z=0);
-  Point(const Hcoord& v) : Hcoord(v) { assert(near(w,1)); }
+	explicit Point(float X = 0, float Y = 0, float Z = 0);
+	Point(const Hcoord& v) : Hcoord(v) { assert(near(w, 1)); }
 };
-  
+
 
 struct Vector : Hcoord {
-  explicit Vector(float X=0, float Y=0, float Z=0);
-  Vector(const Hcoord& v) : Hcoord(v) { assert(near(w,0)); }
-  Vector operator*(float val)
-  {
-      return Vector(x * val, y * val, z * val);
-  }
+	explicit Vector(float X = 0, float Y = 0, float Z = 0);
+	Vector(const Hcoord& v) : Hcoord(v) { assert(near(w, 0)); }
+	Vector operator*(float val)
+	{
+		return Vector(x * val, y * val, z * val);
+	}
+	Vector operator/=(float val)
+	{
+		return Vector(x /= val, y /= val, z /= val);
+	}
 };
 
 
 struct Matrix {
-  Hcoord row[4];
-  Hcoord& operator[](int i) { return row[i]; }
-  const Hcoord& operator[](int i) const { return row[i]; }
+	Hcoord row[4];
+	Hcoord& operator[](int i) { return row[i]; }
+	const Hcoord& operator[](int i) const { return row[i]; }
 };
 
 
 struct Affine : Matrix {
-  Affine(void);
-  Affine(const Vector& Lx, const Vector& Ly, const Vector& Lz, const Point& D);
-  Affine(const Matrix& M) : Matrix(M)                 
-      { assert(Hcoord::near(M[3][0],0) && Hcoord::near(M[3][1],0)
-               && Hcoord::near(M[3][2],0) && Hcoord::near(M[3][3],1)); }
+	Affine(void);
+	Affine(const Vector& Lx, const Vector& Ly, const Vector& Lz, const Point& D);
+	Affine(const Matrix& M) : Matrix(M)
+	{
+		assert(Hcoord::near(M[3][0], 0) && Hcoord::near(M[3][1], 0)
+			&& Hcoord::near(M[3][2], 0) && Hcoord::near(M[3][3], 1));
+	}
 };
 
 
@@ -74,27 +80,27 @@ struct Vector2
 {
 	void operator+=(Hcoord val)
 	{
-        x += val.x;
-        y += val.y;
+		x += val.x;
+		y += val.y;
 	}
-    float x, y;
+	float x, y;
 };
 struct Vector3
 {
-    void operator+=(Hcoord val)
-    {
-        x += val.x;
-        y += val.y;
-        z += val.z;
-    }
-    float x, y, z;
+	void operator+=(Hcoord val)
+	{
+		x += val.x;
+		y += val.y;
+		z += val.z;
+	}
+	float x, y, z;
 };
 struct Vertex
 {
-    Vector3 position;
-    Vector3 normal;
-    Vector2 texCoord;
-    Vector3 color;
+	Vector3 position;
+	Vector3 normal;
+	Vector2 texCoord;
+	Vector3 color;
 };
 
 #endif

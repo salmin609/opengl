@@ -36,6 +36,7 @@ namespace ObjLoader
 		bool vtExist = false;
 		bool vnExist = false;
 		int faceConsistingCount = 0;
+		float biggestVertexPosition = 0.f;
 		//File open error check
 		if (!in_file.is_open())
 		{
@@ -69,6 +70,20 @@ namespace ObjLoader
 			else if (prefix == "v") //Vertex position
 			{
 				ss >> tempVec3.x >> tempVec3.y >> tempVec3.z;
+
+				if(tempVec3.x > biggestVertexPosition)
+				{
+					biggestVertexPosition = tempVec3.x;
+				}
+				if (tempVec3.y > biggestVertexPosition)
+				{
+					biggestVertexPosition = tempVec3.y;
+				}
+				if (tempVec3.z > biggestVertexPosition)
+				{
+					biggestVertexPosition = tempVec3.z;
+				}
+				
 				tempVertices.emplace_back(tempVec3.x, tempVec3.y, tempVec3.z);
 			}
 			else if (prefix == "vt")
@@ -205,6 +220,11 @@ namespace ObjLoader
 		const size_t normalIndexSize = normalIndices.size();
 		const size_t texCoordIndexSize = texcoordIndices.size();
 
+		for(size_t i = 0; i < tempVerticesSize; ++i)
+		{
+			tempVertices[i] /= biggestVertexPosition;
+		}
+		
 		vertexDatas.resize(vertexIndexSize, Vertex());
 		const size_t vertexDatasSize = vertexDatas.size();
 

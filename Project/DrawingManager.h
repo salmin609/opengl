@@ -2,6 +2,7 @@
 #include <vector>
 #include "Affine.h"
 
+class Shader;
 class Object;
 /**
  * \brief
@@ -21,4 +22,6 @@ private:
 	Matrix ndcMat;
 	size_t objectsSize;
 	std::vector<Object*> object;
+
+	Shader* simpleShader;
 };

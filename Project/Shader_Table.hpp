@@ -13,3 +13,4 @@ const static std::string shader_shadow_vertex = "ShadowVertex.glsl";
 const static std::string shader_shadow_fragment = "ShadowFragment.glsl";
 const static std::string shaderInstanceVertex = "VertexShaderInstance.glsl";
 const static std::string shaderInstanceFragment = "FragmentShaderInstance.glsl";
+const static std::string shaderSingleColorFragment = "SingleColorFragmentShader.glsl";

@@ -257,5 +257,11 @@
     <None Include="FragmentShaderInstance.glsl">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="SingleColorFragmentShader.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="SingleColorVertexShader.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
 </Project>

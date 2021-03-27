@@ -51,9 +51,11 @@ void Level1::Init_Objects()
 	light = new Object(&light_mesh, Point{ 1.f, 3.f, 0.f }, &pearl, WHITE);
 	second_light = new Object(&snub_mesh, Point{ 0.f, 3.f, 3.f }, &obsidian);
 	ground = new Object(&cube_mesh, Point(0.f, 0.f, 0.f), &emerald);
-	deer = new Object(deerObj, Point(0.f, 0.f, 0.f), nullptr);
+	deer = new Object(deerObj, Point(0.f, 1.f, 0.f), nullptr);
 	tree = new Object(quadObj, Point(2.f, 0.f, 0.f), &emerald);
-	deer->Set_Scale(Vector(0.01f, 0.01f, 0.01f));
+	const Vector scalingVec{4.f, 4.f, 4.f};
+	deer->Set_Scale(scalingVec);
+	tree->Set_Scale(scalingVec);
 	ground->Set_Scale(Vector(10.f, -0.1f, 10.f));
 }
 

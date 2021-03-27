@@ -104,3 +104,15 @@ unsigned Shader::GetShaderId()
 {
 	return shaderId;
 }
+
+void Shader::Use()
+{
+	glUseProgram(shaderId);
+}
+
+void Shader::SendUniformMat(std::string uniformName, void* val) const
+{
+	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	float* valInFloat = static_cast<float*>(val);
+	glUniformMatrix4fv(loc, 1, GL_TRUE, valInFloat);
+}

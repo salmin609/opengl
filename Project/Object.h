@@ -38,6 +38,7 @@ public:
     void Set_Rot_Axis(Vector axis);
     void Set_Camera_Pos(Point cam_pos);
     Matrix Get_Model_To_World();
+    Matrix GetModelToWorldOutlineScaling(float increment);
     Mesh* Get_Mesh();
     Point& Get_Obj_Pos();
     Vector Get_Scale();
@@ -50,8 +51,10 @@ public:
     Vector& Get_Rot_Axis();
     void Set_Material(Material_* mat_);
     Object_ExceptShadow* Get_Shadow();
-    
+    void SetVAO();
     void Initialize_Uniform();
+    void IncreScale();
+    bool IsElemented();
 private:
     struct LightInfo
     {

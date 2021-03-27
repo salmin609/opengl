@@ -182,6 +182,8 @@
     <None Include="ShadowVertex.glsl" />
     <None Include="SimpleFragment.glsl" />
     <None Include="SimpleVertex.glsl" />
+    <None Include="SingleColorFragmentShader.glsl" />
+    <None Include="SingleColorVertexShader.glsl" />
     <None Include="Vertexshader.glsl" />
     <None Include="VertexShaderInstance.glsl" />
     <None Include="Vertexshader_Texture.glsl" />
