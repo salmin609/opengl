@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Affine.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\Camera.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Projection.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CubeMesh.cpp">
+      <Filter>Cpp\Discarded\ObjectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SnubDodecMesh.cpp">
+      <Filter>Cpp\Discarded\ObjectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphic.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimpleCube_Mesh.cpp">
+      <Filter>Cpp\Discarded\ObjectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Image.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Level1.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Light_Mesh.cpp">
+      <Filter>Cpp\Discarded\ObjectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ground.cpp">
+      <Filter>Cpp\Discarded</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Mesh.cpp">
+      <Filter>Cpp\Discarded</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Mesh_Object.cpp">
+      <Filter>Cpp\Discarded</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Object.cpp">
+      <Filter>Cpp\Discarded</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Object_ExceptShadow.cpp">
+      <Filter>Cpp\Discarded</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shader.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LoadedObj.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\UniformManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DrawingManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CameraManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RaycastManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PositionConverter.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Level2.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sphere_mesh.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BinaryFileManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{d82de508-c42e-4154-86ab-e585c411e067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp">
+      <UniqueIdentifier>{ec254fef-800c-4d83-b4b5-fdbc92a61a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a707770f-b180-4638-9702-0554d03a11f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{e07709b8-c6ef-4d32-af25-b7f08cba4150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fragment">
+      <UniqueIdentifier>{affeb317-7def-475a-8909-f0881a95b961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{4f443a73-53c1-4741-b35a-9227afd23754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Cpp">
+      <UniqueIdentifier>{ff9dcc8e-1d20-4d94-bce0-d1fb00934449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Hpp">
+      <UniqueIdentifier>{95d9a978-2480-4d4d-874d-11d37cbdbfbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Discarded">
+      <UniqueIdentifier>{4d2d82a6-cba1-4806-ad1d-e21b6f2b4aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Discarded\ObjectMesh">
+      <UniqueIdentifier>{b6cc6efc-d25f-4696-92ca-ed1fbdfa5939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cpp\Discarded\ShadowMesh">
+      <UniqueIdentifier>{daafc57b-b017-44a8-9fc7-008260cc7778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Discarded">
+      <UniqueIdentifier>{987841be-ad42-4811-b046-24b20185bf8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Discarded\ObjectMesh">
+      <UniqueIdentifier>{b698eccb-c8b8-4d39-ae0c-9f728f953983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Discarded\ShadowMesh">
+      <UniqueIdentifier>{0ec22d02-86e4-41d6-9174-5a70f302687e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Camera.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Affine.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Projection.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Client.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CubeMesh.h">
+      <Filter>Header\Discarded\ObjectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SnubDodecMesh.h">
+      <Filter>Header\Discarded\ObjectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphic.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SimpleCube_Mesh.h">
+      <Filter>Header\Discarded\ObjectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Image.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\State.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Level1.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light_Mesh.h">
+      <Filter>Header\Discarded\ObjectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shader_Table.hpp">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Affine2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ObjLoader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ground.h">
+      <Filter>Header\Discarded</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Mesh.h">
+      <Filter>Header\Discarded</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Mesh_Object.h">
+      <Filter>Header\Discarded</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object.h">
+      <Filter>Header\Discarded</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object_ExceptShadow.h">
+      <Filter>Header\Discarded</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LoadedObj.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UniformManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DrawingManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CameraManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RaycastManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PositionConverter.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Level2.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sphere_mesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BinaryFileManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShadowVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="SimpleVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="Vertexshader.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="Vertexshader_Texture.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="Fragmentshader.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="Fragmentshader_Texture.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="ShadowFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="SimpleFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="LightFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="LightVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="VertexShaderInstance.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="FragmentShaderInstance.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+  </ItemGroup>
+</Project>

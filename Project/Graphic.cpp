@@ -1,0 +1,164 @@
+#include "Graphic.h"
+#include <algorithm>
+#include "Client.h"
+#include "Projection.h"
+#include "PositionConverter.h"
+#include <iostream>
+
+
+const float PI = 4.0f * atan(1.0f);
+const Point O(0, 0, 0);
+const Vector EX(1, 0, 0),
+EY(0, 1, 0),
+EZ(0, 0, 1);
+const Vector GRAY(0.5f, 0.5f, 0.5f);
+
+Object* Graphic::light = nullptr;
+Object* Graphic::ground = nullptr;
+Graphic* Graphic::instance = nullptr;
+std::vector<Object*> Graphic::objects;
+
+
+Graphic::Graphic(void)
+{
+	instance = this;
+	drawingManager = new DrawingManager();
+	cameraManager = new CameraManager();
+	raycastManager = new RaycastManager();
+	
+	Initialize_Camera();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+Graphic::~Graphic(void)
+{
+}
+
+void Graphic::Draw(float dt)
+{
+	(dt);
+	ClearBuffers();
+	drawingManager->Drawing();
+}
+
+void Graphic::mousewheel(SDL_Event event)
+{
+	cameraManager->CameraMovement(event);
+}
+
+
+void Graphic::Move(SDL_Keycode keycode)
+{
+	cameraManager->Move(keycode);
+}
+
+void Graphic::mousepress()
+{
+	int mouse_x, mouse_y;
+	SDL_GetMouseState(&mouse_x, &mouse_y);
+
+	const Point mouse_pos_world = PositionConverter::GetMousePosInWorldCoord(static_cast<float>(mouse_x), static_cast<float>(mouse_y));
+	obj_selected = Ray_To_Object(mouse_pos_world);
+}
+
+void Graphic::mouse_motion()
+{
+	raycastManager->MoveCastedObj(obj_selected);
+}
+
+void Graphic::ClearBuffers()
+{
+	glClearColor(1, 1, 1, 1.f);
+	glClearDepth(1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Graphic::Initialize_Camera()
+{
+	cameraManager->Init();
+}
+
+void Graphic::Update_AB(Point curr_mouse_pos)
+{
+	float speed = 0.01f;
+	float newAlpha = ((prev_mouse_pos.y - curr_mouse_pos.y) * speed);
+	float newBeta = ((prev_mouse_pos.x - curr_mouse_pos.x) * speed);
+	cameraManager->UpdateAB(newAlpha, newBeta);
+	Set_V_V();
+}
+
+
+void Graphic::Set_Prev_Mousepos(Point p)
+{
+	prev_mouse_pos = p;
+}
+
+Object* Graphic::Ray_To_Object(Point mouse_pos_world)
+{
+	return raycastManager->RayToObject(mouse_pos_world);
+}
+
+void Graphic::Set_Selected_Null()
+{
+	obj_selected = nullptr;
+}
+
+void Graphic::Set_Traverse_Mode(bool toggle)
+{
+	cameraManager->SetTraverseMode(toggle);
+}
+
+void Graphic::Set_V_V()
+{
+	cameraManager->SetVV();
+}
+
+void Graphic::Set_Move_Faster(bool toggle)
+{
+	cameraManager->SetMoveFaster(toggle);
+}
+
+void Graphic::Set_Window_WH(int width, int height)
+{
+	window_width = width;
+	window_height = height;
+}
+
+Hcoord Graphic::GetWindowWH()
+{
+	return Hcoord(static_cast<float>(window_width), static_cast<float>(window_height), 0.f, 0.f);
+}
+
+
+void Graphic::Indicate_Level()
+{
+	std::cout << "------------------------------------------------" << std::endl;
+	std::cout << "Level		:		" << graphic_level << std::endl;
+	std::cout << "------------------------------------------------\n" << std::endl;
+	if (graphic_level == 0)
+	{
+		std::cout << "flat shading" << std::endl;
+	}
+	else if (graphic_level == 1)
+	{
+		std::cout << "smooth shading" << std::endl;
+	}
+	else if (graphic_level == 2)
+	{
+		std::cout << "cube texturing" << std::endl;
+	}
+	std::cout << "------------------------------------------------\n\n\n" << std::endl;
+}
+
+Point Graphic::GetPrevMousePos() const
+{
+	return prev_mouse_pos;
+}
+
+
+Object* Graphic::SelectedObject()
+{
+	return obj_selected;
+}

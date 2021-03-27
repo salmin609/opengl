@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{7ABC44A1-16E8-48A2-A0C0-719102F4E2F9}</ProjectGuid>
+    <RootNamespace>CS250</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..;..\third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../third_party/x64</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "..\third_party\x64\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..;..\third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../third_party/x64</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "..\third_party\x64\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Affine.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\BinaryFileManager.cpp" />
+    <ClCompile Include="..\Camera.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\CameraManager.cpp" />
+    <ClCompile Include="..\Client.cpp" />
+    <ClCompile Include="..\CubeMesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\DrawingManager.cpp" />
+    <ClCompile Include="..\Graphic.cpp" />
+    <ClCompile Include="..\Ground.cpp" />
+    <ClCompile Include="..\Image.cpp" />
+    <ClCompile Include="..\Level1.cpp" />
+    <ClCompile Include="..\Level2.cpp" />
+    <ClCompile Include="..\Light_Mesh.cpp" />
+    <ClCompile Include="..\LoadedObj.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\Mesh.cpp" />
+    <ClCompile Include="..\Mesh_Object.cpp" />
+    <ClCompile Include="..\Object.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Object_ExceptShadow.cpp" />
+    <ClCompile Include="..\PositionConverter.cpp" />
+    <ClCompile Include="..\Projection.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\RaycastManager.cpp" />
+    <ClCompile Include="..\Shader.cpp" />
+    <ClCompile Include="..\SimpleCube_Mesh.cpp" />
+    <ClCompile Include="..\SnubDodecMesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sphere_mesh.cpp" />
+    <ClCompile Include="..\UniformManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Affine.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\BinaryFileManager.h" />
+    <ClInclude Include="..\Camera.h" />
+    <ClInclude Include="..\CameraManager.h" />
+    <ClInclude Include="..\Client.h" />
+    <ClInclude Include="..\CubeMesh.h" />
+    <ClInclude Include="..\DrawingManager.h" />
+    <ClInclude Include="..\Graphic.h" />
+    <ClInclude Include="..\Ground.h" />
+    <ClInclude Include="..\Image.h" />
+    <ClInclude Include="..\Level1.h" />
+    <ClInclude Include="..\Level2.h" />
+    <ClInclude Include="..\Light_Mesh.h" />
+    <ClInclude Include="..\LoadedObj.h" />
+    <ClInclude Include="..\Mesh.h" />
+    <ClInclude Include="..\Mesh_Object.h" />
+    <ClInclude Include="..\Object.h" />
+    <ClInclude Include="..\Object_ExceptShadow.h" />
+    <ClInclude Include="..\ObjLoader.h" />
+    <ClInclude Include="..\PositionConverter.h" />
+    <ClInclude Include="..\Projection.h" />
+    <ClInclude Include="..\RaycastManager.h" />
+    <ClInclude Include="..\Shader.h" />
+    <ClInclude Include="..\Shader_Table.hpp" />
+    <ClInclude Include="..\SimpleCube_Mesh.h" />
+    <ClInclude Include="..\SnubDodecMesh.h" />
+    <ClInclude Include="..\Sphere_mesh.h" />
+    <ClInclude Include="..\State.h" />
+    <ClInclude Include="..\UniformManager.h" />
+    <ClInclude Include="Affine2.h" />
+    <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fragmentshader.glsl" />
+    <None Include="FragmentShaderInstance.glsl" />
+    <None Include="Fragmentshader_Texture.glsl" />
+    <None Include="LightFragment.glsl" />
+    <None Include="LightVertex.glsl" />
+    <None Include="ShadowFragment.glsl" />
+    <None Include="ShadowVertex.glsl" />
+    <None Include="SimpleFragment.glsl" />
+    <None Include="SimpleVertex.glsl" />
+    <None Include="Vertexshader.glsl" />
+    <None Include="VertexShaderInstance.glsl" />
+    <None Include="Vertexshader_Texture.glsl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
