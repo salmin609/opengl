@@ -13,7 +13,7 @@ Object* RaycastManager::RayToObject(Point mousePosWorld) const
 	const std::vector<Object*> objVec = Graphic::objects;
 	const size_t objectsSize = objVec.size();
 	
-	//looping for all objects.
+	//looping for all objects.1
 	for (size_t i = 0; i < objectsSize; ++i)
 	{
 		Object* obj = objVec[i];

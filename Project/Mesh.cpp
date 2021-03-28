@@ -72,18 +72,31 @@ void Mesh::InitializeTexturedObj(std::string sprite_path, std::string vertex_pat
 void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath, std::string fragPath)
 {
 	InitializeTexturedObj(std::move(spritePath), std::move(vertexPath), std::move(fragPath));
-	instancingNum = 100;
+	instancingNum = 250;
+	const int offsetDivisor = 10;
+	bool minusTrigger = false;
 	
 	for(size_t i = 0 ; i < instancingNum; ++i)
 	{
-		int randomOffsetx = rand() % instancingNum;
-		int randomOffsety = rand() % instancingNum;
-		int randomOffsetz = rand() % instancingNum;
+		const int randomOffsetx = rand() % offsetDivisor;
+		const int randomOffsety = rand() % (offsetDivisor / 2);
+		const int randomOffsetz = rand() % offsetDivisor;
 
-		offsetVec.push_back(Vector3{
-			static_cast<float>(randomOffsetx),
-			static_cast<float>(randomOffsety),
-			static_cast<float>(randomOffsetz)});
+		if(!minusTrigger)
+		{
+			offsetVec.push_back(Vector3{
+				static_cast<float>(randomOffsetx),
+				static_cast<float>(randomOffsety),
+				static_cast<float>(randomOffsetz)});
+		}
+		else
+		{
+			offsetVec.push_back(Vector3{
+				static_cast<float>(-randomOffsetx),
+				static_cast<float>(-randomOffsety),
+				static_cast<float>(-randomOffsetz) });
+		}
+		minusTrigger = !minusTrigger;
 	}
 	
 	

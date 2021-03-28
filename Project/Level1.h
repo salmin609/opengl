@@ -31,7 +31,7 @@ private:
 	Object* right_cube;
 	Object* right_circle;
 	Object* light;
-	Object* second_light;
+	
 	Object* right_heart;
 	Object* left_heart;
 	Object* ground;

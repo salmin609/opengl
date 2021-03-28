@@ -65,7 +65,7 @@ private:
     };
 	struct ObjInfo
 	{
-        Vector scale{ 0.35f, 0.35f, 0.35f };
+        Vector scale{ 1.f, 1.f, 1.f };
         Point pos;
         Vector color;
         Vector rotAxis{ 0.f, 0.f, 1.f };

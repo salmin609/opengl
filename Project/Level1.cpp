@@ -25,7 +25,7 @@ void Level1::Load()
 	Graphic::objects.clear();
 	Graphic::objects.push_back(center_circle);
 	Graphic::objects.push_back(light);
-	Graphic::objects.push_back(second_light);
+	//Graphic::objects.push_back(second_light);
 	Graphic::objects.push_back(right_circle);
 	Graphic::objects.push_back(deer);
 	Graphic::objects.push_back(tree);
@@ -49,13 +49,12 @@ void Level1::Init_Objects()
 	center_circle = new Object(&snub_mesh, Point(0.f, 1.f, 0.f), &emerald, &sphere_mesh);
 	right_circle = new Object(&snub_mesh, Point(2.f, 1.f, 0.f), &obsidian, &sphere_mesh);
 	light = new Object(&light_mesh, Point{ 1.f, 3.f, 0.f }, &pearl, WHITE);
-	second_light = new Object(&snub_mesh, Point{ 0.f, 3.f, 3.f }, &obsidian);
 	ground = new Object(&cube_mesh, Point(0.f, 0.f, 0.f), &emerald);
 	deer = new Object(deerObj, Point(0.f, 1.f, 0.f), nullptr);
 	tree = new Object(quadObj, Point(2.f, 0.f, 0.f), &emerald);
-	const Vector scalingVec{4.f, 4.f, 4.f};
-	deer->Set_Scale(scalingVec);
-	tree->Set_Scale(scalingVec);
+	const Vector scale{ 0.35f, 0.35f, 0.35f };
+	center_circle->Set_Scale(scale);
+	right_circle->Set_Scale(scale);
 	ground->Set_Scale(Vector(10.f, -0.1f, 10.f));
 }
 

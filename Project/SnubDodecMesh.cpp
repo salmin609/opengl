@@ -88,7 +88,8 @@ void SnubDodecMesh::SetVertices()
 {
     const int vert_count = VertexCount();
 
-    const Point vertarr[] = { Point(0.8734f, 0.2507f, 0.2840f), Point(-0.1461f, -0.9260f, -0.1655f),
+    const Point vertarr[] = {
+    	Point(0.8734f, 0.2507f, 0.2840f), Point(-0.1461f, -0.9260f, -0.1655f),
         Point(-0.7273f, 0.4871f, 0.3743f), Point(0.1655f, 0.1461f, -0.9260f),
         Point(-0.2840f, -0.8734f, 0.2507f), Point(-0.3743f, 0.7273f, 0.4871f),
         Point(-0.2507f, 0.2840f, -0.8734f), Point(0.9260f, -0.1655f, 0.1461f),

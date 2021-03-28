@@ -17,7 +17,10 @@ private:
 	void DrawingGround();
 	void DrawingShadow();
 	void DrawingObjs();
-
+	void DrawingOutline();
+	void OutlinePrepare();
+	
+	
 	Matrix camMat;
 	Matrix ndcMat;
 	size_t objectsSize;
