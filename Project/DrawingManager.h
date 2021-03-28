@@ -27,4 +27,12 @@ private:
 	std::vector<Object*> object;
 
 	Shader* simpleShader;
+	Shader* screenShader;
+
+	unsigned frameBufferId;
+	unsigned textureColorBufferId;
+	unsigned renderbufferId;
+
+	unsigned quadVAO;
+	unsigned quadVBO;
 };

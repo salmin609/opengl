@@ -176,6 +176,8 @@
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />
+    <None Include="FrameBufferFragment.glsl" />
+    <None Include="FrameBufferVertex.glsl" />
     <None Include="LightFragment.glsl" />
     <None Include="LightVertex.glsl" />
     <None Include="ShadowFragment.glsl" />

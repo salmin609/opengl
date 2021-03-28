@@ -1,11 +1,73 @@
 #include "DrawingManager.h"
 #include "Graphic.h"
 #include "Projection.h"
+#include <iostream>
 
 DrawingManager::DrawingManager()
 {
 	simpleShader = new Shader(shader_object_vertex.c_str(),
 		shaderSingleColorFragment.c_str());
+	screenShader = new Shader(shaderFrameBufferVertex.c_str(), 
+		shaderFrameBufferFragment.c_str());
+
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+
+	int val = 0;
+	screenShader->Use();
+	screenShader->SendUniformInt("screenTextures", &val);
+
+
+	
+	glGenFramebuffers(1, &frameBufferId);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+
+	glGenTextures(1, &textureColorBufferId);
+	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 600, 600
+		, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D, textureColorBufferId, 0);
+
+	glGenRenderbuffers(1, &renderbufferId);
+	glBindRenderbuffer(GL_RENDERBUFFER, renderbufferId);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 600, 600);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+		GL_RENDERBUFFER, renderbufferId);
+
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "Error ! frame buffer is not complete" << std::endl;
+	}
+	else if(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "frame buffer is complete" << std::endl;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	
+
 }
 
 void DrawingManager::Drawing()
@@ -14,11 +76,21 @@ void DrawingManager::Drawing()
 	camMat = WorldToCamera(*CameraManager::instance->GetCamera());
 	objectsSize = Graphic::objects.size();
 	object = Graphic::objects;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	glEnable(GL_DEPTH_TEST);
 	DrawingGround();
 	DrawingShadow();
 	OutlinePrepare();
 	DrawingObjs();
 	DrawingOutline();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
+	//glClearColor(1.f, 1.f, 1.f, 1.f);
+	screenShader->Use();
+	glBindVertexArray(quadVAO);
+	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void DrawingManager::DrawingGround()

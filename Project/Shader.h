@@ -8,6 +8,7 @@ public:
 	unsigned GetShaderId();
 	void Use();
 	void SendUniformMat(std::string uniformName, void* val) const;
+	void SendUniformInt(std::string uniformName, void* val) const;
 private:
 	unsigned shaderId;
 };

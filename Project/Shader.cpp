@@ -116,3 +116,10 @@ void Shader::SendUniformMat(std::string uniformName, void* val) const
 	float* valInFloat = static_cast<float*>(val);
 	glUniformMatrix4fv(loc, 1, GL_TRUE, valInFloat);
 }
+
+void Shader::SendUniformInt(std::string uniformName, void* val) const
+{
+	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	int* valInInt = static_cast<int*>(val);
+	glUniform1i(loc, *valInInt);
+}

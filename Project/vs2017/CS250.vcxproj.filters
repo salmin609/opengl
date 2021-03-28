@@ -263,5 +263,11 @@
     <None Include="SingleColorVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="FrameBufferFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="FrameBufferVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
 </Project>
