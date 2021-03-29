@@ -86,11 +86,11 @@ void Graphic::mouse_motion()
 
 void Graphic::ClearBuffers()
 {
-	glClearColor(1, 1, 1, 1.f);
+	//glClearColor(1, 1, 1, 1.f);
 	glClearDepth(1);
-	glClear(GL_COLOR_BUFFER_BIT | 
+	/*glClear(GL_COLOR_BUFFER_BIT | 
 		GL_DEPTH_BUFFER_BIT | 
-		GL_STENCIL_BUFFER_BIT);
+		GL_STENCIL_BUFFER_BIT);*/
 }
 
 void Graphic::Initialize_Camera()

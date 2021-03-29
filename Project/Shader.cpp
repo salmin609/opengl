@@ -24,6 +24,10 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 		stream.close();
 		file = f_shader_stream.str();
 	}
+	else
+	{
+		throw std::runtime_error("Failed to open fragment shader file");
+	}
 
 	const char* f_shader_code = file.c_str();
 
@@ -32,6 +36,10 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 		v_shader_stream << v_stream.rdbuf();
 		v_stream.close();
 		vfile = v_shader_stream.str();
+	}
+	else
+	{
+		throw std::runtime_error("Failed to open vertex shader file");
 	}
 
 	const char* v_shader_code = vfile.c_str();
@@ -122,4 +130,11 @@ void Shader::SendUniformInt(std::string uniformName, void* val) const
 	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
 	int* valInInt = static_cast<int*>(val);
 	glUniform1i(loc, *valInInt);
+}
+
+void Shader::SendUniformFloat(std::string uniformName, void* val) const
+{
+	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	float* valInFloat = static_cast<float*>(val);
+	glUniform1f(loc, *valInFloat);
 }

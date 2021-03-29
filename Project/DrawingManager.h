@@ -2,6 +2,7 @@
 #include <vector>
 #include "Affine.h"
 
+class FrameBufferObject;
 class Shader;
 class Object;
 /**
@@ -14,6 +15,8 @@ public:
 	DrawingManager();
 	void Drawing();
 private:
+	void ClearBuffer();
+	
 	void DrawingGround();
 	void DrawingShadow();
 	void DrawingObjs();
@@ -26,13 +29,6 @@ private:
 	size_t objectsSize;
 	std::vector<Object*> object;
 
-	Shader* simpleShader;
-	Shader* screenShader;
-
-	unsigned frameBufferId;
-	unsigned textureColorBufferId;
-	unsigned renderbufferId;
-
-	unsigned quadVAO;
-	unsigned quadVBO;
+	Shader* outlineShader;
+	FrameBufferObject* frameBufferObj;
 };

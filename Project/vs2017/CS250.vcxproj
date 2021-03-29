@@ -106,6 +106,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\DrawingManager.cpp" />
+    <ClCompile Include="..\FrameBuffer.cpp" />
     <ClCompile Include="..\Graphic.cpp" />
     <ClCompile Include="..\Ground.cpp" />
     <ClCompile Include="..\Image.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="..\Client.h" />
     <ClInclude Include="..\CubeMesh.h" />
     <ClInclude Include="..\DrawingManager.h" />
+    <ClInclude Include="..\FrameBuffer.h" />
     <ClInclude Include="..\Graphic.h" />
     <ClInclude Include="..\Ground.h" />
     <ClInclude Include="..\Image.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\ToonifyPostPorcessiongFilterFragment.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />
