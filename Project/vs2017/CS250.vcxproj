@@ -122,6 +122,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Object_ExceptShadow.cpp" />
+    <ClCompile Include="..\OutLine.cpp" />
     <ClCompile Include="..\PositionConverter.cpp" />
     <ClCompile Include="..\Projection.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -130,6 +131,7 @@
     <ClCompile Include="..\RaycastManager.cpp" />
     <ClCompile Include="..\Shader.cpp" />
     <ClCompile Include="..\SimpleCube_Mesh.cpp" />
+    <ClCompile Include="..\SkyBox.cpp" />
     <ClCompile Include="..\SnubDodecMesh.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -161,12 +163,14 @@
     <ClInclude Include="..\Object.h" />
     <ClInclude Include="..\Object_ExceptShadow.h" />
     <ClInclude Include="..\ObjLoader.h" />
+    <ClInclude Include="..\OutLine.h" />
     <ClInclude Include="..\PositionConverter.h" />
     <ClInclude Include="..\Projection.h" />
     <ClInclude Include="..\RaycastManager.h" />
     <ClInclude Include="..\Shader.h" />
     <ClInclude Include="..\Shader_Table.hpp" />
     <ClInclude Include="..\SimpleCube_Mesh.h" />
+    <ClInclude Include="..\Skybox.h" />
     <ClInclude Include="..\SnubDodecMesh.h" />
     <ClInclude Include="..\Sphere_mesh.h" />
     <ClInclude Include="..\State.h" />
@@ -189,6 +193,8 @@
     <None Include="SimpleVertex.glsl" />
     <None Include="SingleColorFragmentShader.glsl" />
     <None Include="SingleColorVertexShader.glsl" />
+    <None Include="SkyboxFragment.glsl" />
+    <None Include="SkyboxVertex.glsl" />
     <None Include="Vertexshader.glsl" />
     <None Include="VertexShaderInstance.glsl" />
     <None Include="Vertexshader_Texture.glsl" />

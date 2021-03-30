@@ -3,13 +3,15 @@
 #include "Projection.h"
 #include <iostream>
 #include "FrameBuffer.h"
+#include "Image.h"
+#include "Skybox.h"
+#include "OutLine.h"
 
 DrawingManager::DrawingManager()
 {
-	outlineShader = new Shader(shader_object_vertex.c_str(),
-		shaderSingleColorFragment.c_str());
-
+	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject();
+	skyBox = new SkyBox();
 }
 
 void DrawingManager::Drawing()
@@ -21,13 +23,12 @@ void DrawingManager::Drawing()
 
 	frameBufferObj->Bind();
 	ClearBuffer();
-	
 	DrawingGround();
 	DrawingShadow();
-	OutlinePrepare();
+	outLine->OutlinePrepare();
 	DrawingObjs();
-	DrawingOutline();
-
+	outLine->Draw(camMat, ndcMat);
+	skyBox->Draw(ndcMat);
 	frameBufferObj->UnBind();
 	frameBufferObj->Use();
 }
@@ -80,52 +81,5 @@ void DrawingManager::DrawingObjs()
 		obj->Set_Camera_Pos(CameraManager::instance->CameraPos());
 		obj->Set_Light_Pos(Graphic::light->Get_Obj_Pos());
 		obj->Draw(ndcMat, camMat);
-	}
-}
-
-void DrawingManager::DrawingOutline()
-{
-	Object* selectedObj = Graphic::instance->SelectedObject();
-
-	if (selectedObj != nullptr)
-	{
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-		outlineShader->Use();
-		outlineShader->SendUniformMat("to_ndc", &ndcMat);
-		outlineShader->SendUniformMat("cam", &camMat);
-
-		selectedObj->SetVAO();
-
-		Matrix model2World = selectedObj->GetModelToWorldOutlineScaling(0.1f);
-		Mesh* mesh = selectedObj->Get_Mesh();
-		outlineShader->SendUniformMat("model", &model2World);
-
-		
-		if(selectedObj->IsElemented())
-		{
-			glDrawElements(GL_TRIANGLES, mesh->FaceCount() * 3, GL_UNSIGNED_INT, nullptr);
-		}
-		else
-		{
-			glDrawArrays(GL_TRIANGLES, 0, mesh->FaceCount() * 3);
-		}
-		
-		glBindVertexArray(0);
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
-	}
-}
-
-void DrawingManager::OutlinePrepare()
-{
-	Object* selectedObj = Graphic::instance->SelectedObject();
-
-	if(selectedObj != nullptr)
-	{
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
 	}
 }

@@ -17,3 +17,5 @@ const static std::string shaderSingleColorFragment = "SingleColorFragmentShader.
 const static std::string shaderFrameBufferVertex = "FrameBufferVertex.glsl";
 const static std::string shaderFrameBufferFragment = "FrameBufferFragment.glsl";
 const static std::string shaderToonifyPostProcessFragment = "ToonifyPostPorcessiongFilterFragment.glsl";
+const static std::string shaderSkyboxVertex = "SkyboxVertex.glsl";
+const static std::string shaderSkyboxFragment = "SkyboxFragment.glsl";

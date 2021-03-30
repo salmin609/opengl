@@ -18,7 +18,7 @@ public:
 	void mousewheel(SDL_Event event);
 	void mousepress();
 	void mouse_motion();
-	void ClearBuffers();
+	//void ClearBuffers();
 	void Initialize_Camera();
 	void Update_AB(Point curr_mouse_pos);
 	void Move(SDL_Keycode keycode);

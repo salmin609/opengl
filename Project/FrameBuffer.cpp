@@ -31,7 +31,7 @@ FrameBufferObject::FrameBufferObject()
 	int val = 0;
 	float val2 = 0.2f;
 	float val3 = 5.0f;
-	float val4 = 0.f;
+	float val4 = 0.5f;
 	shader->Use();
 	shader->SendUniformInt("tex0", &val);
 	shader->SendUniformFloat("edge_thres", &val2);
@@ -86,4 +86,9 @@ void FrameBufferObject::Use()
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+FrameBufferObject::~FrameBufferObject()
+{
+	glDeleteFramebuffers(1, &frameBufferId);
 }

@@ -4,7 +4,7 @@
 class Image
 {
 public:
-	unsigned char* Load_Image(std::string path, int& w, int &h);
+	unsigned char* Load_Image(std::string path, int& w, int &h, bool isFlip);
 
 
 private:

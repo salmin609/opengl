@@ -9,6 +9,7 @@ public:
 	void Bind() const;
 	void UnBind();
 	void Use();
+	~FrameBufferObject();
 private:
 	unsigned quadVao;
 	unsigned quadVbo;

@@ -35,9 +35,42 @@ Affine CameraToWorld(const Camera& cam)
 	return result;
 }
 
+Affine CameraToWorldWithoutTranslation(const Camera& cam)
+{
+	const Vector u = cam.Right();
+	const Vector v = cam.Up();
+	const Vector n = cam.Back();
+	//const Point eye = cam.Eye();
+
+	Affine result;
+
+	result.row[0].x = u.x;
+	result.row[1].x = u.y;
+	result.row[2].x = u.z;
+
+	result.row[0].y = v.x;
+	result.row[1].y = v.y;
+	result.row[2].y = v.z;
+
+	result.row[0].z = n.x;
+	result.row[1].z = n.y;
+	result.row[2].z = n.z;
+
+	/*result.row[0].w = eye.x;
+	result.row[1].w = eye.y;
+	result.row[2].w = eye.z;*/
+
+	return result;
+}
+
 Affine WorldToCamera(const Camera& cam)
 {
 	return inverse(CameraToWorld(cam));
+}
+
+Affine WorldToCameraWithoutTranslation(const Camera& cam)
+{
+	return inverse(CameraToWorldWithoutTranslation(cam));
 }
 
 

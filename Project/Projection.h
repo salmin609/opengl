@@ -22,6 +22,8 @@ Matrix NDCToCamera(const Camera& cam);
 Matrix DeviceToNdc(int width, int height);
 Affine NDCToDevice(int width, int height);
 
+Affine WorldToCameraWithoutTranslation(const Camera& cam);
+Affine CameraToWorldWithoutTranslation(const Camera& cam);
 
 #endif
 

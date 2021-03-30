@@ -5,6 +5,8 @@
 class FrameBufferObject;
 class Shader;
 class Object;
+class SkyBox;
+class OutLine;
 /**
  * \brief
  * Manager which managing the drawing methods for Graphic class
@@ -20,15 +22,14 @@ private:
 	void DrawingGround();
 	void DrawingShadow();
 	void DrawingObjs();
-	void DrawingOutline();
-	void OutlinePrepare();
 	
-	
-	Matrix camMat;
-	Matrix ndcMat;
-	size_t objectsSize;
 	std::vector<Object*> object;
 
-	Shader* outlineShader;
+	Matrix camMat;
+	Matrix ndcMat;
+	
+	size_t objectsSize;
+	SkyBox* skyBox;
 	FrameBufferObject* frameBufferObj;
+	OutLine* outLine;
 };

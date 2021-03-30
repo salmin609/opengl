@@ -120,7 +120,7 @@ void Mesh::Initialize_Texture(std::string sprite_path)
 
 	Image temp_image;
 	int w, h;
-	unsigned char* data = temp_image.Load_Image(std::move(sprite_path), w, h);
+	unsigned char* data = temp_image.Load_Image(std::move(sprite_path), w, h, true);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);

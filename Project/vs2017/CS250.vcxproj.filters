@@ -83,6 +83,12 @@
     <ClCompile Include="..\FrameBuffer.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\SkyBox.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\OutLine.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -225,6 +231,12 @@
     <ClInclude Include="..\FrameBuffer.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Skybox.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\OutLine.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -276,6 +288,12 @@
       <Filter>Shaders\Vertex</Filter>
     </None>
     <None Include="..\ToonifyPostPorcessiongFilterFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="SkyboxVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="SkyboxFragment.glsl">
       <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>
