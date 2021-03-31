@@ -55,6 +55,7 @@ struct Mesh {
 	void Initialize_Texture(std::string sprite_path);
 	void InitializeTexturedObj(std::string sprite_path, std::string vertex_path = shader_texture_vertex, std::string frag_path = shader_texture_fragment);
 	void InitializeInstanceObj(std::string spritePath, std::string vertexPath = shaderInstanceVertex, std::string fragPath = shaderInstanceFragment);
+	void InitializeColoredParticle(std::string vertexPath, std::string fragmentPath);
 	void Clear_Datas();
 	bool Get_Is_Textured() const;
 	void SetTexture();
@@ -63,29 +64,31 @@ struct Mesh {
 	bool IsQuadObj();
 	
 	void Init_VAO();
-	void Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size);
+	void Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size, GLenum drawingType = GL_STATIC_DRAW, bool isNormalize = false);
 	static void Unbind();
 	bool IsInstancing();
 	int InstancingNum() const;
+	void MoveParticle();
 protected:
 	Shader* shader = nullptr;
 	unsigned vao_id = 0;
 	unsigned vbo_id = 0;
+	unsigned color_id = 0;
 	unsigned vbo_normal = 0;
 	unsigned elementId = 0;
 	unsigned texture_id = 0;
 	unsigned specular_texture_id = 0;
 	unsigned instancingId = 0;
-	//std::vector<float> vertex_datas;
-	//std::vector<float> normal_datas;
-	//std::vector<float> texture_coords;
+	unsigned matrixId = 0;
 	std::vector<unsigned> textureId;
 	std::vector<unsigned int> elements;
 	
 	std::vector<Vertex> vertexDatas;
 	std::vector<Vector3> offsetVec;
+	std::vector<Vector> particleTranslation;
 	
 	int instancingNum;
+	int particleNum;
 	bool is_textured = false;
 	bool isQuad = false;
 	bool isInstancing = false;

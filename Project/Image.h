@@ -6,14 +6,14 @@ class Image
 public:
 	unsigned char* Load_Image(std::string path, int& w, int &h, bool isFlip);
 
-
-private:
 	struct Color_Ub {
 		unsigned char r;
 		unsigned char g;
 		unsigned char b;
 		unsigned char a;
 	};
+private:
+	
 
 	std::vector<Color_Ub> color_datas;
 	Color_Ub color_data;

@@ -11,6 +11,7 @@
 #include <utility>
 #include "Mesh.h"
 #include "Image.h"
+#include "vs2017/SimpleMeshes.h"
 
 
 unsigned Mesh::Get_VAO_Id()
@@ -105,6 +106,78 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 	glVertexAttribDivisor(3, 1);
 }
 
+void Mesh::InitializeColoredParticle(std::string vertexPath, std::string fragmentPath)
+{
+	int simpleCubeSize;
+	float* simpleCubeVertices = SimpleMesh::SimpleCube(simpleCubeSize);
+
+	shader = new Shader(vertexPath.c_str(), fragmentPath.c_str());
+
+	Init_VAO();
+	instancingNum = 100;
+	particleNum = 100;
+	int offset = 30;
+	
+	std::vector<Image::Color_Ub> particleColor;
+
+	//color
+	for(size_t i = 0; i < particleNum; ++i)
+	{
+		const int randomx = rand() % 255;
+		const int randomy = rand() % 255;
+		const int randomz = rand() % 255;
+
+		particleColor.push_back(Image::Color_Ub{ 
+			static_cast<unsigned char>(randomx), 
+			static_cast<unsigned char>(randomy), 
+			static_cast<unsigned char>(randomz),
+			1 });
+	}
+	
+
+	//trans
+	for(size_t i = 0 ; i < particleNum; ++i)
+	{
+		const int randomx = rand() % offset;
+		const int randomy = rand() % offset;
+		const int randomz = rand() % offset;
+
+		particleTranslation.push_back(Vector{
+			static_cast<float>(randomx),
+			static_cast<float>(randomy),
+			static_cast<float>(randomz)
+		});
+	}
+
+	Init_VBO(simpleCubeVertices, &vbo_id, simpleCubeSize * sizeof(float),
+		0, 0, 0, 3);
+
+	Init_VBO(particleColor.data(), &color_id, 
+		particleColor.size() * sizeof(Image::Color_Ub),
+		0, 0, 1, 3, GL_STATIC_DRAW, true);
+
+	Init_VBO(NULL, &matrixId,
+		particleTranslation.size() * sizeof(Vector),
+		0, 0, 2, 3, GL_STREAM_DRAW);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0,
+		particleTranslation.size() * sizeof(Vector),
+		particleTranslation.data());
+
+	/*glGenBuffers(1, &matrixId);
+	glBindBuffer(GL_ARRAY_BUFFER, matrixId);
+	glBufferData(GL_ARRAY_BUFFER, particleTranslation.size() * sizeof(Vector),
+		particleTranslation.data(), GL_STREAM_DRAW);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_UNSIGNED_BYTE, GL_FALSE,
+		0, 0);*/
+	
+	glVertexAttribDivisor(1, 1);
+	glVertexAttribDivisor(2, 1);
+
+	delete[] simpleCubeVertices;
+}
+
 
 void Mesh::Initialize_Texture(std::string sprite_path)
 {
@@ -180,14 +253,22 @@ void Mesh::Init_VAO()
 	glBindVertexArray(vao_id);
 }
 
-void Mesh::Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size)
+void Mesh::Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size, GLenum drawingType
+	, bool isNormalize)
 {
 	if (arr_size > 0)
 	{
 		glGenBuffers(1, slot);
 		glBindBuffer(GL_ARRAY_BUFFER, *slot);
-		glBufferData(GL_ARRAY_BUFFER, arr_size, data, GL_STATIC_DRAW);
-		glVertexAttribPointer(index, vec_size, GL_FLOAT, GL_FALSE, stride, offset);
+		glBufferData(GL_ARRAY_BUFFER, arr_size, data, drawingType);
+		if(!isNormalize)
+		{
+			glVertexAttribPointer(index, vec_size, GL_FLOAT, GL_FALSE, stride, offset);
+		}
+		else
+		{
+			glVertexAttribPointer(index, vec_size, GL_FLOAT, GL_TRUE, stride, offset);
+		}
 		glEnableVertexAttribArray(index);
 	}
 	else
@@ -213,5 +294,27 @@ bool Mesh::IsInstancing()
 int Mesh::InstancingNum() const
 {
 	return instancingNum;
+}
+
+void Mesh::MoveParticle()
+{
+	const size_t vecSize = particleTranslation.size();
+
+	for(size_t i = 0 ; i < vecSize; ++i)
+	{
+		Vector& particleVec = particleTranslation[i];
+
+		particleVec.x += (particleVec.x * 0.001f);
+		particleVec.y += (particleVec.y * 0.001f);
+		particleVec.z += (particleVec.z * 0.001f);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, matrixId);
+	glBufferData(GL_ARRAY_BUFFER,
+		particleTranslation.size() * sizeof(Vector),
+		NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 
+		particleTranslation.size() * sizeof(Vector),
+		particleTranslation.data());
 }
 

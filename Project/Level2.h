@@ -9,7 +9,7 @@ class Level2 : public State
 public:
 	Level2();
 	void Load() override;
-	void Update() override;
+	void Update(float dt) override;
 	void UnLoad() override;
 private:
 	LoadedObj* objMesh;

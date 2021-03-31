@@ -34,9 +34,9 @@ void Level1::Load()
 	Graphic::ground = ground;
 }
 
-void Level1::Update()
+void Level1::Update(float dt)
 {
-
+	(dt);
 }
 
 void Level1::UnLoad()

@@ -12,7 +12,7 @@ class Level1 : public State
 public:
 	Level1();
 	virtual void Load();
-	virtual void Update();
+	virtual void Update(float dt);
 	virtual void UnLoad();
 	void Init_Objects();
 	void Initialize_Material();

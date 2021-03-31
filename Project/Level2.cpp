@@ -21,9 +21,9 @@ void Level2::Load()
 	Graphic::ground = nullptr;
 }
 
-void Level2::Update()
+void Level2::Update(float dt)
 {
-	
+	(dt);
 }
 
 void Level2::UnLoad()

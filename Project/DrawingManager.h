@@ -29,7 +29,7 @@ private:
 	Matrix ndcMat;
 	
 	size_t objectsSize;
-	SkyBox* skyBox;
+	//SkyBox* skyBox;
 	FrameBufferObject* frameBufferObj;
 	OutLine* outLine;
 };

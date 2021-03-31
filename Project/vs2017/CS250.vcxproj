@@ -112,6 +112,7 @@
     <ClCompile Include="..\Image.cpp" />
     <ClCompile Include="..\Level1.cpp" />
     <ClCompile Include="..\Level2.cpp" />
+    <ClCompile Include="..\Level3.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -123,6 +124,7 @@
     </ClCompile>
     <ClCompile Include="..\Object_ExceptShadow.cpp" />
     <ClCompile Include="..\OutLine.cpp" />
+    <ClCompile Include="..\Particle.cpp" />
     <ClCompile Include="..\PositionConverter.cpp" />
     <ClCompile Include="..\Projection.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -156,6 +158,7 @@
     <ClInclude Include="..\Image.h" />
     <ClInclude Include="..\Level1.h" />
     <ClInclude Include="..\Level2.h" />
+    <ClInclude Include="..\Level3.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -164,6 +167,7 @@
     <ClInclude Include="..\Object_ExceptShadow.h" />
     <ClInclude Include="..\ObjLoader.h" />
     <ClInclude Include="..\OutLine.h" />
+    <ClInclude Include="..\Particle.h" />
     <ClInclude Include="..\PositionConverter.h" />
     <ClInclude Include="..\Projection.h" />
     <ClInclude Include="..\RaycastManager.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="..\State.h" />
     <ClInclude Include="..\UniformManager.h" />
     <ClInclude Include="Affine2.h" />
+    <ClInclude Include="SimpleMeshes.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +192,8 @@
     <None Include="FrameBufferVertex.glsl" />
     <None Include="LightFragment.glsl" />
     <None Include="LightVertex.glsl" />
+    <None Include="ParticleColoredFragment.glsl" />
+    <None Include="ParticleColoredVertex.glsl" />
     <None Include="ShadowFragment.glsl" />
     <None Include="ShadowVertex.glsl" />
     <None Include="SimpleFragment.glsl" />

@@ -11,7 +11,7 @@ DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject();
-	skyBox = new SkyBox();
+	//skyBox = new SkyBox();
 }
 
 void DrawingManager::Drawing()
@@ -28,7 +28,7 @@ void DrawingManager::Drawing()
 	outLine->OutlinePrepare();
 	DrawingObjs();
 	outLine->Draw(camMat, ndcMat);
-	skyBox->Draw(ndcMat);
+	//skyBox->Draw(ndcMat);
 	frameBufferObj->UnBind();
 	frameBufferObj->Use();
 }

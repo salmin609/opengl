@@ -89,6 +89,12 @@
     <ClCompile Include="..\OutLine.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\Particle.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Level3.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -237,6 +243,15 @@
     <ClInclude Include="..\OutLine.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleMeshes.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Particle.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Level3.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -295,6 +310,12 @@
     </None>
     <None Include="SkyboxFragment.glsl">
       <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="ParticleColoredFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="ParticleColoredVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>
 </Project>

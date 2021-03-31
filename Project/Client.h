@@ -7,8 +7,10 @@
 
 #include <SDL2/SDL.h>
 #include "Graphic.h"
-#include "Level1.h"
-#include "Level2.h"
+class State;
+class Level1;
+class Level2;
+class Level3;
 class Client {
 public:
 	Client(void);
@@ -32,4 +34,6 @@ private:
 	Graphic* graphic;
 	Level1* level1;
 	Level2* level2;
+	Level3* level3;
+	State* currState;
 };
