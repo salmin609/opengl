@@ -169,6 +169,7 @@
     <ClInclude Include="..\ObjLoader.h" />
     <ClInclude Include="..\OutLine.h" />
     <ClInclude Include="..\Particle.h" />
+    <ClInclude Include="..\ParticleInstance.h" />
     <ClInclude Include="..\PositionConverter.h" />
     <ClInclude Include="..\Projection.h" />
     <ClInclude Include="..\RaycastManager.h" />

@@ -14,6 +14,7 @@
 #include <string>
 #include "Affine.h"
 #include "Image.h"
+#include "ParticleInstance.h"
 #include "Shader_Table.hpp"
 #include "Shader.h"
 
@@ -75,6 +76,7 @@ protected:
 	unsigned vao_id = 0;
 	unsigned vbo_id = 0;
 	unsigned color_id = 0;
+	unsigned rotateId = 0;
 	unsigned vbo_normal = 0;
 	unsigned elementId = 0;
 	unsigned texture_id = 0;
@@ -86,9 +88,13 @@ protected:
 	
 	std::vector<Vertex> vertexDatas;
 	std::vector<Vector3> offsetVec;
-	std::vector<Vector> particleTranslation;
-	std::vector<Vector> particleColor;
 	
+	std::vector<ParticleInstance> particles;
+	
+	/*std::vector<Vector> particleTranslation;
+	std::vector<Vector> particleColor;
+	std::vector<Vector> particleRotate;
+	*/
 	int instancingNum;
 	int particleNum;
 	bool is_textured = false;

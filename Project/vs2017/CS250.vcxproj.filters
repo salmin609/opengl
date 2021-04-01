@@ -255,6 +255,9 @@
     <ClInclude Include="..\Level3.h">
       <Filter>Engine\Hpp</Filter>
     </ClInclude>
+    <ClInclude Include="..\ParticleInstance.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">

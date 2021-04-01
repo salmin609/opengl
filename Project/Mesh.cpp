@@ -121,20 +121,18 @@ void Mesh::InitializeColoredParticle(std::string vertexPath, std::string fragmen
 	Init_VBO(simpleCubeVertices, &vbo_id, simpleCubeSize * sizeof(float),
 		0, 0, 0, 3);
 
-	Init_VBO(particleColor.data(), &color_id,
-		particleColor.size() * sizeof(Vector),
-		0, 0, 1, 3, GL_STATIC_DRAW);
+	Init_VBO(particles.data(), &color_id, particles.size() * sizeof(ParticleInstance),
+		sizeof(ParticleInstance), (GLvoid*)offsetof(ParticleInstance, color), 1, 3);
 
-	Init_VBO(NULL, &matrixId,
-		particleTranslation.size() * sizeof(Vector),
+	Init_VBO(NULL, &matrixId, particles.size() * sizeof(Vector3),
 		0, 0, 2, 3, GL_STREAM_DRAW);
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0,
-		particleTranslation.size() * sizeof(Vector),
-		particleTranslation.data());
+	Init_VBO(NULL, &rotateId, particles.size() * sizeof(Vector3),
+		0, 0, 3, 3, GL_STREAM_DRAW);
 
 	glVertexAttribDivisor(1, 1);
 	glVertexAttribDivisor(2, 1);
+	glVertexAttribDivisor(3, 1);
 
 	delete[] simpleCubeVertices;
 }
@@ -268,35 +266,48 @@ void Mesh::MoveParticle(float dt)
 	}
 
 	const float speed = 2.f;
-	const size_t vecSize = particleTranslation.size();
+	const size_t vecSize = particles.size();
+	std::vector<Vector3> dirVec;
+	std::vector<Vector3> rotateVec;
 
 	for (size_t i = 0; i < vecSize; ++i)
 	{
-		Vector& particleVec = particleTranslation[i];
+		Vector3& dir = particles[i].dir;
+		Vector3& rotate = particles[i].rotate;
 
 		if (!isSetZero)
 		{
-			particleVec.x += (particleVec.x * speed * dt);
-			particleVec.y += (particleVec.y * speed * dt);
-			particleVec.z += (particleVec.z * speed * dt);
+			dir.x += (dir.x * speed * dt);
+			dir.y += (dir.y * speed * dt);
+			dir.z += (dir.z * speed * dt);
+
+			rotate.x += (rotate.x * speed * dt);
+			rotate.y += (rotate.y * speed * dt);
+			rotate.z += (rotate.z * speed * dt);
 		}
 		else
 		{
-			particleVec.x = RandomNumber::RandomFloat(0.f, 10.f);
-			particleVec.y = RandomNumber::RandomFloat(0.f, 10.f);
-			particleVec.z = RandomNumber::RandomFloat(0.f, 10.f);
-		}
-	}
-	if(isSetZero)
-	{
-		std::sort(particleTranslation.begin(), particleTranslation.end());
-	}
+			dir.x = RandomNumber::RandomFloat(0.f, 10.f);
+			dir.y = RandomNumber::RandomFloat(0.f, 10.f);
+			dir.z = RandomNumber::RandomFloat(0.f, 10.f);
 
+			rotate.x = RandomNumber::RandomFloat(0.f, 10.f);
+			rotate.y = RandomNumber::RandomFloat(0.f, 10.f);
+			rotate.z = RandomNumber::RandomFloat(0.f, 10.f);
+		}
+		dirVec.push_back(dir);
+		rotateVec.push_back(rotate);
+	}
+	
 	glBindBuffer(GL_ARRAY_BUFFER, matrixId);
-	glBufferData(GL_ARRAY_BUFFER,
-		particleTranslation.size() * sizeof(Vector),
-		NULL, GL_STREAM_DRAW);
+	
 	glBufferSubData(GL_ARRAY_BUFFER, 0,
-		particleTranslation.size() * sizeof(Vector),
-		particleTranslation.data());
+		dirVec.size() * sizeof(Vector3),
+		dirVec.data());
+
+	glBindBuffer(GL_ARRAY_BUFFER, rotateId);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0,
+		rotateVec.size() * sizeof(Vector3),
+		rotateVec.data());
 }
