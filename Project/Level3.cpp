@@ -17,8 +17,7 @@ void Level3::Load()
 
 void Level3::Update(float dt)
 {
-	(dt);
-	particle->MoveParticle();
+	particle->MoveParticle(dt);
 }
 
 void Level3::UnLoad()

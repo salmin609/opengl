@@ -15,4 +15,5 @@ public:
     virtual void SetVertices();
 private:
     int faceCount = 12;
+    //std::vector<Vector> particleTranslation;
 };

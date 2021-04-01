@@ -3,7 +3,6 @@
 #include "Projection.h"
 #include <iostream>
 #include "FrameBuffer.h"
-#include "Image.h"
 #include "Skybox.h"
 #include "OutLine.h"
 

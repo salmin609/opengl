@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include "Affine.h"
+#include "Image.h"
 #include "Shader_Table.hpp"
 #include "Shader.h"
 
@@ -68,7 +69,7 @@ struct Mesh {
 	static void Unbind();
 	bool IsInstancing();
 	int InstancingNum() const;
-	void MoveParticle();
+	void MoveParticle(float dt);
 protected:
 	Shader* shader = nullptr;
 	unsigned vao_id = 0;
@@ -86,12 +87,14 @@ protected:
 	std::vector<Vertex> vertexDatas;
 	std::vector<Vector3> offsetVec;
 	std::vector<Vector> particleTranslation;
+	std::vector<Vector> particleColor;
 	
 	int instancingNum;
 	int particleNum;
 	bool is_textured = false;
 	bool isQuad = false;
 	bool isInstancing = false;
+	float timer;
 };
 
 

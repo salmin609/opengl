@@ -1,6 +1,5 @@
 #include "Skybox.h"
 #include "Graphic.h"
-#include "Image.h"
 #include "Projection.h"
 #include "vs2017/SimpleMeshes.h"
 SkyBox::SkyBox()

@@ -57,7 +57,12 @@ void CameraManager::Move(SDL_Keycode keycode)
 		break;
 	}
 
-	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, aspect, 100.f);
+	CameraReInit();
+}
+
+void CameraManager::CameraReInit()
+{
+	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 1.f, 50.f);
 }
 
 void CameraManager::CameraMovement(SDL_Event event)
@@ -79,7 +84,7 @@ void CameraManager::CameraMovement(SDL_Event event)
 			defaultCamPos.y += (v_v.y * speed);
 			defaultCamPos.z += (v_v.z * speed);
 		}
-		cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.5f, 100.f);
+		CameraReInit();
 	}
 	else
 	{
@@ -101,7 +106,7 @@ void CameraManager::CameraMovement(SDL_Event event)
 			defaultCamPos.y -= (v_v.y * speed);
 			defaultCamPos.z -= (v_v.z * speed);
 		}
-		cam = Camera(defaultCamPos, lookat, Vector(0, 1, 0), 0.5f * pi, 1.f, aspect, 100.f);
+		CameraReInit();
 	}
 	else
 	{
@@ -132,7 +137,7 @@ void CameraManager::SetVV()
 	v_v.y = r * sin(cam_alpha);
 	v_v.z = r * cos(cam_alpha) * cos(cam_beta);
 	lookat = v_v;
-	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.5f, 100.f);
+	CameraReInit();
 }
 
 Camera* CameraManager::GetCamera()

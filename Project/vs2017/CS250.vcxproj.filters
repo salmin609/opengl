@@ -95,6 +95,9 @@
     <ClCompile Include="..\Level3.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\RandomNumGenerator.h">
+      <Filter>Header</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">

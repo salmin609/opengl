@@ -16,6 +16,7 @@ public:
 	void UpdateAB(float newAlpha, float newBeta);
 	void Init();
 	void Move(SDL_Keycode keycode);
+	void CameraReInit();
 private:
 	Vector ey = Vector(0, 1, 0);
 	float pi = 4.0f * atan(1.0f);

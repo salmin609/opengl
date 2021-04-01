@@ -35,6 +35,11 @@ Graphic::Graphic(void)
 	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	GLint bits;
+	glGetIntegerv(GL_DEPTH_BITS, &bits);
+	std::cout << "Depth buffer size : " << bits << std::endl;
+	
+
 	int stencilTest;
 	glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, 
 		GL_STENCIL, GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE, 

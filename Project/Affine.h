@@ -8,9 +8,6 @@
 #include <cmath>
 #include <cassert>
 
-
-
-
 struct Hcoord {
 	float x, y, z, w;
 	explicit Hcoord(float X = 0, float Y = 0, float Z = 0, float W = 0);
@@ -38,6 +35,10 @@ struct Vector : Hcoord {
 	Vector operator/=(float val)
 	{
 		return Vector(x /= val, y /= val, z /= val);
+	}
+	bool operator<(Vector val)
+	{
+		return z < val.z;
 	}
 };
 

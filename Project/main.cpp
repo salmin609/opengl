@@ -15,6 +15,8 @@ int main(int /*argc*/, char* /*argv*/[]) {
 	// SDL: initialize and create a window
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
 	const char* title = "CS250: Project#2 Kimsangmin";
 	int width = 600,
 		height = 600;
