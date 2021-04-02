@@ -58,18 +58,17 @@ void Mesh::Initialize_Object_Mesh(std::string vertex_path, std::string frag_path
 {
 	Initialize(vertex_path.c_str(), frag_path.c_str());
 
-
-	Init_VBO(vertexDatas.data(), &vbo_id, vertexDatas.size() * sizeof(Vertex),
-		sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal), 1, 3);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+	glEnableVertexAttribArray(1);
 }
 
 void Mesh::InitializeTexturedObj(std::string sprite_path, std::string vertex_path, std::string frag_path)
 {
 	Initialize_Object_Mesh(std::move(vertex_path), std::move(frag_path));
 
-	Init_VBO(vertexDatas.data(), &texture_id, vertexDatas.size() * sizeof(Vertex),
-		sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord), 2, 2);
-
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
+	glEnableVertexAttribArray(2);
+	
 	Initialize_Texture(std::move(sprite_path));
 }
 
@@ -102,7 +101,6 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 		}
 		minusTrigger = !minusTrigger;
 	}
-
 
 	Init_VBO(offsetVec.data(), &instancingId, sizeof(Vector3) * offsetVec.size(),
 		0, 0, 3, 3);
@@ -257,46 +255,38 @@ int Mesh::InstancingNum() const
 
 void Mesh::MoveParticle(float dt)
 {
-	bool isSetZero = false;
-	timer -= dt;
-	if (timer < 0.f)
-	{
-		isSetZero = true;
-		timer = 2.f;
-	}
-
 	const float speed = 2.f;
-	const size_t vecSize = particles.size();
+	const int randomIndex = RandomNumber::RandomInt(10);
+	instancingNum += randomIndex;
+
+	if(instancingNum > particleNum)
+	{
+		instancingNum = particleNum;
+	}
 	std::vector<Vector3> dirVec;
 	std::vector<Vector3> rotateVec;
-
-	for (size_t i = 0; i < vecSize; ++i)
+	
+	for(int i = 0; i < instancingNum; ++i)
 	{
-		Vector3& dir = particles[i].dir;
-		Vector3& rotate = particles[i].rotate;
+		ParticleInstance& particle = particles[i];
 
-		if (!isSetZero)
+		particle.life -= dt;
+		if (particle.life < 0.f)
 		{
-			dir.x += (dir.x * speed * dt);
-			dir.y += (dir.y * speed * dt);
-			dir.z += (dir.z * speed * dt);
-
-			rotate.x += (rotate.x * speed * dt);
-			rotate.y += (rotate.y * speed * dt);
-			rotate.z += (rotate.z * speed * dt);
+			instancingNum--;
+			particle.life = 2.f;
+			particle.dir.x = RandomNumber::RandomFloat(0.f, 10.f);
+			particle.dir.y = RandomNumber::RandomFloat(0.f, 10.f);
+			particle.dir.z = RandomNumber::RandomFloat(0.f, 10.f);
 		}
 		else
 		{
-			dir.x = RandomNumber::RandomFloat(0.f, 10.f);
-			dir.y = RandomNumber::RandomFloat(0.f, 10.f);
-			dir.z = RandomNumber::RandomFloat(0.f, 10.f);
-
-			rotate.x = RandomNumber::RandomFloat(0.f, 10.f);
-			rotate.y = RandomNumber::RandomFloat(0.f, 10.f);
-			rotate.z = RandomNumber::RandomFloat(0.f, 10.f);
+			particle.dir.x += (particle.dir.x * speed * dt);
+			particle.dir.y += (particle.dir.y * speed * dt);
+			particle.dir.z += (particle.dir.z * speed * dt);
 		}
-		dirVec.push_back(dir);
-		rotateVec.push_back(rotate);
+		dirVec.push_back(particle.dir);
+		rotateVec.push_back(particle.rotate);
 	}
 	
 	glBindBuffer(GL_ARRAY_BUFFER, matrixId);
