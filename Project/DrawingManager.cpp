@@ -20,13 +20,19 @@ void DrawingManager::Drawing()
 	objectsSize = Graphic::objects.size();
 	object = Graphic::objects;
 
+	Matrix transposed = transpose(camMat);
+	glBindBuffer(GL_UNIFORM_BUFFER, Graphic::instance->GetUboMatricesId());
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Affine), sizeof(Affine), &transposed);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
 	frameBufferObj->Bind();
+	
 	ClearBuffer();
 	DrawingGround();
 	DrawingShadow();
 	outLine->OutlinePrepare();
 	DrawingObjs();
-	outLine->Draw(camMat, ndcMat);
+	outLine->Draw();
 	//skyBox->Draw(ndcMat);
 	frameBufferObj->UnBind();
 	frameBufferObj->Use();
@@ -48,7 +54,7 @@ void DrawingManager::DrawingGround()
 		Point& lightPos = Graphic::light->Get_Obj_Pos();
 
 		Graphic::ground->Set_Light_Pos(lightPos);
-		Graphic::ground->Draw(ndcMat, camMat);
+		Graphic::ground->Draw();
 	}
 }
 void DrawingManager::DrawingShadow()
@@ -79,6 +85,6 @@ void DrawingManager::DrawingObjs()
 		Object* obj = object[i];
 		obj->Set_Camera_Pos(CameraManager::instance->CameraPos());
 		obj->Set_Light_Pos(Graphic::light->Get_Obj_Pos());
-		obj->Draw(ndcMat, camMat);
+		obj->Draw();
 	}
 }

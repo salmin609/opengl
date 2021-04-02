@@ -26,9 +26,15 @@ vec3 rotate(vec3 v, vec3 axis, float angle)
 
 out vec3 colorVal;
 
-uniform mat4 to_ndc;
+layout(std140) uniform Matrices
+{
+	mat4 to_ndc;
+	mat4 cam;
+};
+
+//uniform mat4 to_ndc;
 uniform mat4 model;
-uniform mat4 cam;
+//uniform mat4 cam;
 
 void main()
 {

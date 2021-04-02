@@ -57,6 +57,21 @@ Graphic::~Graphic(void)
 {
 }
 
+void Graphic::InitUniformBlockMatrices()
+{
+	glGenBuffers(1, &uboMatrices);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(Affine), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(Affine));
+
+	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
+	Matrix transposed = transpose(ndcMat);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Affine), &transposed);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
 void Graphic::Draw(float dt)
 {
 	(dt);
@@ -170,6 +185,11 @@ void Graphic::Indicate_Level()
 Point Graphic::GetPrevMousePos() const
 {
 	return prev_mouse_pos;
+}
+
+unsigned Graphic::GetUboMatricesId()
+{
+	return uboMatrices;
 }
 
 

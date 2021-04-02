@@ -76,6 +76,7 @@ Affine translate(const Vector& v);
 Affine scale(float r);
 Affine scale(float rx, float ry, float rz);
 Affine inverse(const Affine& A);
+Matrix transpose(const Matrix& A);
 
 struct Vector2
 {

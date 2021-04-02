@@ -19,6 +19,8 @@ Client::Client(void)
 	level2 = new Level2();
 	level3 = new Level3();
 
+	graphic->InitUniformBlockMatrices();
+	
 	currState = level1;
 }
 

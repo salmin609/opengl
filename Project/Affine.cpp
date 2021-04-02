@@ -304,3 +304,17 @@ Affine inverse(const Affine& A)
 
 	return inversed_linear_mat * inversed_translate;
 }
+
+Matrix  transpose(const Matrix& A)
+{
+	Matrix result;
+
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+		{
+			result[i][j] = A[j][i];
+		}
+	}
+	return result;
+}

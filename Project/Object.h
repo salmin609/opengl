@@ -26,11 +26,11 @@ public:
     Object(Mesh* mesh_val, Point pos, Material_* mat, Vector color);
     ~Object();
     void Init();
-    void Draw(Matrix& ndc, Matrix& cam_mat);
+    void Draw();
     void DrawByElement(Matrix& ndc, Matrix& camMat);
     void End_Draw();
     void Select_Mesh();
-    void Send_Uniform(Matrix& ndc_mat, Matrix& cam_mat, Matrix world_mat);
+    void Send_Uniform(Matrix world_mat);
     void Set_Light_Pos(Point light);
     void Set_Second_Light_Pos(Point light);
     void Set_Shadow(Mesh* mesh_val);

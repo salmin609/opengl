@@ -106,6 +106,9 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 */
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
+
+	unsigned int uniformBlockIndex = glGetUniformBlockIndex(shaderId, "Matrices");
+	glUniformBlockBinding(shaderId, uniformBlockIndex, 0);
 }
 
 unsigned Shader::GetShaderId()

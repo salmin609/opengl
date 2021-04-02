@@ -13,7 +13,7 @@ public:
 	static Graphic* instance;
 	Graphic(void);
 	~Graphic(void);
-
+	void InitUniformBlockMatrices();
 	void Draw(float dt);
 	void mousewheel(SDL_Event event);
 	void mousepress();
@@ -32,6 +32,7 @@ public:
 	Hcoord GetWindowWH();
 	void Indicate_Level();
 	Point GetPrevMousePos() const;
+	unsigned int GetUboMatricesId();
 	
 	Object* SelectedObject();
 	static std::vector<Object*> objects;
@@ -46,7 +47,7 @@ private:
 	int window_height;
 
 	int graphic_level = 0;
-	
+	unsigned int uboMatrices;
 	/**
 	 * \brief
 	 * Manager 

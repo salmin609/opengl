@@ -10,10 +10,16 @@ out vec3 frag_pos;
 out vec4 light;
 out vec2 texture_coord;
 
-uniform mat4 to_ndc;
+//uniform mat4 to_ndc;
 uniform mat4 model;
-uniform mat4 cam;
+//uniform mat4 cam;
 uniform vec4 light_pos;
+
+layout(std140) uniform Matrices
+{
+	mat4 to_ndc;
+	mat4 cam;
+};
 
 void main()
 {

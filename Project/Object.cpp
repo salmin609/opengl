@@ -46,10 +46,10 @@ void Object::Init()
 	mesh->Unbind();
 }
 
-void Object::Draw(Matrix& ndc, Matrix& cam_mat)
+void Object::Draw()
 {
 	Select_Mesh();
-	Send_Uniform(ndc, cam_mat, Get_Model_To_World());
+	Send_Uniform(Get_Model_To_World());
 
 	if (mesh->IsElemented())
 	{
@@ -92,14 +92,11 @@ void Object::Select_Mesh()
 
 }
 
-void Object::Send_Uniform(Matrix& ndc_mat, Matrix& cam_mat, Matrix world_mat)
+void Object::Send_Uniform(Matrix world_mat)
 {
-	uniforms("to_ndc", &ndc_mat);
 	uniforms("model", &world_mat);
-	uniforms("cam", &cam_mat);
 	uniforms("view_pos", &camera_pos);
 	uniforms("light_pos", &lightInfo.lightPos);
-	//uniforms("second_light_pos", &second_light_pos);
 	
 	if (obj_mat != nullptr)
 	{

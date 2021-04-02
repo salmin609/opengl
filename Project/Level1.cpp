@@ -25,7 +25,6 @@ void Level1::Load()
 	Graphic::objects.clear();
 	Graphic::objects.push_back(center_circle);
 	Graphic::objects.push_back(light);
-	//Graphic::objects.push_back(second_light);
 	Graphic::objects.push_back(right_circle);
 	Graphic::objects.push_back(deer);
 	Graphic::objects.push_back(tree);

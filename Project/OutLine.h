@@ -9,7 +9,7 @@ class OutLine
 public:
 	OutLine();
 	void OutlinePrepare();
-	void Draw(Matrix& camMat, Matrix& ndcMat);
+	void Draw();
 private:
 	Shader* outlineShader;
 	

@@ -21,7 +21,7 @@ void OutLine::OutlinePrepare()
 	}
 }
 
-void OutLine::Draw(Matrix& camMat, Matrix& ndcMat)
+void OutLine::Draw()
 {
 	Object* selectedObj = Graphic::instance->SelectedObject();
 
@@ -31,8 +31,8 @@ void OutLine::Draw(Matrix& camMat, Matrix& ndcMat)
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 		outlineShader->Use();
-		outlineShader->SendUniformMat("to_ndc", &ndcMat);
-		outlineShader->SendUniformMat("cam", &camMat);
+		//outlineShader->SendUniformMat("to_ndc", &ndcMat);
+		//outlineShader->SendUniformMat("cam", &camMat);
 
 		selectedObj->SetVAO();
 
