@@ -105,3 +105,14 @@ Camera& Camera::Roll(float angle)
 
 	return *this;
 }
+
+void Camera::ChangeCameraYPosition(float downDistance)
+{
+	eye.y -= downDistance;
+	InvertPitch();
+}
+
+void Camera::InvertPitch()
+{
+	*this = Pitch(180.f);
+}

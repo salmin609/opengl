@@ -135,6 +135,12 @@ void Shader::SendUniformInt(std::string uniformName, void* val) const
 	glUniform1i(loc, *valInInt);
 }
 
+void Shader::SendUniformInt(std::string uniformName, int val) const
+{
+	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	glUniform1i(loc, val);
+}
+
 void Shader::SendUniformFloat(std::string uniformName, void* val) const
 {
 	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());

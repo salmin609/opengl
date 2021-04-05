@@ -15,6 +15,7 @@ const Vector GRAY(0.5f, 0.5f, 0.5f);
 
 Object* Graphic::light = nullptr;
 Object* Graphic::ground = nullptr;
+Object* Graphic::water = nullptr;
 Graphic* Graphic::instance = nullptr;
 std::vector<Object*> Graphic::objects;
 

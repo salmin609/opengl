@@ -25,6 +25,8 @@ public:
     Camera& Yaw(float angle);
     Camera& Pitch(float angle);
     Camera& Roll(float angle);
+    void ChangeCameraYPosition(float distance);
+    void InvertPitch();
     float Get_Width() const 
     {
         return width;

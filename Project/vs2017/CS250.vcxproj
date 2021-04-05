@@ -113,6 +113,7 @@
     <ClCompile Include="..\Level1.cpp" />
     <ClCompile Include="..\Level2.cpp" />
     <ClCompile Include="..\Level3.cpp" />
+    <ClCompile Include="..\Level4.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -141,6 +142,7 @@
     </ClCompile>
     <ClCompile Include="..\Sphere_mesh.cpp" />
     <ClCompile Include="..\UniformManager.cpp" />
+    <ClCompile Include="..\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Affine.h">
@@ -160,6 +162,7 @@
     <ClInclude Include="..\Level1.h" />
     <ClInclude Include="..\Level2.h" />
     <ClInclude Include="..\Level3.h" />
+    <ClInclude Include="..\Level4.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -181,6 +184,7 @@
     <ClInclude Include="..\Sphere_mesh.h" />
     <ClInclude Include="..\State.h" />
     <ClInclude Include="..\UniformManager.h" />
+    <ClInclude Include="..\Water.h" />
     <ClInclude Include="Affine2.h" />
     <ClInclude Include="SimpleMeshes.h" />
     <ClInclude Include="Vertex.h" />
@@ -207,6 +211,8 @@
     <None Include="Vertexshader.glsl" />
     <None Include="VertexShaderInstance.glsl" />
     <None Include="Vertexshader_Texture.glsl" />
+    <None Include="WaterFragment.glsl" />
+    <None Include="WaterVertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

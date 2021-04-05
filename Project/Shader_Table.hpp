@@ -21,3 +21,5 @@ const static std::string shaderSkyboxVertex = "SkyboxVertex.glsl";
 const static std::string shaderSkyboxFragment = "SkyboxFragment.glsl";
 const static std::string shaderParticleColoredVertex = "ParticleColoredVertex.glsl";
 const static std::string shaderParticleColoredFragment = "ParticleColoredFragment.glsl";
+const static std::string shaderWaterVertex = "WaterVertex.glsl";
+const static std::string shaderWaterFragment = "WaterFragment.glsl";

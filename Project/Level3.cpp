@@ -13,6 +13,8 @@ void Level3::Load()
 {
 	Graphic::objects.clear();
 	Graphic::objects.push_back(object);
+	Graphic::ground = nullptr;
+	Graphic::water = nullptr;
 }
 
 void Level3::Update(float dt)

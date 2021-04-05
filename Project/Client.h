@@ -11,6 +11,7 @@ class State;
 class Level1;
 class Level2;
 class Level3;
+class Level4;
 class Client {
 public:
 	Client(void);
@@ -35,5 +36,6 @@ private:
 	Level1* level1;
 	Level2* level2;
 	Level3* level3;
+	Level4* level4;
 	State* currState;
 };

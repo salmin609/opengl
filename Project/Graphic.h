@@ -38,6 +38,7 @@ public:
 	static std::vector<Object*> objects;
 	static Object* light;
 	static Object* ground;
+	static Object* water;
 private:
 	Point prev_mouse_pos;
 	//Picked object

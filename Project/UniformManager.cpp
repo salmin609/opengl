@@ -45,6 +45,7 @@ void UniformManager::SendUniforms(SendTypes type, std::string name, void* val)
 {
 	unsigned location = uniforms[name].location;
 	float* valInFloat = static_cast<float*>(val);
+	int* valInInt = static_cast<int*>(val);
 	switch(type)
 	{
 	case None: 
@@ -60,6 +61,9 @@ void UniformManager::SendUniforms(SendTypes type, std::string name, void* val)
 		break;
 	case Float:
 		glUniform1fv(location, 1, valInFloat);
+		break;
+	case Int:
+		glUniform1i(location, *valInInt);
 		break;
 	default: ;
 	}

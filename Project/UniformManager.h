@@ -12,6 +12,7 @@ public:
 		Vector3,
 		Vector4,
 		Float,
+		Int
 	};
 
 	struct Uniform

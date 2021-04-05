@@ -318,3 +318,21 @@ Matrix  transpose(const Matrix& A)
 	}
 	return result;
 }
+
+Affine identityMatrix()
+{
+	Affine result;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			result[i][j] = 0.f;
+
+			if(i == j)
+			{
+				result[i][j] = 1.f;
+			}
+		}
+	}
+	return result;
+}

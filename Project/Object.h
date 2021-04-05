@@ -43,6 +43,7 @@ public:
     Point& Get_Obj_Pos();
     Vector Get_Scale();
     void Set_Scale(Vector scale);
+    void Set_Scale(float scale);
     void Set_T(float t_);
     float Get_T();
     void Set_Selected(bool toggle);
@@ -55,9 +56,11 @@ public:
     void Initialize_Uniform();
     void IncreScale();
     bool IsElemented();
+    void SetPlane(const Hcoord& planeVec);
+    std::vector<unsigned>& GetTextureSlot();
 private:
     struct LightInfo
-    {
+    { 
         Point lightPos;
         Vector diffuse{0.5f, 0.5f, 0.5f};
         Vector ambient{0.2f, 0.2f, 0.2f};
@@ -71,6 +74,7 @@ private:
         Vector rotAxis{ 0.f, 0.f, 1.f };
         float rotRate = 0.f;
 	};
+    Hcoord planeVector;
 	
     Mesh* mesh;
     

@@ -98,6 +98,12 @@
     <ClCompile Include="..\RandomNumGenerator.h">
       <Filter>Header</Filter>
     </ClCompile>
+    <ClCompile Include="..\Level4.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Water.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -258,6 +264,12 @@
     <ClInclude Include="..\ParticleInstance.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Level4.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Water.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -321,6 +333,12 @@
       <Filter>Shaders\Fragment</Filter>
     </None>
     <None Include="ParticleColoredVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="WaterFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="WaterVertex.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>

@@ -8,6 +8,8 @@ out vec3 frag_pos;
 out vec4 light;
 out vec2 texture_coord;
 
+uniform vec4 plane;
+
 layout(std140) uniform Matrices
 {
 	mat4 to_ndc;
@@ -23,6 +25,9 @@ void main()
 	normal_vec = mat3(transpose(inverse(model))) * normal;
 	light = light_pos;
 	frag_pos = vec3(model * vec4(position, 1));
+
+	gl_ClipDistance[0] = dot(vec4(frag_pos, 1), plane);
+
 	gl_Position = to_ndc * cam * vec4(frag_pos, 1);
 	texture_coord = texcoord;
 };

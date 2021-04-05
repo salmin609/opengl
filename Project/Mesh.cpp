@@ -37,6 +37,11 @@ unsigned Mesh::Get_Seconde_Texture_Id() const
 	return specular_texture_id;
 }
 
+std::vector<unsigned>& Mesh::GetTextureId()
+{
+	return textureId;
+}
+
 void Mesh::Initialize(const char* vertexPath, const char* fragmentPath)
 {
 	shader = new Shader(vertexPath, fragmentPath);
@@ -69,7 +74,7 @@ void Mesh::InitializeTexturedObj(std::string sprite_path, std::string vertex_pat
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoord));
 	glEnableVertexAttribArray(2);
 	
-	Initialize_Texture(std::move(sprite_path));
+	Initialize_Texture(std::move(sprite_path), 0, 0);
 }
 
 void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath, std::string fragPath)
@@ -136,12 +141,17 @@ void Mesh::InitializeColoredParticle(std::string vertexPath, std::string fragmen
 }
 
 
-void Mesh::Initialize_Texture(std::string sprite_path)
+void Mesh::Initialize_Texture(std::string sprite_path, int width, int height, unsigned textureNum)
 {
-	unsigned newId;
-	glGenTextures(1, &newId);
-	glBindTexture(GL_TEXTURE_2D, newId);
-	textureId.push_back(newId);
+	unsigned* newId = new unsigned(textureNum);
+	glGenTextures(textureNum, newId);
+
+	for(unsigned i = 0 ; i < textureNum; ++i)
+	{
+		glBindTexture(GL_TEXTURE_2D, newId[i]);
+		glActiveTexture(GL_TEXTURE_2D);
+		textureId.push_back(newId[i]);
+	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -151,11 +161,16 @@ void Mesh::Initialize_Texture(std::string sprite_path)
 	Image temp_image;
 	int w, h;
 	unsigned char* data = temp_image.Load_Image(std::move(sprite_path), w, h, true);
-	if (data)
+	if(data != nullptr)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
 	}
+	else
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	glGenerateMipmap(GL_TEXTURE_2D);
+		
 }
 
 void Mesh::Clear_Datas()
@@ -189,6 +204,21 @@ void Mesh::SetTexture()
 	}
 }
 
+void Mesh::PushTextureId(unsigned id)
+{
+	textureId.push_back(id);
+}
+
+void Mesh::ClearTextureIds()
+{
+	textureId.clear();
+}
+
+bool Mesh::isTextureSlotEmpty()
+{
+	return textureId.empty();
+}
+
 bool Mesh::IsElemented()
 {
 	return !elements.empty();
@@ -202,6 +232,11 @@ unsigned Mesh::GetElementId()
 bool Mesh::IsQuadObj()
 {
 	return isQuad;
+}
+
+Shader* Mesh::GetShader()
+{
+	return shader;
 }
 
 void Mesh::Init_VAO()

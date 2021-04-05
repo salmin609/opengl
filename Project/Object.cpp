@@ -88,7 +88,7 @@ void Object::Select_Mesh()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->GetElementId());
 	}
-	Initialize_Uniform();
+	//Initialize_Uniform();
 
 }
 
@@ -97,6 +97,7 @@ void Object::Send_Uniform(Matrix world_mat)
 	uniforms("model", &world_mat);
 	uniforms("view_pos", &camera_pos);
 	uniforms("light_pos", &lightInfo.lightPos);
+	uniforms("plane", &planeVector);
 	
 	if (obj_mat != nullptr)
 	{
@@ -109,6 +110,11 @@ void Object::Send_Uniform(Matrix world_mat)
 	uniforms("light_.diffuse", &lightInfo.diffuse);
 	uniforms("light_.specular", &lightInfo.specular);
 	uniforms("color_val", &objInfo.color);
+
+	int tempVal = 0;
+	int tempVal2 = 1;
+	uniforms("reflect", &tempVal);
+	uniforms("refract", &tempVal2);
 }
 
 void Object::Set_Light_Pos(Point light)
@@ -173,6 +179,11 @@ void Object::Set_Scale(Vector scale)
 	this->objInfo.scale = scale;
 }
 
+void Object::Set_Scale(float scale)
+{
+	this->objInfo.scale = Vector{ scale, scale, scale };
+}
+
 void Object::Set_T(float t_)
 {
 	t = t_;
@@ -234,6 +245,10 @@ void Object::Initialize_Uniform()
 	uniforms.AddUniform("light_.ambient", UniformManager::Vector3);
 	uniforms.AddUniform("light_.diffuse", UniformManager::Vector3);
 	uniforms.AddUniform("color_val", UniformManager::Vector3);
+	uniforms.AddUniform("plane", UniformManager::Vector4);
+	uniforms.AddUniform("reflect", UniformManager::Int);
+	uniforms.AddUniform("refract", UniformManager::Int);
+
 }
 
 void Object::IncreScale()
@@ -245,4 +260,15 @@ void Object::IncreScale()
 bool Object::IsElemented()
 {
 	return mesh->IsElemented();
+}
+
+void Object::SetPlane(const Hcoord& planeVec)
+{
+	planeVector = planeVec;
+	uniforms("plane", &planeVector);
+}
+
+std::vector<unsigned>& Object::GetTextureSlot()
+{
+	return mesh->GetTextureId();
 }

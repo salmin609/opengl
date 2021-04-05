@@ -31,6 +31,7 @@ void Level1::Load()
 	
 	Graphic::light = light;
 	Graphic::ground = ground;
+	Graphic::water = nullptr;
 }
 
 void Level1::Update(float dt)

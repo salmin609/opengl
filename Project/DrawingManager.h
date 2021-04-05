@@ -21,7 +21,10 @@ private:
 	
 	void DrawingGround();
 	void DrawingShadow();
+	void DrawingWater();
 	void DrawingObjs();
+
+	void WaterInitialize(Hcoord planeVec);
 	
 	std::vector<Object*> object;
 
@@ -31,5 +34,7 @@ private:
 	size_t objectsSize;
 	//SkyBox* skyBox;
 	FrameBufferObject* frameBufferObj;
+	FrameBufferObject* waterReflectframeBufferObj;
+	FrameBufferObject* waterReflactframeBufferObj;
 	OutLine* outLine;
 };

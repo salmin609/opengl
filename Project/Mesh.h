@@ -51,20 +51,24 @@ struct Mesh {
 	virtual unsigned Get_Shader_Id();
 	unsigned Get_Texture_Id() const;
 	unsigned Get_Seconde_Texture_Id() const;
+	std::vector<unsigned>& GetTextureId();
 
 	void Initialize(const char* vertexPath, const char* fragmentPath);
 	void Initialize_Object_Mesh(std::string vertex_path = shader_object_vertex, std::string frag_path = shader_object_fragment);
-	void Initialize_Texture(std::string sprite_path);
+	void Initialize_Texture(std::string sprite_path, int width, int height, unsigned textureNum = 1);
 	void InitializeTexturedObj(std::string sprite_path, std::string vertex_path = shader_texture_vertex, std::string frag_path = shader_texture_fragment);
 	void InitializeInstanceObj(std::string spritePath, std::string vertexPath = shaderInstanceVertex, std::string fragPath = shaderInstanceFragment);
 	void InitializeColoredParticle(std::string vertexPath, std::string fragmentPath);
 	void Clear_Datas();
 	bool Get_Is_Textured() const;
 	void SetTexture();
+	void PushTextureId(unsigned id);
+	void ClearTextureIds();
+	bool isTextureSlotEmpty();
 	bool IsElemented();
 	unsigned GetElementId();
 	bool IsQuadObj();
-	
+	Shader* GetShader();
 	void Init_VAO();
 	void Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size, GLenum drawingType = GL_STATIC_DRAW, bool isNormalize = false);
 	static void Unbind();

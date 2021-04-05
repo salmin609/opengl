@@ -10,6 +10,7 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "Level4.h"
 
 Client::Client(void)
 {
@@ -18,7 +19,7 @@ Client::Client(void)
 	level1 = new Level1();
 	level2 = new Level2();
 	level3 = new Level3();
-
+	level4 = new Level4();
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;
@@ -67,6 +68,11 @@ void Client::Increase_Graphic_Level()
 		level3->Load();
 		currState = level3;
 	}
+	else if(currState == level3)
+	{
+		level4->Load();
+		currState = level4;
+	}
 }
 
 void Client::Decrease_Graphic_Level()
@@ -80,6 +86,11 @@ void Client::Decrease_Graphic_Level()
 	{
 		level2->Load();
 		currState = level2;
+	}
+	else if (currState == level4)
+	{
+		level3->Load();
+		currState = level3;
 	}
 }
 
