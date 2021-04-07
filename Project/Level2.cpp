@@ -18,6 +18,7 @@ void Level2::Load()
 {
 	Graphic::objects.clear();
 	Graphic::objects.push_back(obj);
+	Graphic::objects.push_back(Graphic::light);
 	Graphic::ground = nullptr;
 	Graphic::water = nullptr;
 }

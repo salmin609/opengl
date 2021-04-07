@@ -104,6 +104,15 @@
     <ClCompile Include="..\Water.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\WaterFrameBuffer.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Texture.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBufferTexturing.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -268,6 +277,15 @@
       <Filter>Engine\Hpp</Filter>
     </ClInclude>
     <ClInclude Include="..\Water.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WaterFrameBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Texture.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBufferTexturing.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

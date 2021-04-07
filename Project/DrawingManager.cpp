@@ -5,21 +5,35 @@
 #include "FrameBuffer.h"
 #include "Skybox.h"
 #include "OutLine.h"
-
+#include "WaterFrameBuffer.h"
+#include "Texture.h"
+#include "vs2017/FrameBufferTexturing.h"
 DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject(0);
-	waterReflectframeBufferObj = new FrameBufferObject(0, 200, 200);
-	waterReflactframeBufferObj = new FrameBufferObject(0, 200, 200);
-
+	//waterReflectframeBufferObj = new FrameBufferObject(0, 200, 200);
+	//waterReflactframeBufferObj = new FrameBufferObject(0, 200, 200);
+	//waterFrameBuffer = new WaterFrameBuffer();
+	reflectFramebuffer = new FrameBuffer();
+	refractFramebuffer = new FrameBuffer();
 	//Graphic::water->Get_Mesh()->PushTextureId(waterReflectframeBufferObj->GetTextureColorBufferId());
 	//Graphic::water->Get_Mesh()->PushTextureId(waterReflactframeBufferObj->GetTextureColorBufferId());
 	//skyBox = new SkyBox();
+	waterDuDv = new Texture("dudvMap.png");
+	normalMap = new Texture("normal.png");
 }
 
-void DrawingManager::Drawing()
+void DrawingManager::Drawing(float dt)
 {
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	moveFactor += moveSpeed * dt;
+
+	if(moveFactor > 1.f)
+	{
+		moveFactor = 0.f;
+	}
+	
 	ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
 	camMat = WorldToCamera(*CameraManager::instance->GetCamera());
 	objectsSize = Graphic::objects.size();
@@ -29,60 +43,36 @@ void DrawingManager::Drawing()
 	glBindBuffer(GL_UNIFORM_BUFFER, Graphic::instance->GetUboMatricesId());
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Affine), sizeof(Affine), &transposed);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	
-	//Reflection Texture
 
 
-	if(Graphic::water != nullptr)
+	if (Graphic::water != nullptr)
 	{
 		glEnable(GL_CLIP_DISTANCE0);
-
-		/*Camera* cam = CameraManager::instance->GetCamera();
-		Camera invertedCamera = *cam;
-		const float distance = 2 * (cam->Eye().y - 1.f);
-		invertedCamera.ChangeCameraYPosition(distance);
-		const Matrix invertedCamMat = WorldToCamera(invertedCamera);
-		const Matrix invertedTransposedCamMat = transpose(invertedCamMat);
-		glBindBuffer(GL_UNIFORM_BUFFER, Graphic::instance->GetUboMatricesId());
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Affine), sizeof(Affine), &invertedTransposedCamMat);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
-		
-		waterReflectframeBufferObj->Bind();
-		waterReflectframeBufferObj->SetViewPort();
-		ClearBuffer();
-		WaterInitialize(Hcoord{0, 1, 0, -1.f});
+		reflectFramebuffer->Bind();
+		WaterInitialize(Hcoord{ 0, 1, 0, -1.f + 0.1f });
 		DrawingObjs();
-		waterReflectframeBufferObj->UnBind();
-		waterReflectframeBufferObj->ResetViewPort();
-		//glBindBuffer(GL_UNIFORM_BUFFER, Graphic::instance->GetUboMatricesId());
-		//glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Affine), sizeof(Affine), &transposed);
-		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		reflectFramebuffer->UnBind();
 
-		//Reflaction Texture
-		waterReflactframeBufferObj->Bind();
-		waterReflactframeBufferObj->SetViewPort();
-		ClearBuffer();
+		refractFramebuffer->Bind();
 		WaterInitialize(Hcoord{ 0, -1, 0, 1.f });
 		DrawingObjs();
-		waterReflactframeBufferObj->UnBind();
-		waterReflactframeBufferObj->ResetViewPort();
+		refractFramebuffer->UnBind();
+
 		glDisable(GL_CLIP_DISTANCE0);
 	}
-
-	//WaterInitialize(Hcoord{ 0, -1, 0, 10000 });
-	frameBufferObj->Bind();
+	
+	//frameBufferObj->Bind();
+	glViewport(0, 0, 1024, 768);
 	ClearBuffer();
 	DrawingGround();
 	DrawingShadow();
 	DrawingWater();
+	//DrawLight();
 	outLine->OutlinePrepare();
 	DrawingObjs();
 	outLine->Draw();
-	frameBufferObj->UseFrameBuffer(waterReflectframeBufferObj, 0, 600, 200, 400);
-	frameBufferObj->UseFrameBuffer(waterReflactframeBufferObj, 400, 400, 600, 600);
-	//skyBox->Draw(ndcMat);
-	frameBufferObj->UnBind();
-	frameBufferObj->Use();
+	//frameBufferObj->UnBind();
+	//frameBufferObj->Use();
 }
 
 void DrawingManager::ClearBuffer()
@@ -128,20 +118,46 @@ void DrawingManager::DrawingShadow()
 void DrawingManager::DrawingWater()
 {
 	Object* waterObj = Graphic::water;
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	if(waterObj != nullptr)
+	if (waterObj != nullptr)
 	{
-		glUseProgram(waterObj->Get_Mesh()->Get_Shader_Id());
+		Shader* shader = waterObj->Get_Mesh()->GetShader();
+		unsigned vaoId = waterObj->Get_Mesh()->Get_VAO_Id();
+		Matrix model = waterObj->Get_Model_To_World();
+		Point cameraPos = CameraManager::instance->GetCamera()->Eye();
+		Vector3 cameraPosInVec3 = Vector3{cameraPos.x ,cameraPos.y , cameraPos.z};
+		Point lightPosition = Graphic::light->Get_Obj_Pos();
+		Vector3 lightPosInVec3{ lightPosition.x, lightPosition.y, lightPosition.z };
+		Vector3 lightColor{1.f, 1.f, 1.f};
+		shader->Use();
+		glBindVertexArray(vaoId);
+		shader->SendUniformMat("model", &model);
+		shader->SendUniformMat("to_ndc", &ndcMat);
+		shader->SendUniformMat("cam", &camMat);
+		shader->SendUniformFloat("moveFactor", &moveFactor);
+		shader->SendUniformVec3("cameraPosition", &cameraPosInVec3);
+		shader->SendUniformVec3("lightPosition", &lightPosInVec3);
+		shader->SendUniformVec3("lightColor", &lightColor);
 		
-		waterObj->Get_Mesh()->GetShader()->SendUniformInt("reflect", 0);
+		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, waterReflectframeBufferObj->GetTextureColorBufferId());
-		waterObj->Get_Mesh()->GetShader()->SendUniformInt("refract", 1);
+		glBindTexture(GL_TEXTURE_2D, reflectFramebuffer->TextureId());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, waterReflactframeBufferObj->GetTextureColorBufferId());
-		
-		waterObj->Draw();
+		glBindTexture(GL_TEXTURE_2D, refractFramebuffer->TextureId());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, waterDuDv->GetTextureId());
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, normalMap->GetTextureId());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, refractFramebuffer->DepthTextureId());
+
+		glDrawArrays(GL_TRIANGLES, 0, 3 * waterObj->Get_Mesh()->FaceCount());
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	glDisable(GL_BLEND);
 }
 
 void DrawingManager::DrawingObjs()
@@ -152,6 +168,16 @@ void DrawingManager::DrawingObjs()
 		obj->Set_Camera_Pos(CameraManager::instance->CameraPos());
 		obj->Set_Light_Pos(Graphic::light->Get_Obj_Pos());
 		obj->Draw();
+	}
+}
+
+void DrawingManager::DrawLight()
+{
+	Object* lightObj = Graphic::light;
+
+	if(lightObj != nullptr)
+	{
+		lightObj->Draw();
 	}
 }
 

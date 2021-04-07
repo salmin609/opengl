@@ -8,7 +8,7 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 	colorAttachmentSlot = 0;
 	fboWidth = width;
 	fboHeight = height;
-	
+
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
 		-1.0f,  1.0f,  0.0f, 1.0f,
@@ -31,7 +31,7 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 	shader = new Shader(shaderFrameBufferVertex.c_str(),
-		shaderFrameBufferFragment.c_str());
+		shaderToonifyPostProcessFragment.c_str());
 
 	int val = 0;
 	float val2 = 0.2f;
@@ -54,6 +54,7 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachmentSlot,
 		GL_TEXTURE_2D, textureColorBufferId, 0);
+	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureColorBufferId, 0);
 
 	glGenRenderbuffers(1, &renderBufferId);
 	glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
@@ -74,7 +75,9 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 
 void FrameBufferObject::Bind() const
 {
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	glViewport(0, 0, 1024, 768);
 }
 
 void FrameBufferObject::UnBind()
@@ -90,6 +93,7 @@ void FrameBufferObject::Use()
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 unsigned FrameBufferObject::GetFrameBufferId()
@@ -107,16 +111,29 @@ void FrameBufferObject::UseFrameBuffer(FrameBufferObject* fboSrc, int srcX, int 
 	if (fboSrc != nullptr)
 	{
 		unsigned srcWidth, srcHeight;
-		
+
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferId);
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSrc->GetFrameBufferId());
 		glReadBuffer(fboSrc->GetFrameBufferId());
 		fboSrc->GetFboWidthHeight(srcWidth, srcHeight);
 		glBlitFramebuffer(0, 0, srcWidth, srcHeight, srcX, srcY, destX, destY,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+}
+
+void FrameBufferObject::UseFrameBuffer(unsigned froSrc, int srcX, int srcY, int destX, int destY)
+{
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferId);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, froSrc);
+	glReadBuffer(froSrc);
+	
+	glBlitFramebuffer(0, 0, 1024, 768, srcX, srcY, destX, destY,
+		GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 unsigned FrameBufferObject::ColorAttachMentSlot()
@@ -132,9 +149,9 @@ void FrameBufferObject::GetFboWidthHeight(unsigned& width, unsigned& height)
 
 void FrameBufferObject::SetViewPort()
 {
-	int window_viewport_width = 600;
-	int window_viewport_height = 600;
-	
+	int window_viewport_width = 1024;
+	int window_viewport_height = 768;
+
 	int x = -(window_viewport_width - static_cast<int>(fboWidth)) / 2;
 	int y = -(window_viewport_height - static_cast<int>(fboHeight)) / 2;
 
@@ -143,7 +160,7 @@ void FrameBufferObject::SetViewPort()
 
 void FrameBufferObject::ResetViewPort()
 {
-	glViewport(0, 0, 600, 600);
+	glViewport(0, 0, 1024, 768);
 }
 
 FrameBufferObject::~FrameBufferObject()

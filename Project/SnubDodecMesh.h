@@ -10,6 +10,7 @@
 class SnubDodecMesh : public Mesh_Object {
   public:
     SnubDodecMesh();
+    SnubDodecMesh(std::string vertexPath, std::string fragPath);
     int VertexCount(void) { return 60; }
     Point GetVertex(int i) { return vertices[i]; }
     Vector Dimensions(void) { return Vector(2,2,2); }

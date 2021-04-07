@@ -55,6 +55,7 @@ void Level1::Init_Objects()
 	const Vector scale{ 0.35f, 0.35f, 0.35f };
 	center_circle->Set_Scale(scale);
 	right_circle->Set_Scale(scale);
+	light->Set_Scale(scale);
 	ground->Set_Scale(Vector(10.f, -0.1f, 10.f));
 }
 

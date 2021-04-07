@@ -143,18 +143,15 @@ void Mesh::InitializeColoredParticle(std::string vertexPath, std::string fragmen
 
 void Mesh::Initialize_Texture(std::string sprite_path, int width, int height, unsigned textureNum)
 {
-	unsigned* newId = new unsigned(textureNum);
-	glGenTextures(textureNum, newId);
+	(textureNum);
+	unsigned id;
+	glGenTextures(1, &id);
+	glActiveTexture(GL_TEXTURE0 + static_cast<GLint>(textureId.size()));
+	glBindTexture(GL_TEXTURE_2D, id);
+	textureId.push_back(id);
 
-	for(unsigned i = 0 ; i < textureNum; ++i)
-	{
-		glBindTexture(GL_TEXTURE_2D, newId[i]);
-		glActiveTexture(GL_TEXTURE_2D);
-		textureId.push_back(newId[i]);
-	}
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	/*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -169,8 +166,8 @@ void Mesh::Initialize_Texture(std::string sprite_path, int width, int height, un
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
-	glGenerateMipmap(GL_TEXTURE_2D);
-		
+	//glGenerateMipmap(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Mesh::Clear_Datas()
@@ -200,6 +197,7 @@ void Mesh::SetTexture()
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textureId[i]);
+			
 		}
 	}
 }
@@ -207,6 +205,7 @@ void Mesh::SetTexture()
 void Mesh::PushTextureId(unsigned id)
 {
 	textureId.push_back(id);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureId.back(), 0);
 }
 
 void Mesh::ClearTextureIds()

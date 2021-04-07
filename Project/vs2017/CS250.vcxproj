@@ -141,8 +141,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Sphere_mesh.cpp" />
+    <ClCompile Include="..\Texture.cpp" />
     <ClCompile Include="..\UniformManager.cpp" />
     <ClCompile Include="..\Water.cpp" />
+    <ClCompile Include="..\WaterFrameBuffer.cpp" />
+    <ClCompile Include="FrameBufferTexturing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Affine.h">
@@ -183,9 +186,12 @@
     <ClInclude Include="..\SnubDodecMesh.h" />
     <ClInclude Include="..\Sphere_mesh.h" />
     <ClInclude Include="..\State.h" />
+    <ClInclude Include="..\Texture.h" />
     <ClInclude Include="..\UniformManager.h" />
     <ClInclude Include="..\Water.h" />
+    <ClInclude Include="..\WaterFrameBuffer.h" />
     <ClInclude Include="Affine2.h" />
+    <ClInclude Include="FrameBufferTexturing.h" />
     <ClInclude Include="SimpleMeshes.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

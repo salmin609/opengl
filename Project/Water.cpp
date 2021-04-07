@@ -19,9 +19,10 @@ void Water::SetVertices()
 
 	Init_VAO();
 	Init_VBO(v, &vbo_id, sizeof(v), 0, 0, 0, 3);
-	Initialize_Texture(std::string(), 200, 200, 1);
-	//Initialize_Texture(std::string(), 200, 200);
-	shader->SendUniformInt("reflect", 0);
-	shader->SendUniformInt("refract", 1);
-	//ClearTextureIds();
+	textureId.clear();
+	shader->SendUniformInt("reflectTexture", 0);
+	shader->SendUniformInt("refractTexture", 1);
+	shader->SendUniformInt("dudvMap", 2);
+	shader->SendUniformInt("normalMap", 3);
+	shader->SendUniformInt("depthMap", 4);
 }

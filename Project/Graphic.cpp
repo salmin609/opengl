@@ -75,9 +75,7 @@ void Graphic::InitUniformBlockMatrices()
 
 void Graphic::Draw(float dt)
 {
-	(dt);
-	//ClearBuffers();
-	drawingManager->Drawing();
+	drawingManager->Drawing(dt);
 }
 
 void Graphic::mousewheel(SDL_Event event)

@@ -62,7 +62,7 @@ void CameraManager::Move(SDL_Keycode keycode)
 
 void CameraManager::CameraReInit()
 {
-	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 1.f, 50.f);
+	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.1f, 1000.f);
 }
 
 void CameraManager::CameraMovement(SDL_Event event)

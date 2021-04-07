@@ -16,9 +16,9 @@ Level4::Level4()
 	obcidianMat.specular = Vector(0.332741f, 0.328634f, 0.346435f);
 	obcidianMat.shiness = 0.3f;
 
-
 	water = new Water();
-	ground = new Object(&cube_mesh, Point(0.f, 0.f, 0.f), nullptr);
+	ground = new Object(&cube_mesh, Point(0.f, -3.f, 0.f), nullptr);
+	downCube = new Object(&cube_mesh, Point(0.f, -3.f, 0.f), &obcidianMat);
 
 	upFirstSnub = new Object(&snub_mesh, Point(1.f, 2.f, 0.f), &emeraldMat);
 	upSecondSnub = new Object(&snub_mesh, Point(-1.f, 2.f, 0.f), &emeraldMat);
@@ -27,6 +27,7 @@ Level4::Level4()
 	downSecondSnub = new Object(&snub_mesh, Point(-1.f, -2.f, 0.f), &obcidianMat);
 
 	waterObj = new Object(water, Point{ 0.f, 1.f, 0.f }, nullptr);
+	downCube->Set_Scale(Vector(10.f, -0.1f, 10.f));
 	ground->Set_Scale(Vector(10.f, -0.1f, 10.f));
 	waterObj->Set_Scale(Vector(10.f, -0.1f, 10.f));
 	upFirstSnub->Set_Scale(0.35f);
@@ -43,7 +44,9 @@ void Level4::Load()
 	Graphic::objects.push_back(upSecondSnub);
 	Graphic::objects.push_back(downFirstSnub);
 	Graphic::objects.push_back(downSecondSnub);
-	Graphic::ground = nullptr;
+	//Graphic::objects.push_back(downCube);
+	Graphic::objects.push_back(Graphic::light);
+	//Graphic::ground = ground;
 	Graphic::water = waterObj;
 }
 

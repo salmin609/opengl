@@ -21,6 +21,7 @@ private:
 	Object* upSecondSnub;
 	Object* downFirstSnub;
 	Object* downSecondSnub;
+	Object* downCube;
 	SnubDodecMesh snub_mesh;
 	CubeMesh cube_mesh;
 	Water* water;

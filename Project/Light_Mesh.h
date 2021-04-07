@@ -1,6 +1,6 @@
-#include "SimpleCube_Mesh.h"
+#include "SnubDodecMesh.h"
 
-class Light_Mesh : public SimpleCubeMesh
+class Light_Mesh : public SnubDodecMesh
 {
 public:
 	Light_Mesh();

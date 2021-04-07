@@ -18,8 +18,8 @@ int main(int /*argc*/, char* /*argv*/[]) {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 	const char* title = "CS250: Project#2 Kimsangmin";
-	int width = 600,
-		height = 600;
+	int width = 1024,
+		height = 768;
 	SDL_Window* window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, width, height,
 		SDL_WINDOW_OPENGL);

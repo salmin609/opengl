@@ -84,6 +84,17 @@ SnubDodecMesh::SnubDodecMesh()
     Initialize_Object_Mesh();
 }
 
+SnubDodecMesh::SnubDodecMesh(std::string vertexPath, std::string fragPath)
+{
+    SnubDodecMesh::SetVertices();
+
+    SetNormal();
+    InitializeVerticesDatas();
+    InitializeElement();
+    //InitializeNormalDatas();
+    Initialize_Object_Mesh(vertexPath, fragPath);
+}
+
 void SnubDodecMesh::SetVertices()
 {
     const int vert_count = VertexCount();

@@ -65,7 +65,7 @@ void Object::Draw()
 		glDrawArrays(GL_TRIANGLES, 0, mesh->FaceCount() * 3);
 	}
 
-	End_Draw();
+	//End_Draw();
 }
 
 
@@ -79,10 +79,10 @@ void Object::Select_Mesh()
 {
 	shader_id = mesh->Get_Shader_Id();
 	vao_id = mesh->Get_VAO_Id();
-	mesh->SetTexture();
 
 	glUseProgram(shader_id);
 	glBindVertexArray(vao_id);
+	mesh->SetTexture();
 
 	if (mesh->IsElemented())
 	{
@@ -111,10 +111,10 @@ void Object::Send_Uniform(Matrix world_mat)
 	uniforms("light_.specular", &lightInfo.specular);
 	uniforms("color_val", &objInfo.color);
 
-	int tempVal = 0;
-	int tempVal2 = 1;
-	uniforms("reflect", &tempVal);
-	uniforms("refract", &tempVal2);
+	//int tempVal = 0;
+	//int tempVal2 = 1;
+	//uniforms("reflect", &tempVal);
+	//uniforms("refract", &tempVal2);
 }
 
 void Object::Set_Light_Pos(Point light)
