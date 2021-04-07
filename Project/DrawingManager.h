@@ -35,7 +35,7 @@ private:
 	Matrix ndcMat;
 	
 	size_t objectsSize;
-	//SkyBox* skyBox;
+	SkyBox* skyBox;
 	FrameBufferObject* frameBufferObj;
  	FrameBufferObject* waterReflectframeBufferObj;
 	FrameBufferObject* waterReflactframeBufferObj;
@@ -43,9 +43,14 @@ private:
 	OutLine* outLine;
 	FrameBuffer* reflectFramebuffer;
 	FrameBuffer* refractFramebuffer;
+	FrameBuffer* checkBuffer;
 	Texture* waterDuDv;
 	Texture* normalMap;
 
+	unsigned quadVao;
+	unsigned quadVbo;
+	Shader* frameBufferObjectShader;
+	
 	float moveSpeed = 0.03f;
 	float moveFactor = 0.f;
 };

@@ -60,7 +60,7 @@ void main(void)
 	refractiveFactor = clamp(refractiveFactor, 0.001, 0.999);
 
 	vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
-	float specular = max(dot(reflectedLight, viewVec), 0.0);
+	float specular = max(dot(reflectedLight, viewVec), 0.1);
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = lightColor * specular * 0.5;
 

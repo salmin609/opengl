@@ -75,9 +75,8 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 
 void FrameBufferObject::Bind() const
 {
-	//glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
-	glViewport(0, 0, 1024, 768);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void FrameBufferObject::UnBind()
@@ -91,6 +90,7 @@ void FrameBufferObject::Use()
 	//UseFrameBuffer(fboSrc);
 	glBindVertexArray(quadVao);
 	glDisable(GL_DEPTH_TEST);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

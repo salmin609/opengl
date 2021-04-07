@@ -12,14 +12,10 @@ DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject(0);
-	//waterReflectframeBufferObj = new FrameBufferObject(0, 200, 200);
-	//waterReflactframeBufferObj = new FrameBufferObject(0, 200, 200);
-	//waterFrameBuffer = new WaterFrameBuffer();
 	reflectFramebuffer = new FrameBuffer();
 	refractFramebuffer = new FrameBuffer();
-	//Graphic::water->Get_Mesh()->PushTextureId(waterReflectframeBufferObj->GetTextureColorBufferId());
-	//Graphic::water->Get_Mesh()->PushTextureId(waterReflactframeBufferObj->GetTextureColorBufferId());
-	//skyBox = new SkyBox();
+	checkBuffer = new FrameBuffer();
+	skyBox = new SkyBox();
 	waterDuDv = new Texture("dudvMap.png");
 	normalMap = new Texture("normal.png");
 }
@@ -43,9 +39,9 @@ void DrawingManager::Drawing(float dt)
 	glBindBuffer(GL_UNIFORM_BUFFER, Graphic::instance->GetUboMatricesId());
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Affine), sizeof(Affine), &transposed);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	bool isWaterExist = Graphic::water != nullptr;
 
-
-	if (Graphic::water != nullptr)
+	if (isWaterExist)
 	{
 		glEnable(GL_CLIP_DISTANCE0);
 		reflectFramebuffer->Bind();
@@ -61,18 +57,25 @@ void DrawingManager::Drawing(float dt)
 		glDisable(GL_CLIP_DISTANCE0);
 	}
 	
-	//frameBufferObj->Bind();
+	if (!isWaterExist)
+	{
+		frameBufferObj->Bind();
+	}
 	glViewport(0, 0, 1024, 768);
 	ClearBuffer();
 	DrawingGround();
 	DrawingShadow();
 	DrawingWater();
-	//DrawLight();
+	skyBox->Draw(ndcMat);
 	outLine->OutlinePrepare();
 	DrawingObjs();
 	outLine->Draw();
-	//frameBufferObj->UnBind();
-	//frameBufferObj->Use();
+
+	if (!isWaterExist)
+	{
+		frameBufferObj->UnBind();
+		frameBufferObj->Use();
+	}
 }
 
 void DrawingManager::ClearBuffer()
