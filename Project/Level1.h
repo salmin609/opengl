@@ -20,8 +20,8 @@ public:
 private:
 	SnubDodecMesh snub_mesh;
 	CubeMesh cube_mesh;
-	SimpleCubeMesh simplecube_mesh;
-	SphereMesh sphere_mesh;
+	//SimpleCubeMesh simplecube_mesh;
+	//SphereMesh sphere_mesh;
 	Light_Mesh light_mesh;
 	LoadedObj* deerObj;
 	LoadedObj* quadObj;

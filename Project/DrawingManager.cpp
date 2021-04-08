@@ -15,7 +15,7 @@ DrawingManager::DrawingManager()
 	reflectFramebuffer = new FrameBuffer();
 	refractFramebuffer = new FrameBuffer();
 	checkBuffer = new FrameBuffer();
-	skyBox = new SkyBox();
+	//skyBox = new SkyBox();
 	waterDuDv = new Texture("dudvMap.png");
 	normalMap = new Texture("normal.png");
 }
@@ -66,7 +66,7 @@ void DrawingManager::Drawing(float dt)
 	DrawingGround();
 	DrawingShadow();
 	DrawingWater();
-	skyBox->Draw(ndcMat);
+	//skyBox->Draw(ndcMat);
 	outLine->OutlinePrepare();
 	DrawingObjs();
 	outLine->Draw();

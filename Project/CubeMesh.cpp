@@ -27,42 +27,9 @@ const CubeMesh::Edge CubeMesh::edges[12] = {
 CubeMesh::CubeMesh()
 {
 	CubeMesh::SetVertices();
-	InitializeTextureObj("container.png");
+	Initialize(shader_object_vertex.c_str(), shader_object_fragment.c_str());
 }
 
-int CubeMesh::VertexCount()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, return just size of vertices using magic number.
-	*/
-	return 8;
-}
-
-Point CubeMesh::GetVertex(int i)
-{
-	return vertices[i];
-}
-
-Vector CubeMesh::Dimensions()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, value is fixed with {-1, 1},
-	*	return the calculated delta x,y,z.
-	*/
-	return Vector(2.f, 2.f, 2.f);
-}
-
-Point CubeMesh::Center()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, value is fixed with {-1, 1},
-	*	return the calculated center value.
-	*/
-	return Point(0.f, 0.f, 0.f);
-}
 
 int CubeMesh::FaceCount()
 {
@@ -73,27 +40,9 @@ int CubeMesh::FaceCount()
 	return 12;
 }
 
-Mesh::Face CubeMesh::GetFace(int i)
-{
-	return faces[i];
-}
-
-int CubeMesh::EdgeCount()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the edges is const static array, return just size of edges using magic number.
-	*/
-	return 12;
-}
-
-Mesh::Edge CubeMesh::GetEdge(int i)
-{
-	return edges[i];
-}
 void CubeMesh::SetVertices()
 {
-	const int vert_count = VertexCount();
+	const int vert_count = 8;
 
 	const Point vertarr[] = {
 		Point(1, -1, 1),
@@ -112,4 +61,42 @@ void CubeMesh::SetVertices()
 	{
 		normal.push_back(Hcoord());
 	}
+
+	const int faceSize = FaceCount();
+
+	for (int i = 0; i < faceSize; ++i)
+	{
+		Face face = faces[i];
+		const int index1 = face.index1;
+		const int index2 = face.index2;
+		const int index3 = face.index3;
+
+		elements.push_back(index1);
+		elements.push_back(index2);
+		elements.push_back(index3);
+	}
+
+	for (int i = 0; i < faceSize; ++i)
+	{
+		Face face = faces[i];
+		const int index1 = face.index1;
+		const int index2 = face.index2;
+		const int index3 = face.index3;
+
+		Point P = vertices[index1];
+		Point Q = vertices[index2];
+		Point R = vertices[index3];
+
+		const Vector Q_minus_P = Q - P;
+		const Vector R_minus_P = R - P;
+
+		Vector orientation_vec(cross(Q_minus_P, R_minus_P));
+
+		orientation_vec = normalize(orientation_vec);
+
+		normal[index1] += orientation_vec;
+		normal[index2] += orientation_vec;
+		normal[index3] += orientation_vec;
+	}
+	InitializeVerticesDatas();
 }

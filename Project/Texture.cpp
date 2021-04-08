@@ -6,18 +6,19 @@ Texture::Texture(const std::string& fileName, bool hasTransparency) : fileName(f
 	//BYTE* pixels = ImageUtils::Load_Image(fileName.c_str(), &width, &height);
 
 	Image tempImage;
-	unsigned char* pixel = tempImage.Load_Image(fileName, width, height, false);
+	unsigned char* pixel = tempImage.Load_Image(fileName, width, height, true);
 	this->hasTransparency = hasTransparency;
-
 	glGenTextures(1, &textureID);
 	Bind();
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixel);
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
 	Unbind();
 }
 

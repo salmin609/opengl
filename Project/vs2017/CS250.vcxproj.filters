@@ -113,6 +113,9 @@
     <ClCompile Include="FrameBufferTexturing.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\VAO.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -286,6 +289,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="FrameBufferTexturing.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VAO.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

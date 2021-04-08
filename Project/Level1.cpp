@@ -46,8 +46,8 @@ void Level1::UnLoad()
 
 void Level1::Init_Objects()
 {
-	center_circle = new Object(&snub_mesh, Point(0.f, 1.f, 0.f), &emerald, &sphere_mesh);
-	right_circle = new Object(&snub_mesh, Point(2.f, 1.f, 0.f), &obsidian, &sphere_mesh);
+	center_circle = new Object(&snub_mesh, Point(0.f, 1.f, 0.f), &emerald);
+	right_circle = new Object(&snub_mesh, Point(2.f, 1.f, 0.f), &obsidian);
 	light = new Object(&light_mesh, Point{ 1.f, 3.f, 0.f }, &pearl, WHITE);
 	ground = new Object(&cube_mesh, Point(0.f, 0.f, 0.f), &emerald);
 	deer = new Object(deerObj, Point(0.f, 1.f, 0.f), nullptr);

@@ -143,6 +143,7 @@
     <ClCompile Include="..\Sphere_mesh.cpp" />
     <ClCompile Include="..\Texture.cpp" />
     <ClCompile Include="..\UniformManager.cpp" />
+    <ClCompile Include="..\VAO.cpp" />
     <ClCompile Include="..\Water.cpp" />
     <ClCompile Include="..\WaterFrameBuffer.cpp" />
     <ClCompile Include="FrameBufferTexturing.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="..\State.h" />
     <ClInclude Include="..\Texture.h" />
     <ClInclude Include="..\UniformManager.h" />
+    <ClInclude Include="..\VAO.h" />
     <ClInclude Include="..\Water.h" />
     <ClInclude Include="..\WaterFrameBuffer.h" />
     <ClInclude Include="Affine2.h" />

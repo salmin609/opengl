@@ -9,11 +9,9 @@ public:
 	virtual unsigned GetVAOId();
 	virtual unsigned GetShaderId();
 	virtual void SetVertices() = 0;
-	//void InitializeTextureCoord();
-	void InitializeElement();
+	//void InitializeElement();
 	void InitializeVerticesDatas();
-	//void InitializeNormalDatas();
-	void SetNormal();
+	//void SetNormal();
 	void InitializeTextureObj(std::string sprite_path);
 protected:
 	std::vector<Hcoord> normal;

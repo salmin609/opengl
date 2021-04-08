@@ -13,10 +13,12 @@
 #include <vector>
 #include <string>
 #include "Affine.h"
-#include "Image.h"
 #include "ParticleInstance.h"
 #include "Shader_Table.hpp"
 #include "Shader.h"
+
+class Texture;
+class VAO;
 
 struct Mesh {
 
@@ -39,54 +41,36 @@ struct Mesh {
 		glDeleteProgram(shader->GetShaderId());
 		delete shader;
 	}
-	virtual int VertexCount(void) = 0;
-	virtual Point GetVertex(int i) = 0;
-	virtual Vector Dimensions(void) = 0;
-	virtual Point Center(void) = 0;
+	
 	virtual int FaceCount(void) = 0;
-	virtual Face GetFace(int i) = 0;
-	virtual int EdgeCount(void) = 0;
-	virtual Edge GetEdge(int i) = 0;
 	virtual unsigned Get_VAO_Id();
 	virtual unsigned Get_Shader_Id();
-	unsigned Get_Texture_Id() const;
-	unsigned Get_Seconde_Texture_Id() const;
-	std::vector<unsigned>& GetTextureId();
 
 	void Initialize(const char* vertexPath, const char* fragmentPath);
-	void Initialize_Object_Mesh(std::string vertex_path = shader_object_vertex, std::string frag_path = shader_object_fragment);
-	void Initialize_Texture(std::string sprite_path, int width, int height, unsigned textureNum = 1);
-	void InitializeTexturedObj(std::string sprite_path, std::string vertex_path = shader_texture_vertex, std::string frag_path = shader_texture_fragment);
+	void InitializeTexturedObj(std::string spritePath, std::string vertex = shader_texture_vertex, std::string fragment = shader_texture_fragment);
+	void Initialize_Texture(std::string sprite_path);
 	void InitializeInstanceObj(std::string spritePath, std::string vertexPath = shaderInstanceVertex, std::string fragPath = shaderInstanceFragment);
 	void InitializeColoredParticle(std::string vertexPath, std::string fragmentPath);
-	void Clear_Datas();
-	bool Get_Is_Textured() const;
 	void SetTexture();
-	void PushTextureId(unsigned id);
-	void ClearTextureIds();
-	bool isTextureSlotEmpty();
 	bool IsElemented();
 	unsigned GetElementId();
-	bool IsQuadObj();
 	Shader* GetShader();
 	void Init_VAO();
 	void Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, void* offset, int index, int vec_size, GLenum drawingType = GL_STATIC_DRAW, bool isNormalize = false);
-	static void Unbind();
+	void Unbind();
 	bool IsInstancing();
 	int InstancingNum() const;
-	void MoveParticle(float dt);
 protected:
 	Shader* shader = nullptr;
 	unsigned vao_id = 0;
 	unsigned vbo_id = 0;
 	unsigned color_id = 0;
 	unsigned rotateId = 0;
-	unsigned vbo_normal = 0;
 	unsigned elementId = 0;
-	unsigned texture_id = 0;
-	unsigned specular_texture_id = 0;
 	unsigned instancingId = 0;
 	unsigned matrixId = 0;
+	//Texture* texture;
+	std::vector<Texture*> textures;
 	std::vector<unsigned> textureId;
 	std::vector<unsigned int> elements;
 	
@@ -95,16 +79,12 @@ protected:
 	
 	std::vector<ParticleInstance> particles;
 	
-	/*std::vector<Vector> particleTranslation;
-	std::vector<Vector> particleColor;
-	std::vector<Vector> particleRotate;
-	*/
 	int instancingNum;
 	int particleNum;
-	bool is_textured = false;
 	bool isQuad = false;
 	bool isInstancing = false;
 	float timer;
+	VAO* vao;
 };
 
 

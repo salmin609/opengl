@@ -38,43 +38,9 @@ const SphereMesh::Edge SphereMesh::edges[12] = {
 
 SphereMesh::SphereMesh()
 {
-	Set_Normal();
+	//Set_Normal();
 	//Initialize_Shadow_Mesh();
 	Initialize(shader_shadow_vertex.c_str(), shader_shadow_fragment.c_str());
-}
-
-int SphereMesh::VertexCount()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, return just size of vertices using magic number.
-	*/
-	return 9;
-}
-
-Point SphereMesh::GetVertex(int i)
-{
-	return vertices[i];
-}
-
-Vector SphereMesh::Dimensions()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, value is fixed with {-1, 1},
-	*	return the calculated delta x,y,z.
-	*/
-	return Vector(2.f, 2.f, 2.f);
-}
-
-Point SphereMesh::Center()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the vertices is const static array, value is fixed with {-1, 1},
-	*	return the calculated center value.
-	*/
-	return Point(0.f, 0.f, 0.f);
 }
 
 int SphereMesh::FaceCount()
@@ -86,53 +52,3 @@ int SphereMesh::FaceCount()
 	return 8;
 }
 
-Mesh::Face SphereMesh::GetFace(int i)
-{
-	return faces[i];
-}
-
-int SphereMesh::EdgeCount()
-{
-	/*
-	*	Since professor mentioned "as simple as possible", and
-	*	also the edges is const static array, return just size of edges using magic number.
-	*/
-	return 12;
-}
-
-Mesh::Edge SphereMesh::GetEdge(int i)
-{
-	return edges[i];
-}
-
-void SphereMesh::Set_Normal()
-{
-	const size_t face_count = FaceCount();
-
-	const Point E(0.f, 0.f, 0.f);
-
-	for (size_t i = 0; i < face_count; ++i)
-	{
-		const Mesh::Face face = GetFace(static_cast<int>(i));
-
-		const Point P = vertices[face.index1];
-		const Point Q = vertices[face.index2];
-		const Point R = vertices[face.index3];
-
-		const Vector Q_minus_P = Q - P;
-		const Vector R_minus_P = R - P;
-
-		Vector orientation_vec(cross(Q_minus_P, R_minus_P));
-
-		orientation_vec = normalize(orientation_vec);
-
-		Add_Vetrtex(P, Q, R);
-	}
-}
-
-void SphereMesh::Add_Vetrtex(Point P, Point Q, Point R)
-{
-	vertexDatas.push_back(Vertex{ P.x, P.y, P.z });
-	vertexDatas.push_back(Vertex{ Q.x, Q.y, Q.z });
-	vertexDatas.push_back(Vertex{ R.x, R.y, R.z });
-}

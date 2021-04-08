@@ -267,8 +267,3 @@ void Object::SetPlane(const Hcoord& planeVec)
 	planeVector = planeVec;
 	uniforms("plane", &planeVector);
 }
-
-std::vector<unsigned>& Object::GetTextureSlot()
-{
-	return mesh->GetTextureId();
-}

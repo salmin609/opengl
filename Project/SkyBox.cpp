@@ -2,6 +2,7 @@
 #include "Graphic.h"
 #include "Projection.h"
 #include "vs2017/SimpleMeshes.h"
+#include "Image.h"
 SkyBox::SkyBox()
 {
 	skyboxShader = new Shader(shaderSkyboxVertex.c_str(),

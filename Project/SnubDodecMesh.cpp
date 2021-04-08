@@ -76,29 +76,17 @@ Mesh::Edge SnubDodecMesh::edges[150] = {
 SnubDodecMesh::SnubDodecMesh()
 {
     SnubDodecMesh::SetVertices();
-
-    SetNormal();
-    InitializeVerticesDatas();
-    InitializeElement();
-    //InitializeNormalDatas();
-    Initialize_Object_Mesh();
+    Initialize(shader_object_vertex.c_str(), shader_object_fragment.c_str());
 }
 
 SnubDodecMesh::SnubDodecMesh(std::string vertexPath, std::string fragPath)
 {
     SnubDodecMesh::SetVertices();
-
-    SetNormal();
-    InitializeVerticesDatas();
-    InitializeElement();
-    //InitializeNormalDatas();
-    Initialize_Object_Mesh(vertexPath, fragPath);
+    Initialize(vertexPath.c_str(), fragPath.c_str());
 }
 
 void SnubDodecMesh::SetVertices()
 {
-    const int vert_count = VertexCount();
-
     const Point vertarr[] = {
     	Point(0.8734f, 0.2507f, 0.2840f), Point(-0.1461f, -0.9260f, -0.1655f),
         Point(-0.7273f, 0.4871f, 0.3743f), Point(0.1655f, 0.1461f, -0.9260f),
@@ -131,10 +119,48 @@ void SnubDodecMesh::SetVertices()
         Point(-0.6421f, 0.6250f, -0.3216f), Point(0.6250f, -0.3216f, -0.6421f),
         Point(0.3216f, 0.6421f, 0.6250f), Point(-0.6421f, -0.6250f, 0.3216f) };
 
-    vertices.insert(vertices.end(), vertarr, vertarr + vert_count);
+    vertices.insert(vertices.end(), vertarr, vertarr + 60);
 
-    for (int i = 0; i < vert_count; ++i)
+    for (int i = 0; i < 60; ++i)
     {
         normal.push_back(Hcoord());
     }
+
+    const int faceSize = FaceCount();
+
+    for (int i = 0; i < faceSize; ++i)
+    {
+        Face face = faces[i];
+        const int index1 = face.index1;
+        const int index2 = face.index2;
+        const int index3 = face.index3;
+
+        elements.push_back(index1);
+        elements.push_back(index2);
+        elements.push_back(index3);
+    }
+
+    for (int i = 0; i < faceSize; ++i)
+    {
+        Face face = faces[i];
+        const int index1 = face.index1;
+        const int index2 = face.index2;
+        const int index3 = face.index3;
+
+        Point P = vertices[index1];
+        Point Q = vertices[index2];
+        Point R = vertices[index3];
+
+        const Vector Q_minus_P = Q - P;
+        const Vector R_minus_P = R - P;
+
+        Vector orientation_vec(cross(Q_minus_P, R_minus_P));
+
+        orientation_vec = normalize(orientation_vec);
+
+        normal[index1] += orientation_vec;
+        normal[index2] += orientation_vec;
+        normal[index3] += orientation_vec;
+    }
+    InitializeVerticesDatas();
 }

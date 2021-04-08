@@ -57,7 +57,6 @@ public:
     void IncreScale();
     bool IsElemented();
     void SetPlane(const Hcoord& planeVec);
-    std::vector<unsigned>& GetTextureSlot();
 private:
     struct LightInfo
     { 
