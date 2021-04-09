@@ -30,4 +30,11 @@ void Level2::Update(float dt)
 
 void Level2::UnLoad()
 {
+	
+}
+
+Level2::~Level2()
+{
+	delete objMesh;
+	delete obj;
 }

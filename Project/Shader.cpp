@@ -48,14 +48,15 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 * Create & Compile fragment shader.
 	 * Check the compile status.
 	 */
-	const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, &f_shader_code, 0);
-	glCompileShader(fragment_shader);
+	//const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderId, 1, &f_shader_code, 0);
+	glCompileShader(fragmentShaderId);
 
-	glGetProgramiv(fragment_shader, GL_COMPILE_STATUS, &is_succeed);
+	glGetProgramiv(fragmentShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
 	{
-		glDeleteShader(fragment_shader);
+		glDeleteShader(fragmentShaderId);
 		throw std::runtime_error("failed to compile fragment");
 	}
 
@@ -63,14 +64,15 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 * Create & Compile vertex shader.
 	 * Check the compile status.
 	 */
-	const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, &v_shader_code, 0);
-	glCompileShader(vertex_shader);
+	//const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderId, 1, &v_shader_code, 0);
+	glCompileShader(vertexShaderId);
 
-	glGetProgramiv(vertex_shader, GL_COMPILE_STATUS, &is_succeed);
+	glGetProgramiv(vertexShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
 	{
-		glDeleteShader(vertex_shader);
+		glDeleteShader(vertexShaderId);
 		throw std::runtime_error("failed to compile vertex");
 	}
 
@@ -78,11 +80,11 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 * 1.Create program, attach shader to the program.
 	 * 2.Link & Set use.
 	 */
-	shaderId = glCreateProgram();
-	glAttachShader(shaderId, fragment_shader);
-	glAttachShader(shaderId, vertex_shader);
-	glLinkProgram(shaderId);
-	glUseProgram(shaderId);
+	programId = glCreateProgram();
+	glAttachShader(programId, fragmentShaderId);
+	glAttachShader(programId, vertexShaderId);
+	glLinkProgram(programId);
+	glUseProgram(programId);
 
 	/*
 	 * Set the ucolor & aposition uniform variable.
@@ -90,11 +92,11 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 //ucolor = glGetUniformLocation(program, "color");
 	 //aposition = glGetAttribLocation(program, "position");
 
-	glGetProgramiv(shaderId, GL_LINK_STATUS, &is_succeed);
+	glGetProgramiv(programId, GL_LINK_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
 	{
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
+		glDeleteShader(vertexShaderId);
+		glDeleteShader(fragmentShaderId);
 		throw std::runtime_error("failed to link");
 	}
 
@@ -104,59 +106,102 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	/*
 	 * Done all stuff, delete both vertex and fragment shader.
 	 */
-	glDeleteShader(vertex_shader);
-	glDeleteShader(fragment_shader);
+	glDeleteShader(vertexShaderId);
+	glDeleteShader(fragmentShaderId);
 
-	unsigned int uniformBlockIndex = glGetUniformBlockIndex(shaderId, "Matrices");
-	glUniformBlockBinding(shaderId, uniformBlockIndex, 0);
+	unsigned int uniformBlockIndex = glGetUniformBlockIndex(programId, "Matrices");
+	glUniformBlockBinding(programId, uniformBlockIndex, 0);
+}
+
+Shader::Shader(const char* computeShader)
+{
+	std::ifstream stream(computeShader);
+	std::string file;
+	std::stringstream shader_stream;
+
+	if (stream.is_open())
+	{
+		shader_stream << stream.rdbuf();
+		stream.close();
+		file = shader_stream.str();
+	}
+	else
+	{
+		throw std::runtime_error("Failed to open compute shader file");
+	}
+
+	const char* v_shader_code = file.c_str();
+	
+	GLint is_succeed = 1;
+	computeShaderId = glCreateShader(GL_COMPUTE_SHADER);
+	glShaderSource(computeShaderId, 1, &v_shader_code, NULL);
+	glCompileShader(computeShaderId);
+
+	programId = glCreateProgram();
+	glAttachShader(programId, computeShaderId);
+	glLinkProgram(programId);
+
+	glGetProgramiv(programId, GL_LINK_STATUS, &is_succeed);
+
+	if(is_succeed == GL_FALSE)
+	{
+		throw std::runtime_error("compute shader link fail");
+	}
+
+	glDeleteShader(computeShaderId);
 }
 
 unsigned Shader::GetShaderId()
 {
-	return shaderId;
+	return programId;
 }
 
 void Shader::Use()
 {
-	glUseProgram(shaderId);
+	glUseProgram(programId);
 }
 
 void Shader::SendUniformMat(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniformMatrix4fv(loc, 1, GL_TRUE, valInFloat);
 }
 
 void Shader::SendUniformInt(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	int* valInInt = static_cast<int*>(val);
 	glUniform1i(loc, *valInInt);
 }
 
 void Shader::SendUniformInt(std::string uniformName, int val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	glUniform1i(loc, val);
 }
 
 void Shader::SendUniformFloat(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform1f(loc, *valInFloat);
 }
 
 void Shader::SendUniformFloat(std::string uniformName, float val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	glUniform1f(loc, val);
 }
 
 void Shader::SendUniformVec3(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(shaderId, uniformName.c_str());
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform3f(loc, valInFloat[0], valInFloat[1], valInFloat[2]);
+}
+
+Shader::~Shader()
+{
+	glDeleteProgram(programId);
 }

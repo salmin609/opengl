@@ -57,4 +57,17 @@ void Level4::Update(float dt)
 
 void Level4::UnLoad()
 {
+	
+}
+
+Level4::~Level4()
+{
+	delete waterObj;
+	delete ground;
+	delete upFirstSnub;
+	delete upSecondSnub;
+	delete downFirstSnub;
+	delete downSecondSnub;
+	delete downCube;
+	delete water;
 }

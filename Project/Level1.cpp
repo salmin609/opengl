@@ -41,7 +41,20 @@ void Level1::Update(float dt)
 
 void Level1::UnLoad()
 {
+}
 
+Level1::~Level1()
+{
+	delete center_circle;
+	delete left_cube;
+	delete right_cube;
+	delete right_circle;
+	delete light;
+	delete right_heart;
+	delete left_heart;
+	delete ground;
+	delete deer;
+	delete tree;
 }
 
 void Level1::Init_Objects()

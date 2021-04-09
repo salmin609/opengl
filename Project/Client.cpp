@@ -11,6 +11,7 @@
 #include "Level2.h"
 #include "Level3.h"
 #include "Level4.h"
+#include "Level5.h"
 
 Client::Client(void)
 {
@@ -20,6 +21,7 @@ Client::Client(void)
 	level2 = new Level2();
 	level3 = new Level3();
 	level4 = new Level4();
+	level5 = new Level5();
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;
@@ -73,6 +75,11 @@ void Client::Increase_Graphic_Level()
 		level4->Load();
 		currState = level4;
 	}
+	else if (currState == level4)
+	{
+		level5->Load();
+		currState = level5;
+	}
 }
 
 void Client::Decrease_Graphic_Level()
@@ -92,6 +99,11 @@ void Client::Decrease_Graphic_Level()
 		level3->Load();
 		currState = level3;
 	}
+	else if (currState == level5)
+	{
+		level4->Load();
+		currState = level4;
+	}
 }
 
 
@@ -100,8 +112,13 @@ void Client::Set_Prev_Mousepos(Point p)
 	graphic->Set_Prev_Mousepos(p);
 }
 
-Client::~Client(void) {
+Client::~Client(void)
+{
 	delete graphic;
+	delete level1;
+	delete level2;
+	delete level3;
+	delete level4;
 }
 
 void Client::Set_Selected_Null()

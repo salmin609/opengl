@@ -9,4 +9,5 @@ public:
     void MoveParticle(float dt);
 private:
     int faceCount = 12;
+	
 };

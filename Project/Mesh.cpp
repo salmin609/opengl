@@ -188,7 +188,28 @@ void Mesh::Init_VBO(void* data, unsigned* slot, size_t arr_size, int stride, voi
 void Mesh::Unbind()
 {
 	glBindVertexArray(0);
+
+	const size_t texturesSize = textures.size();
+
+	for(size_t i = 0 ; i < texturesSize; ++i)
+	{
+		textures[i]->Unbind();
+	}
 }
+
+Mesh::~Mesh(void)
+{
+	glDeleteVertexArrays(1, &vao_id);
+	glDeleteBuffers(1, &vbo_id);
+	delete shader;
+
+	const size_t texturesSize = textures.size();
+	for(size_t i = 0 ; i < texturesSize; ++i)
+	{
+		delete textures[i];
+	}
+}
+
 
 
 bool Mesh::IsInstancing()

@@ -9,7 +9,7 @@ public:
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
-
+	~Level3();
 private:
 	Particle* particle;
 	Object* object;

@@ -34,14 +34,7 @@ struct Mesh {
 			: index1(i), index2(j) {}
 	};
 
-	virtual ~Mesh(void)
-	{
-		glDeleteVertexArrays(1, &vao_id);
-		glDeleteBuffers(1, &vbo_id);
-		glDeleteProgram(shader->GetShaderId());
-		delete shader;
-	}
-	
+	virtual ~Mesh(void);
 	virtual int FaceCount(void) = 0;
 	virtual unsigned Get_VAO_Id();
 	virtual unsigned Get_Shader_Id();
@@ -69,9 +62,8 @@ protected:
 	unsigned elementId = 0;
 	unsigned instancingId = 0;
 	unsigned matrixId = 0;
-	//Texture* texture;
+	
 	std::vector<Texture*> textures;
-	std::vector<unsigned> textureId;
 	std::vector<unsigned int> elements;
 	
 	std::vector<Vertex> vertexDatas;

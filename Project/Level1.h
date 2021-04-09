@@ -14,6 +14,7 @@ public:
 	virtual void Load();
 	virtual void Update(float dt);
 	virtual void UnLoad();
+	~Level1();
 	void Init_Objects();
 	void Initialize_Material();
 

@@ -116,6 +116,12 @@
     <ClCompile Include="..\VAO.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\WaterRenderer.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Level5.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -159,6 +165,9 @@
     </Filter>
     <Filter Include="Header\Discarded\ShadowMesh">
       <UniqueIdentifier>{0ec22d02-86e4-41d6-9174-5a70f302687e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Compute">
+      <UniqueIdentifier>{49b1fe88-db2d-47b1-b780-63cecb4f525a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -294,6 +303,12 @@
     <ClInclude Include="..\VAO.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\WaterRenderer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Level5.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -364,6 +379,15 @@
     </None>
     <None Include="WaterVertex.glsl">
       <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="ComputeShader.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="ComputeShaderPrefix.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="ComputeShaderBasic.glsl">
+      <Filter>Shaders\Compute</Filter>
     </None>
   </ItemGroup>
 </Project>

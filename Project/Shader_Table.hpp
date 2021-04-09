@@ -23,3 +23,6 @@ const static std::string shaderParticleColoredVertex = "ParticleColoredVertex.gl
 const static std::string shaderParticleColoredFragment = "ParticleColoredFragment.glsl";
 const static std::string shaderWaterVertex = "WaterVertex.glsl";
 const static std::string shaderWaterFragment = "WaterFragment.glsl";
+const static std::string shaderCompute = "ComputeShader.glsl";
+const static std::string shaderComputePrefix = "ComputeShaderPrefix.glsl";
+const static std::string shaderComputeBasic = "ComputeShaderBasic.glsl";

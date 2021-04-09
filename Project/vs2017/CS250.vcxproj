@@ -114,6 +114,7 @@
     <ClCompile Include="..\Level2.cpp" />
     <ClCompile Include="..\Level3.cpp" />
     <ClCompile Include="..\Level4.cpp" />
+    <ClCompile Include="..\Level5.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="..\VAO.cpp" />
     <ClCompile Include="..\Water.cpp" />
     <ClCompile Include="..\WaterFrameBuffer.cpp" />
+    <ClCompile Include="..\WaterRenderer.cpp" />
     <ClCompile Include="FrameBufferTexturing.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +169,7 @@
     <ClInclude Include="..\Level2.h" />
     <ClInclude Include="..\Level3.h" />
     <ClInclude Include="..\Level4.h" />
+    <ClInclude Include="..\Level5.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="..\VAO.h" />
     <ClInclude Include="..\Water.h" />
     <ClInclude Include="..\WaterFrameBuffer.h" />
+    <ClInclude Include="..\WaterRenderer.h" />
     <ClInclude Include="Affine2.h" />
     <ClInclude Include="FrameBufferTexturing.h" />
     <ClInclude Include="SimpleMeshes.h" />
@@ -199,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ToonifyPostPorcessiongFilterFragment.glsl" />
+    <None Include="ComputeShader.glsl" />
+    <None Include="ComputeShaderBasic.glsl" />
+    <None Include="ComputeShaderPrefix.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />

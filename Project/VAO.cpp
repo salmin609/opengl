@@ -25,6 +25,36 @@ void VAO::Init(const std::vector<Vertex>& datas)
 	glEnableVertexAttribArray(2);
 }
 
+void VAO::Init(float* data, int size, int indexNum, const std::vector<int> sizePerIndex)
+{
+	glBindVertexArray(vaoId);
+
+	glGenBuffers(1, &vboSlotId);
+	glBindBuffer(GL_ARRAY_BUFFER, vboSlotId);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+
+	const size_t sizeVecSize = sizePerIndex.size();
+	int stride = 0;
+	for(size_t i = 0 ; i < sizeVecSize; ++i)
+	{
+		stride += sizePerIndex[i];
+	}
+	size_t offset = 0;
+	for(int i = 0; i < indexNum; ++i)
+	{
+		const unsigned sizeOfIndex = sizePerIndex[i];
+		glVertexAttribPointer(i, sizeOfIndex, GL_FLOAT, GL_FALSE, stride * sizeof(float), (GLvoid*)offset);
+		glEnableVertexAttribArray(i);
+		offset += sizePerIndex[i] * sizeof(float);
+	}
+}
+
+void VAO::Bind()
+{
+	shader->Use();
+	glBindVertexArray(vaoId);
+}
+
 unsigned VAO::GetId()
 {
 	return vaoId;

@@ -1,5 +1,5 @@
 #include "FrameBufferTexturing.h"
-
+#include "Texture.h"
 #include <GL/glew.h>
 
 FrameBuffer::FrameBuffer()
@@ -9,17 +9,13 @@ FrameBuffer::FrameBuffer()
 	glGenFramebuffers(1, &framebufferId);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
 
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture = new Texture();
 
 	glGenTextures(1, &depthId);
 	glBindTexture(GL_TEXTURE_2D, depthId);
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, width, height);
 	
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureId, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture->GetTextureId(), 0);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthId, 0);
 
 	static const GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
@@ -30,7 +26,7 @@ FrameBuffer::FrameBuffer()
 
 unsigned FrameBuffer::TextureId()
 {
-	return textureId;
+	return texture->GetTextureId();
 }
 
 unsigned FrameBuffer::DepthTextureId()
@@ -56,7 +52,7 @@ void FrameBuffer::Use(unsigned vaoId, unsigned shaderId)
 	glBindVertexArray(vaoId);
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, texture->GetTextureId());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

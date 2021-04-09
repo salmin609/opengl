@@ -65,7 +65,7 @@ void Object::Draw()
 		glDrawArrays(GL_TRIANGLES, 0, mesh->FaceCount() * 3);
 	}
 
-	//End_Draw();
+	End_Draw();
 }
 
 

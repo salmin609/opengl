@@ -1,5 +1,6 @@
 #pragma once
 
+class Texture;
 class FrameBuffer
 {
 public:
@@ -10,7 +11,7 @@ public:
 	void UnBind();
 	void Use(unsigned vaoId, unsigned shaderId);
 private:
-	unsigned textureId;
+	Texture* texture;
 	unsigned depthId;
 	unsigned renderId;
 	unsigned framebufferId;

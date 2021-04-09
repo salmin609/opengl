@@ -11,6 +11,7 @@ public:
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
+	~Level2();
 private:
 	LoadedObj* objMesh;
 	Object* obj;

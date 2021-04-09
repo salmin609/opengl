@@ -14,6 +14,7 @@ public:
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
+	~Level4();
 private:
 	Object* waterObj;
 	Object* ground;
@@ -22,9 +23,9 @@ private:
 	Object* downFirstSnub;
 	Object* downSecondSnub;
 	Object* downCube;
+	Water* water;
 	SnubDodecMesh snub_mesh;
 	CubeMesh cube_mesh;
-	Water* water;
 	Material_ emeraldMat;
 	Material_ obcidianMat;
 };

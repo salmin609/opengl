@@ -26,3 +26,9 @@ void Level3::Update(float dt)
 void Level3::UnLoad()
 {
 }
+
+Level3::~Level3()
+{
+	delete particle;
+	delete object;
+}

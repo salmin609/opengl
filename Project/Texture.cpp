@@ -1,12 +1,27 @@
 #include "Texture.h"
 #include "Image.h"
-Texture::Texture() {
+Texture::Texture()
+{
+	width = 1024;
+	height = 768;
+	glGenTextures(1, &textureID);
+	pixelData = nullptr;
+	Bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+	//glBindImageTexture(0, textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	//glGenerateMipmap(GL_TEXTURE_2D);
+	Unbind();
 }
 Texture::Texture(const std::string& fileName, bool hasTransparency) : fileName(fileName) {
 	//BYTE* pixels = ImageUtils::Load_Image(fileName.c_str(), &width, &height);
 
 	Image tempImage;
-	unsigned char* pixel = tempImage.Load_Image(fileName, width, height, true);
+	pixelData = tempImage.Load_Image(fileName, width, height, true);
 	this->hasTransparency = hasTransparency;
 	glGenTextures(1, &textureID);
 	Bind();
@@ -16,7 +31,7 @@ Texture::Texture(const std::string& fileName, bool hasTransparency) : fileName(f
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Unbind();
@@ -26,11 +41,25 @@ Texture::~Texture() {
 	glDeleteTextures(1, &textureID);
 }
 
+void Texture::GetImageWidthHeight(int& imgWidth, int& imgHeight)
+{
+	imgWidth = this->width;
+	imgHeight = this->height;
+}
+
 bool Texture::HasTransparency() {
 	return hasTransparency;
 }
 
-void Texture::Bind(int index) {
+void Texture::BindImageTexture(int index, GLenum type)
+{
+	Bind();
+	glBindImageTexture(index , textureID, 0, GL_FALSE, 0, type, GL_RGBA32F);
+	Unbind();
+}
+
+void Texture::Bind(int index)
+{
 	glActiveTexture(GL_TEXTURE0 + index);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 }
