@@ -221,3 +221,8 @@ int Mesh::InstancingNum() const
 {
 	return instancingNum;
 }
+
+std::vector<Vertex> Mesh::GetVertexDatas()
+{
+	return vertexDatas;
+}

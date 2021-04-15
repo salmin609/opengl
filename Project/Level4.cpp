@@ -46,6 +46,7 @@ void Level4::Load()
 	Graphic::objects.push_back(downSecondSnub);
 	//Graphic::objects.push_back(downCube);
 	Graphic::objects.push_back(Graphic::light);
+	CameraManager::instance->SetCameraPos(Vector3{ 0.f, 5.f, -5.f }, Vector3{ 0.f, -1.f, 1.f });
 	//Graphic::ground = ground;
 	Graphic::water = waterObj;
 }

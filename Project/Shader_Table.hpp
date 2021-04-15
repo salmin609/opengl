@@ -26,3 +26,6 @@ const static std::string shaderWaterFragment = "WaterFragment.glsl";
 const static std::string shaderCompute = "ComputeShader.glsl";
 const static std::string shaderComputePrefix = "ComputeShaderPrefix.glsl";
 const static std::string shaderComputeBasic = "ComputeShaderBasic.glsl";
+const static std::string shaderComputeFlocking = "ComputeShaderFlocking.glsl";
+const static std::string shaderFlockingVertex = "FlockingShaderVertex.glsl";
+const static std::string shaderFlockingFragment = "FlockingFragmentShader.glsl";

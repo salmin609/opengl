@@ -90,11 +90,50 @@ struct Vector2
 };
 struct Vector3
 {
+	Vector3() : x(0.f), y(0.f), z(0.f)
+	{
+	}
+	Vector3(float val)
+	{
+		x = val;
+		y = val;
+		z = val;
+	}
+	Vector3(float valX, float valY, float valZ)
+	{
+		x = valX;
+		y = valY;
+		z = valZ;
+	}
 	void operator+=(Hcoord val)
 	{
 		x += val.x;
 		y += val.y;
 		z += val.z;
+	}
+	Vector3 operator-(float val)
+	{
+		Vector3 result{};
+		result.x = x - val;
+		result.y = y - val;
+		result.z = z - val;
+		return result;
+	}
+	Vector3 operator*(Vector3 val)
+	{
+		Vector3 result{};
+		result.x = x * val.x;
+		result.y = y * val.y;
+		result.z = z * val.z;
+		return result;
+	}
+	Vector3 operator*(float val)
+	{
+		Vector3 result{};
+		result.x = x * val;
+		result.y = y * val;
+		result.z = z * val;
+		return result;
 	}
 	float x, y, z;
 };

@@ -16,7 +16,9 @@ public:
 	void UpdateAB(float newAlpha, float newBeta);
 	void Init();
 	void Move(SDL_Keycode keycode);
+	void SetCameraPos(Vector3 cameraPos, Vector3 cameraLookAt);
 	void CameraReInit();
+	Vector GetLookAtDirection();
 private:
 	Vector ey = Vector(0, 1, 0);
 	float pi = 4.0f * atan(1.0f);

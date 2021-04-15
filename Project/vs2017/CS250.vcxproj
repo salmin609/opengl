@@ -115,6 +115,7 @@
     <ClCompile Include="..\Level3.cpp" />
     <ClCompile Include="..\Level4.cpp" />
     <ClCompile Include="..\Level5.cpp" />
+    <ClCompile Include="..\Level6.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="..\Level3.h" />
     <ClInclude Include="..\Level4.h" />
     <ClInclude Include="..\Level5.h" />
+    <ClInclude Include="..\Level6.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -205,7 +207,10 @@
     <None Include="..\ToonifyPostPorcessiongFilterFragment.glsl" />
     <None Include="ComputeShader.glsl" />
     <None Include="ComputeShaderBasic.glsl" />
+    <None Include="ComputeShaderFlocking.glsl" />
     <None Include="ComputeShaderPrefix.glsl" />
+    <None Include="FlockingFragmentShader.glsl" />
+    <None Include="FlockingShaderVertex.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />

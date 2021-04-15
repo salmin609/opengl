@@ -13,6 +13,7 @@ class Level2;
 class Level3;
 class Level4;
 class Level5;
+class Level6;
 class Client {
 public:
 	Client(void);
@@ -39,5 +40,6 @@ private:
 	Level3* level3;
 	Level4* level4;
 	Level5* level5;
+	Level6* level6;
 	State* currState;
 };

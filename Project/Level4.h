@@ -15,6 +15,7 @@ public:
 	void Update(float dt) override;
 	void UnLoad() override;
 	~Level4();
+
 private:
 	Object* waterObj;
 	Object* ground;

@@ -109,4 +109,3 @@ void Level1::Initialize_Material()
 	red_plastic.specular = Vector(0.70f, 0.60f, 0.60f);
 	red_plastic.shiness = 0.25f;
 }
-

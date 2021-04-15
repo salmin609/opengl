@@ -122,6 +122,9 @@
     <ClCompile Include="..\Level5.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\Level6.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -309,6 +312,9 @@
     <ClInclude Include="..\Level5.h">
       <Filter>Engine\Hpp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Level6.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -388,6 +394,15 @@
     </None>
     <None Include="ComputeShaderBasic.glsl">
       <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="ComputeShaderFlocking.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="FlockingShaderVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="FlockingFragmentShader.glsl">
+      <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>
 </Project>

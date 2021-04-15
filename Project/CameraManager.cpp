@@ -60,9 +60,26 @@ void CameraManager::Move(SDL_Keycode keycode)
 	CameraReInit();
 }
 
+void CameraManager::SetCameraPos(Vector3 cameraPos, Vector3 cameraLookAt)
+{
+	defaultCamPos.x = cameraPos.x;
+	defaultCamPos.y = cameraPos.y;
+	defaultCamPos.z = cameraPos.z;
+
+	lookat.x = cameraLookAt.x;
+	lookat.y = cameraLookAt.y;
+	lookat.z = cameraLookAt.z;
+	CameraReInit();
+}
+
 void CameraManager::CameraReInit()
 {
 	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.1f, 1000.f);
+}
+
+Vector CameraManager::GetLookAtDirection()
+{
+	return lookat;
 }
 
 void CameraManager::CameraMovement(SDL_Event event)

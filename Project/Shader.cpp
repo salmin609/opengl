@@ -53,7 +53,7 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	glShaderSource(fragmentShaderId, 1, &f_shader_code, 0);
 	glCompileShader(fragmentShaderId);
 
-	glGetProgramiv(fragmentShaderId, GL_COMPILE_STATUS, &is_succeed);
+	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
 	{
 		glDeleteShader(fragmentShaderId);
@@ -69,7 +69,7 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	glShaderSource(vertexShaderId, 1, &v_shader_code, 0);
 	glCompileShader(vertexShaderId);
 
-	glGetProgramiv(vertexShaderId, GL_COMPILE_STATUS, &is_succeed);
+	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
 	{
 		glDeleteShader(vertexShaderId);
@@ -136,6 +136,13 @@ Shader::Shader(const char* computeShader)
 	computeShaderId = glCreateShader(GL_COMPUTE_SHADER);
 	glShaderSource(computeShaderId, 1, &v_shader_code, NULL);
 	glCompileShader(computeShaderId);
+
+	glGetShaderiv(computeShaderId, GL_COMPILE_STATUS, &is_succeed);
+	if (is_succeed == GL_FALSE)
+	{
+		glDeleteShader(computeShaderId);
+		throw std::runtime_error("failed to compile compute");
+	}
 
 	programId = glCreateProgram();
 	glAttachShader(programId, computeShaderId);

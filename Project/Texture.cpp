@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "Image.h"
-Texture::Texture()
+Texture::Texture(GLenum internalFormat)
 {
 	width = 1024;
 	height = 768;
@@ -12,14 +12,11 @@ Texture::Texture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	//glBindImageTexture(0, textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
-	//glGenerateMipmap(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
 	Unbind();
 }
-Texture::Texture(const std::string& fileName, bool hasTransparency) : fileName(fileName) {
-	//BYTE* pixels = ImageUtils::Load_Image(fileName.c_str(), &width, &height);
-
+Texture::Texture(const std::string& fileName, bool hasTransparency, GLenum internalFormat) : fileName(fileName)
+{
 	Image tempImage;
 	pixelData = tempImage.Load_Image(fileName, width, height, true);
 	this->hasTransparency = hasTransparency;
@@ -31,7 +28,27 @@ Texture::Texture(const std::string& fileName, bool hasTransparency) : fileName(f
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+	Unbind();
+}
+
+Texture::Texture(const std::string& fileName, GLenum internalFormat, int w, int h)
+{
+	(w);
+	(h);
+	Image tempImage;
+	pixelData = tempImage.Load_Image(fileName, width, height, true);
+	glGenTextures(1, &textureID);
+	Bind();
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Unbind();

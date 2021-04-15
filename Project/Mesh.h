@@ -53,6 +53,7 @@ struct Mesh {
 	void Unbind();
 	bool IsInstancing();
 	int InstancingNum() const;
+	std::vector<Vertex> GetVertexDatas();
 protected:
 	Shader* shader = nullptr;
 	unsigned vao_id = 0;

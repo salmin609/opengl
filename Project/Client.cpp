@@ -12,6 +12,7 @@
 #include "Level3.h"
 #include "Level4.h"
 #include "Level5.h"
+#include "Level6.h"
 
 Client::Client(void)
 {
@@ -22,6 +23,14 @@ Client::Client(void)
 	level3 = new Level3();
 	level4 = new Level4();
 	level5 = new Level5();
+	level6 = new Level6();
+
+	level1->SetNextPrevState(nullptr, level2);
+	level2->SetNextPrevState(level1, level3);
+	level3->SetNextPrevState(level2, level4);
+	level4->SetNextPrevState(level3, level5);
+	level5->SetNextPrevState(level4, level6);
+	level6->SetNextPrevState(level5, nullptr);
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;
@@ -60,49 +69,25 @@ void Client::draw(float dt)
 
 void Client::Increase_Graphic_Level()
 {
-	if(currState == level1)
+	State* nextState = currState->GetNextState();
+
+	if(nextState != nullptr)
 	{
-		level2->Load();
-		currState = level2;
-	}
-	else if(currState == level2)
-	{
-		level3->Load();
-		currState = level3;
-	}
-	else if(currState == level3)
-	{
-		level4->Load();
-		currState = level4;
-	}
-	else if (currState == level4)
-	{
-		level5->Load();
-		currState = level5;
+		currState->UnLoad();
+		nextState->Load();
+		currState = nextState;
 	}
 }
 
 void Client::Decrease_Graphic_Level()
 {
-	if (currState == level2)
+	State* prevState = currState->GetPrevState();
+
+	if (prevState != nullptr)
 	{
-		level1->Load();
-		currState = level1;
-	}
-	else if (currState == level3)
-	{
-		level2->Load();
-		currState = level2;
-	}
-	else if (currState == level4)
-	{
-		level3->Load();
-		currState = level3;
-	}
-	else if (currState == level5)
-	{
-		level4->Load();
-		currState = level4;
+		currState->UnLoad();
+		prevState->Load();
+		currState = prevState;
 	}
 }
 
@@ -119,6 +104,8 @@ Client::~Client(void)
 	delete level2;
 	delete level3;
 	delete level4;
+	delete level5;
+	delete level6;
 }
 
 void Client::Set_Selected_Null()

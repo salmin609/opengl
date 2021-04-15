@@ -25,7 +25,7 @@ void VAO::Init(const std::vector<Vertex>& datas)
 	glEnableVertexAttribArray(2);
 }
 
-void VAO::Init(float* data, int size, int indexNum, const std::vector<int> sizePerIndex)
+void VAO::Init(float* data, int size, int indexNum, const std::vector<int>& sizePerIndex)
 {
 	glBindVertexArray(vaoId);
 
