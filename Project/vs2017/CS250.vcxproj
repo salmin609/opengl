@@ -116,6 +116,7 @@
     <ClCompile Include="..\Level4.cpp" />
     <ClCompile Include="..\Level5.cpp" />
     <ClCompile Include="..\Level6.cpp" />
+    <ClCompile Include="..\Level7.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\Level4.h" />
     <ClInclude Include="..\Level5.h" />
     <ClInclude Include="..\Level6.h" />
+    <ClInclude Include="..\Level7.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="..\WaterFrameBuffer.h" />
     <ClInclude Include="..\WaterRenderer.h" />
     <ClInclude Include="Affine2.h" />
+    <ClInclude Include="ComputeShaderRaytracing.glsl" />
     <ClInclude Include="FrameBufferTexturing.h" />
     <ClInclude Include="SimpleMeshes.h" />
     <ClInclude Include="Vertex.h" />

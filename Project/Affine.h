@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <cassert>
+struct Vector3;
 
 struct Hcoord {
 	float x, y, z, w;
@@ -47,6 +48,15 @@ struct Matrix {
 	Hcoord row[4];
 	Hcoord& operator[](int i) { return row[i]; }
 	const Hcoord& operator[](int i) const { return row[i]; }
+	Hcoord operator*(Hcoord val)
+	{
+		Hcoord result;
+		result.x = row[0].x * val.x + row[0].y * val.y + row[0].z * val.z + row[0].w * val.w;
+		result.y = row[1].x * val.x + row[1].y * val.y + row[1].z * val.z + row[1].w * val.w;
+		result.z = row[2].x * val.x + row[2].y * val.y + row[2].z * val.z + row[2].w * val.w;
+		result.w = row[3].x * val.x + row[3].y * val.y + row[3].z * val.z + row[3].w * val.w;
+		return result;
+	}
 };
 
 
@@ -55,8 +65,8 @@ struct Affine : Matrix {
 	Affine(const Vector& Lx, const Vector& Ly, const Vector& Lz, const Point& D);
 	Affine(const Matrix& M) : Matrix(M)
 	{
-		assert(Hcoord::near(M[3][0], 0) && Hcoord::near(M[3][1], 0)
-			&& Hcoord::near(M[3][2], 0) && Hcoord::near(M[3][3], 1));
+		/*assert(Hcoord::near(M[3][0], 0) && Hcoord::near(M[3][1], 0)
+			&& Hcoord::near(M[3][2], 0) && Hcoord::near(M[3][3], 1));*/
 	}
 };
 

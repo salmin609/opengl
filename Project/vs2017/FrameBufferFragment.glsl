@@ -4,11 +4,19 @@ out vec4 fragColor;
 in vec4 Vertex_UV;
 
 uniform sampler2D screenTextures;
+uniform float exposure = 10.0;
 
 vec4 Normal()
 {
 	return texture(screenTextures, Vertex_UV.xy);
 }
+vec4 Bloom()
+{
+    vec4 c = texelFetch(screenTextures, ivec2(gl_FragCoord.xy), 0);
+    c.rgb = vec3(1.0) - exp(-c.rgb * exposure);
+    return c;
+}
+
 vec4 Inversion()
 {
 	return vec4(vec3(1.0 - texture(screenTextures, Vertex_UV.xy)), 1.0);
@@ -88,5 +96,5 @@ vec4 Blur()
 
 void main()
 {
-	fragColor = Normal();
+	fragColor = Blur();
 }

@@ -13,7 +13,7 @@
 #include "Level4.h"
 #include "Level5.h"
 #include "Level6.h"
-
+#include "Level7.h"
 Client::Client(void)
 {
 	graphic = new Graphic();
@@ -24,13 +24,15 @@ Client::Client(void)
 	level4 = new Level4();
 	level5 = new Level5();
 	level6 = new Level6();
+	level7 = new Level7();
 
 	level1->SetNextPrevState(nullptr, level2);
 	level2->SetNextPrevState(level1, level3);
 	level3->SetNextPrevState(level2, level4);
 	level4->SetNextPrevState(level3, level5);
 	level5->SetNextPrevState(level4, level6);
-	level6->SetNextPrevState(level5, nullptr);
+	level6->SetNextPrevState(level5, level7);
+	level7->SetNextPrevState(level6, nullptr);
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;
@@ -106,6 +108,7 @@ Client::~Client(void)
 	delete level4;
 	delete level5;
 	delete level6;
+	delete level7;
 }
 
 void Client::Set_Selected_Null()

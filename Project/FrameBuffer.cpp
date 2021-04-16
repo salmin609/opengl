@@ -1,13 +1,13 @@
 #include "FrameBuffer.h"
 #include "Graphic.h"
 #include <iostream>
-
-FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
+#include "Texture.h"
+#include "VAO.h"
+FrameBufferObject::FrameBufferObject(Texture* textureVal, std::string vertex , std::string fragment)
 {
-	colorAttachmentSlot = colorSlot;
 	colorAttachmentSlot = 0;
-	fboWidth = width;
-	fboHeight = height;
+	fboWidth = 1024;
+	fboHeight = 768;
 
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
@@ -20,18 +20,11 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 		 1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	glGenVertexArrays(1, &quadVao);
-	glGenBuffers(1, &quadVbo);
-	glBindVertexArray(quadVao);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	shader = new Shader(vertex.c_str(),
+		fragment.c_str());
 
-	shader = new Shader(shaderFrameBufferVertex.c_str(),
-		shaderToonifyPostProcessFragment.c_str());
+	vao = new VAO(shader);
+	vao->Init(quadVertices, 24, 2, std::vector<int>{2, 2});
 
 	int val = 0;
 	float val2 = 0.2f;
@@ -46,16 +39,14 @@ FrameBufferObject::FrameBufferObject(int colorSlot, int width, int height)
 	glGenFramebuffers(1, &frameBufferId);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 
-	glGenTextures(1, &textureColorBufferId);
-	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fboWidth, fboHeight
-		, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachmentSlot,
-		GL_TEXTURE_2D, textureColorBufferId, 0);
-	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureColorBufferId, 0);
-
+	if (textureVal == nullptr)
+	{
+		texture = Texture::CreateTextureAttachment(fboWidth, fboHeight);
+	}
+	else
+	{
+		texture = textureVal;
+	}
 	glGenRenderbuffers(1, &renderBufferId);
 	glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, fboWidth, fboHeight);
@@ -86,12 +77,13 @@ void FrameBufferObject::UnBind()
 
 void FrameBufferObject::Use()
 {
-	shader->Use();
-	//UseFrameBuffer(fboSrc);
-	glBindVertexArray(quadVao);
+	//shader->Use();
+	////UseFrameBuffer(fboSrc);
+	//glBindVertexArray(vao.);
+	vao->Bind();
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureColorBufferId);
+	glBindTexture(GL_TEXTURE_2D, texture->GetTextureId());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -103,7 +95,7 @@ unsigned FrameBufferObject::GetFrameBufferId()
 
 unsigned FrameBufferObject::GetTextureColorBufferId()
 {
-	return textureColorBufferId;
+	return texture->GetTextureId();
 }
 
 void FrameBufferObject::UseFrameBuffer(FrameBufferObject* fboSrc, int srcX, int srcY, int destX, int destY)

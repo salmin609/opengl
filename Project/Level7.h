@@ -7,17 +7,18 @@ class Object;
 class Shader;
 class Texture;
 class VAO;
-class Level5 : public State
+class Level7 : public State
 {
 public:
-	Level5();
-	~Level5();
+	Level7();
+	~Level7();
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
-	void ProgramInit();
+
 private:
-	Shader* render;
-	Shader* filter;
-	Shader* resolve;
+	Shader* renderingShader;
+	Shader* computeShader;
+	Texture* texture;
+	FrameBufferObject* frameBufferObj;
 };

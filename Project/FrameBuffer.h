@@ -1,11 +1,14 @@
 #pragma once
+#include <string>
+#include "Shader_Table.hpp"
 
 class Shader;
-
+class Texture;
+class VAO;
 class FrameBufferObject
 {
 public:
-	FrameBufferObject(int colorSlot, int width = 1024, int height = 768);
+	FrameBufferObject(Texture* textureVal = nullptr, std::string vertex = shaderFrameBufferVertex, std::string fragment = shaderToonifyPostProcessFragment);
 	void Bind() const;
 	void UnBind();
 	void Use();
@@ -19,14 +22,12 @@ public:
 	void ResetViewPort();
 	~FrameBufferObject();
 private:
-	unsigned quadVao;
-	unsigned quadVbo;
-
 	unsigned frameBufferId;
-	unsigned textureColorBufferId;
 	unsigned renderBufferId;
 	unsigned colorAttachmentSlot;
 	Shader* shader;
+	Texture* texture;
+	VAO* vao;
 	unsigned fboWidth;
 	unsigned fboHeight;
 };

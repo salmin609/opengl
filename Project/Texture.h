@@ -20,6 +20,8 @@ public:
 	void Bind(int index = 0);
 	void Unbind();
 	unsigned GetTextureId();
+	
 	static Texture* CreateTextureAttachment(int width, int height);
+	
 	unsigned char* pixelData;
 };

@@ -12,7 +12,8 @@
 DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
-	frameBufferObj = new FrameBufferObject(0);
+	frameBufferObj = new FrameBufferObject(nullptr, shaderFrameBufferVertex, 
+		shaderFrameBufferFragment);
 	//skyBox = new SkyBox();
 	waterRenderer = new WaterRenderer();
 }
