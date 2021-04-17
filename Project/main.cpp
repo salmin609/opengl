@@ -48,7 +48,8 @@ int main(int /*argc*/, char* /*argv*/[]) {
 		bool done = false;
 		while (!done) {
 			SDL_Event event;
-			while (SDL_PollEvent(&event)) {
+			while (SDL_PollEvent(&event)) 
+			{
 				switch (event.type) {
 				case SDL_QUIT:
 					done = true;

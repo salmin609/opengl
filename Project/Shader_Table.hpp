@@ -31,3 +31,10 @@ const static std::string shaderComputePrefix = "ComputeShaderPrefix.glsl";
 const static std::string shaderComputeBasic = "ComputeShaderBasic.glsl";
 const static std::string shaderComputeFlocking = "ComputeShaderFlocking.glsl";
 const static std::string shaderComputeRaytracing = "ComputeShaderRaytracing.glsl";
+
+const static std::string shaderHdrBloomFilterVertex = "HdrBloomFilterVertex.glsl";
+const static std::string shaderHdrBloomFilterFragment = "HdrBloomFilterFragment.glsl";
+const static std::string shaderHdrBloomResolveVertex = "HdrBloomResolveVertex.glsl";
+const static std::string shaderHdrBloomResolveFragment = "HdrBloomResolveFragment.glsl";
+const static std::string shaderHdrBloomSceneVertex = "HdrBloomSceneVertex.glsl";
+const static std::string shaderHdrBloomSceneFragment = "HdrBloomSceneFragment.glsl";

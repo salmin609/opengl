@@ -219,6 +219,12 @@
     <None Include="Fragmentshader_Texture.glsl" />
     <None Include="FrameBufferFragment.glsl" />
     <None Include="FrameBufferVertex.glsl" />
+    <None Include="HdrBloomFilterFragment.glsl" />
+    <None Include="HdrBloomFilterVertex.glsl" />
+    <None Include="HdrBloomResolveFragment.glsl" />
+    <None Include="HdrBloomResolveVertex.glsl" />
+    <None Include="HdrBloomSceneFragment.glsl" />
+    <None Include="HdrBloomSceneVertex.glsl" />
     <None Include="LightFragment.glsl" />
     <None Include="LightVertex.glsl" />
     <None Include="ParticleColoredFragment.glsl" />

@@ -40,6 +40,7 @@ public:
     Matrix Get_Model_To_World();
     Matrix GetModelToWorldOutlineScaling(float increment);
     Mesh* Get_Mesh();
+    void SetPosition(Point newPos);
     Point& Get_Obj_Pos();
     Vector Get_Scale();
     void Set_Scale(Vector scale);

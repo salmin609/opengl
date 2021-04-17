@@ -164,6 +164,11 @@ Mesh* Object::Get_Mesh()
 	return mesh;
 }
 
+void Object::SetPosition(Point newPos)
+{
+	objInfo.pos = newPos;
+}
+
 Point& Object::Get_Obj_Pos()
 {
 	return objInfo.pos;

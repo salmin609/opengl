@@ -96,5 +96,5 @@ vec4 Blur()
 
 void main()
 {
-	fragColor = Blur();
+	fragColor = Normal();
 }

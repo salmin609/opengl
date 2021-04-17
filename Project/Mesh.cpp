@@ -226,3 +226,11 @@ std::vector<Vertex> Mesh::GetVertexDatas()
 {
 	return vertexDatas;
 }
+
+void Mesh::Bind()
+{
+	if(vao != nullptr)
+	{
+		vao->Bind();
+	}
+}

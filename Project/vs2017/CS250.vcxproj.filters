@@ -413,5 +413,23 @@
     <None Include="FlockingFragmentShader.glsl">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="HdrBloomFilterVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="HdrBloomFilterFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="HdrBloomResolveVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="HdrBloomResolveFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="HdrBloomSceneFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="HdrBloomSceneVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
 </Project>
