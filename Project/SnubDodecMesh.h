@@ -13,10 +13,11 @@ class SnubDodecMesh : public Mesh_Object {
     SnubDodecMesh(std::string vertexPath, std::string fragPath);
     int FaceCount(void) { return 116; }
     virtual void SetVertices();
-
+    std::vector<Vertex> GetTemp();
   private:
     static Face faces[116];
     static Edge edges[150];
+    std::vector<Vertex> tempVerticesData;
 };
 
 

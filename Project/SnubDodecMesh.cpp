@@ -162,5 +162,43 @@ void SnubDodecMesh::SetVertices()
         normal[index2] += orientation_vec;
         normal[index3] += orientation_vec;
     }
+
+
+    for (int i = 0; i < faceSize; ++i)
+    {
+        Face face = faces[i];
+        const int index1 = face.index1;
+        const int index2 = face.index2;
+        const int index3 = face.index3;
+
+        Point point1 = vertarr[index1];
+        Point point2 = vertarr[index2];
+        Point point3 = vertarr[index3];
+
+        Hcoord normal1 = normal[index1];
+        Hcoord normal2 = normal[index2];
+        Hcoord normal3 = normal[index3];
+    	
+        tempVerticesData.push_back(Vertex{
+            Vector3{point1.x, point1.y, point1.z},
+            Vector3{normal1.x, normal1.y, normal1.z}
+        });
+
+        tempVerticesData.push_back(Vertex{
+		    Vector3{point2.x, point2.y, point2.z},
+		    Vector3{normal2.x, normal2.y, normal2.z}
+        });
+
+        tempVerticesData.push_back(Vertex{
+		    Vector3{point3.x, point3.y, point3.z},
+		    Vector3{normal3.x, normal3.y, normal3.z}
+        });
+    }
+	
     InitializeVerticesDatas();
+}
+
+std::vector<Vertex> SnubDodecMesh::GetTemp()
+{
+    return tempVerticesData;
 }

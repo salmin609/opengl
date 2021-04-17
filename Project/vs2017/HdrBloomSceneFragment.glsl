@@ -41,8 +41,8 @@ void main(void)
 	vec3 specular = pow(max(dot(R, V), 0.0), m.specularPower) * m.specularColor;
 	vec3 ambient = m.ambientColor;
 
-	vec3 color = ambient + diffuse + specular;
-
+	//vec3 color = ambient + diffuse + specular;
+	vec3 color = vec3(1.0, 1.0, 1.0);
 	color0 = vec4(color, 1.0);
 
 	float Y = dot(color, vec3(0.299, 0.587, 0.144));

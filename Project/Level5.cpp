@@ -92,13 +92,7 @@ Level5::Level5()
 	object = new Object(&snubMesh, Point{ 0.f, 0.f, 0.f }, nullptr, nullptr);
 
 	render->Use();
-	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
-	//ndcMat = transpose(ndcMat);
-	Matrix camMat = CameraToWorld(*CameraManager::instance->GetCamera());
-	//camMat = transpose(camMat);
-
-	render->SendUniformMat("matProj", &ndcMat);
-	render->SendUniformMat("matView", &camMat);
+	
 
 	for (int i = 0; i < SPHERE_COUNT; ++i)
 	{
@@ -108,6 +102,10 @@ Level5::Level5()
 		object->SetPosition(Point{ randomVec.x, randomVec.y, randomVec.z });
 		render->SendUniformMat(modelMatName, &model);
 	}
+
+	const std::vector<Vertex> vertices = snubMesh.GetTemp();
+	objectVao = new VAO(render);
+	objectVao->Init(vertices);
 	/*glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboTransform);
 	struct transforms_t
 	{
@@ -149,13 +147,7 @@ void Level5::Load()
 }
 
 void Level5::Update(float dt)
-{
-	glClearColor(0.1f, 0.1f, 0.1f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT |
-		GL_DEPTH_BUFFER_BIT |
-		GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	
+{	
 	static const GLfloat black[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	static const GLfloat one = 1.0f;
 	static float total_time = 0.0f;
@@ -171,14 +163,22 @@ void Level5::Update(float dt)
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	render->Use();
+	objectVao->Bind();
+	//render->Use();
+	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
+	//ndcMat = transpose(ndcMat);
+	Matrix camMat = CameraToWorld(*CameraManager::instance->GetCamera());
+	//camMat = transpose(camMat);
+
+	render->SendUniformMat("matProj", &ndcMat);
+	render->SendUniformMat("matView", &camMat);
 	
 	render->SendUniformFloat("bloomThreshMin", bloomThreshMin);
 	render->SendUniformFloat("bloomThreshMax", bloomThreshMax);
-
-	snubMesh.Bind();
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, snubMesh.GetElementId());
-	glDrawElementsInstanced(GL_TRIANGLES, snubMesh.FaceCount() * 3, GL_UNSIGNED_BYTE, nullptr, SPHERE_COUNT);
+	
+	//snubMesh.Bind();
+	glDrawArraysInstanced(GL_TRIANGLES, 0, snubMesh.FaceCount() * 3,
+		SPHERE_COUNT);
 
 	glDisable(GL_DEPTH_TEST);
 
@@ -202,8 +202,8 @@ void Level5::Update(float dt)
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texFilter[1]);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texBrightPass);
-	//glBindTexture(GL_TEXTURE_2D, texScene);
+	//glBindTexture(GL_TEXTURE_2D, texBrightPass);
+	glBindTexture(GL_TEXTURE_2D, texScene);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 

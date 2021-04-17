@@ -38,6 +38,7 @@ private:
 	
 	SnubDodecMesh snubMesh;
 	Object* object;
+	VAO* objectVao;
 	enum
 	{
 		MAX_SCENE_WIDTH = 2048,
