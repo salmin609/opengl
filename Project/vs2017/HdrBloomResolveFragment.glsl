@@ -3,7 +3,7 @@
 layout (binding = 0) uniform sampler2D hdrImage;
 layout (binding = 1) uniform sampler2D bloomImage;
 
-uniform float exposure = 0.9;
+uniform float exposure = 1.5;
 uniform float bloomFactor = 1.0;
 uniform float sceneFactor = 1.0;
 

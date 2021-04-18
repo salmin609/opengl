@@ -8,6 +8,7 @@ class Object;
 class Shader;
 class Texture;
 class VAO;
+class LoadedObj;
 class Level5 : public State
 {
 public:
@@ -39,11 +40,12 @@ private:
 	SnubDodecMesh snubMesh;
 	Object* object;
 	VAO* objectVao;
+	LoadedObj* sphere;
 	enum
 	{
 		MAX_SCENE_WIDTH = 2048,
 		MAX_SCENE_HEIGHT = 2048,
-		SPHERE_COUNT = 32,
+		SPHERE_COUNT = 100,
 	};
 
 	float bloomThreshMin = 0.8f;

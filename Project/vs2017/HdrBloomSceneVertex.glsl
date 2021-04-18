@@ -1,6 +1,6 @@
 #version 420 core
 
-layout (location = 0) in vec4 position;
+layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 
 out VS_OUT
@@ -11,11 +11,11 @@ out VS_OUT
 	flat int materialIndex;
 } vs_out;
 
-uniform vec3 lightPos = vec3(100.0, 100.0, 100.0);
+uniform vec3 lightPos = vec3(0.0, 0.0, 0.0);
 
 uniform mat4 matProj;
 uniform mat4 matView;
-uniform mat4 matModel[32];
+uniform mat4 matModel[100];
 //layout (binding = 0, std140) uniform TRANSFORM_BLOCK
 //{
 //	mat4 matProj;
@@ -27,7 +27,7 @@ void main(void)
 {
 	mat4 matMv = matView * matModel[gl_InstanceID];
 
-	vec4 p = matMv * position;
+	vec4 p = matMv * vec4(position, 1.0);
 
 	vs_out.N = mat3(matMv) * normal;
 

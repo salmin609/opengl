@@ -55,13 +55,15 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 {
 	Initialize_Texture(std::move(spritePath));
 	Initialize(vertexPath.c_str(), fragPath.c_str());
-	instancingNum = 250;
-	const int offsetDivisor = 10;
-	bool minusTrigger = false;
+	instancingNum = 500;
+	//const int offsetDivisor = 10;
+	//bool minusTrigger = false;
 
 	for (size_t i = 0; i < instancingNum; ++i)
 	{
-		const int randomOffsetx = rand() % offsetDivisor;
+		Vector3 randomVec = RandomNumber::RandomVector3(-10.f, 10.f);
+		offsetVec.push_back(randomVec);
+		/*const int randomOffsetx = rand() % offsetDivisor;
 		const int randomOffsety = rand() % (offsetDivisor / 2);
 		const int randomOffsetz = rand() % offsetDivisor;
 
@@ -79,7 +81,7 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 				static_cast<float>(-randomOffsety),
 				static_cast<float>(-randomOffsetz) });
 		}
-		minusTrigger = !minusTrigger;
+		minusTrigger = !minusTrigger;*/
 	}
 
 	Init_VBO(offsetVec.data(), &instancingId, sizeof(Vector3) * offsetVec.size(),

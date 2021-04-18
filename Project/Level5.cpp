@@ -4,11 +4,14 @@
 #include "VAO.h"
 #include "Object.h"
 #include "RandomNumGenerator.h"
+#include "LoadedObj.h"
 Level5::Level5()
 {
 	render = new Shader(shaderHdrBloomSceneVertex.c_str(), shaderHdrBloomSceneFragment.c_str());
 	filter = new Shader(shaderHdrBloomFilterVertex.c_str(), shaderHdrBloomFilterFragment.c_str());
 	resolve = new Shader(shaderHdrBloomResolveVertex.c_str(), shaderHdrBloomResolveFragment.c_str());
+
+	sphere = new LoadedObj("Sphere");
 
 	static const GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	static const GLfloat exposureLUT[20] = { 11.0f, 6.0f, 3.2f, 2.8f, 2.2f, 1.90f, 1.80f, 1.80f, 1.70f, 1.70f,  1.60f, 1.60f, 1.50f, 1.50f, 1.40f, 1.40f, 1.30f, 1.20f, 1.10f, 1.00f };
@@ -76,34 +79,44 @@ Level5::Level5()
 	glBindBuffer(GL_UNIFORM_BUFFER, uboMaterial);
 	glBufferData(GL_UNIFORM_BUFFER, SPHERE_COUNT * sizeof(material), NULL, GL_STATIC_DRAW);
 
-	material* m = (material*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, SPHERE_COUNT * sizeof(material), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	/*material* m = (material*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, SPHERE_COUNT * sizeof(material), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	*/
 	float ambient = 0.002f;
+	render->Use();
+	
 	for (int i = 0; i < SPHERE_COUNT; i++)
 	{
 		float fi = 3.14159267f * (float)i / 8.0f;
-		m[i].diffuse_color = Vector3(sinf(fi) * 0.5f + 0.5f, sinf(fi + 1.345f) * 0.5f + 0.5f, sinf(fi + 2.567f) * 0.5f + 0.5f);
-		m[i].specular_color = Vector3(2.8f, 2.8f, 2.9f);
-		m[i].specular_power = 30.0f;
-		m[i].ambient_color = Vector3(ambient * 0.025f);
-		ambient *= 1.5f;
+		std::string matStr = "mat[" + std::to_string(i) + "]";
+		Vector3 diffuseColor = Vector3(sinf(fi) * 0.5f + 0.5f, sinf(fi + 1.345f) * 0.5f + 0.5f, sinf(fi + 2.567f) * 0.5f + 0.5f);
+		Vector3 specularColor = Vector3(2.8f, 2.8f, 2.9f);
+		float specularPower = 30.f;
+		Vector3 ambientColor = Vector3(ambient * 0.025f);
+		render->SendUniformVec3(matStr + ".diffuseColor", &diffuseColor);
+		render->SendUniformVec3(matStr + ".specularColor", &specularColor);
+		render->SendUniformVec3(matStr + ".ambientColor", &ambientColor);
+		render->SendUniformFloat(matStr + ".specularPower", specularPower);
+		
+		ambient *= 1.1f;
 	}
-	glUnmapBuffer(GL_UNIFORM_BUFFER);
+	//glUnmapBuffer(GL_UNIFORM_BUFFER);
 
 	object = new Object(&snubMesh, Point{ 0.f, 0.f, 0.f }, nullptr, nullptr);
-
+	object->Set_Scale(5.f);
 	render->Use();
 	
 
 	for (int i = 0; i < SPHERE_COUNT; ++i)
 	{
 		std::string modelMatName = "matModel[" + std::to_string(i) + "]";
-		const Vector3 randomVec = RandomNumber::RandomVector3(-10.f, 10.f);
+		const Vector3 randomVec = RandomNumber::RandomVector3(-5.f, 5.f);
 		Matrix model = object->Get_Model_To_World();
 		object->SetPosition(Point{ randomVec.x, randomVec.y, randomVec.z });
 		render->SendUniformMat(modelMatName, &model);
 	}
 
-	const std::vector<Vertex> vertices = snubMesh.GetTemp();
+	//const std::vector<Vertex> vertices = snubMesh.GetTemp();
+	const std::vector<Vertex> vertices = sphere->GetVertexDatas();
 	objectVao = new VAO(render);
 	objectVao->Init(vertices);
 	/*glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboTransform);
@@ -148,7 +161,7 @@ void Level5::Load()
 
 void Level5::Update(float dt)
 {	
-	static const GLfloat black[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	static const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	static const GLfloat one = 1.0f;
 	static float total_time = 0.0f;
 
@@ -177,7 +190,7 @@ void Level5::Update(float dt)
 	render->SendUniformFloat("bloomThreshMax", bloomThreshMax);
 	
 	//snubMesh.Bind();
-	glDrawArraysInstanced(GL_TRIANGLES, 0, snubMesh.FaceCount() * 3,
+	glDrawArraysInstanced(GL_TRIANGLES, 0, sphere->FaceCount() * 3,
 		SPHERE_COUNT);
 
 	glDisable(GL_DEPTH_TEST);
