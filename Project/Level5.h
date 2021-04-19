@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Object.h"
 #include "State.h"
 #include "SnubDodecMesh.h"
@@ -23,7 +24,7 @@ private:
 	Shader* filter;
 	Shader* resolve;
 
-	unsigned vao;
+	//unsigned vao;
 	unsigned renderFbo;
 	
 	unsigned texScene;
@@ -33,7 +34,7 @@ private:
 	unsigned filterFbo[2];
 	unsigned texFilter[2];
 
-	unsigned texLut;
+	//unsigned texLut;
 	unsigned uboTransform;
 	unsigned uboMaterial;
 	
@@ -41,13 +42,20 @@ private:
 	Object* object;
 	VAO* objectVao;
 	LoadedObj* sphere;
+	int screenWidth;
+	int screenHeight;
 	enum
 	{
-		MAX_SCENE_WIDTH = 2048,
-		MAX_SCENE_HEIGHT = 2048,
-		SPHERE_COUNT = 100,
+		SPHERE_COUNT = 1000,
 	};
+	struct transforms_t
+	{
+		Matrix mat_proj;
+		Matrix mat_view;
+		Matrix mat_model[SPHERE_COUNT];
+	};
+	std::vector<Vector3> randomPos;
 
-	float bloomThreshMin = 0.8f;
+	float bloomThreshMin = 1.0f;
 	float bloomThreshMax = 1.2f;
 };

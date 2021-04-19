@@ -2,6 +2,8 @@
 #include "Graphic.h"
 #include "Projection.h"
 #include <iostream>
+
+#include "Client.h"
 #include "FrameBuffer.h"
 #include "Skybox.h"
 #include "OutLine.h"
@@ -53,7 +55,7 @@ void DrawingManager::Drawing(float dt)
 		{
 			frameBufferObj->Bind();
 		}
-		glViewport(0, 0, 1024, 768);
+		glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 		ClearBuffer();
 		DrawingGround();
 		DrawingShadow();

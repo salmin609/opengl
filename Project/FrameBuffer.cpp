@@ -1,13 +1,15 @@
 #include "FrameBuffer.h"
 #include "Graphic.h"
 #include <iostream>
+
+#include "Client.h"
 #include "Texture.h"
 #include "VAO.h"
 FrameBufferObject::FrameBufferObject(Texture* textureVal, std::string vertex , std::string fragment)
 {
 	colorAttachmentSlot = 0;
-	fboWidth = 1024;
-	fboHeight = 768;
+	fboWidth = Client::windowWidth;
+	fboHeight = Client::windowHeight;
 
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
@@ -122,7 +124,7 @@ void FrameBufferObject::UseFrameBuffer(unsigned froSrc, int srcX, int srcY, int 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, froSrc);
 	glReadBuffer(froSrc);
 	
-	glBlitFramebuffer(0, 0, 1024, 768, srcX, srcY, destX, destY,
+	glBlitFramebuffer(0, 0, Client::windowWidth, Client::windowHeight, srcX, srcY, destX, destY,
 		GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -141,8 +143,8 @@ void FrameBufferObject::GetFboWidthHeight(unsigned& width, unsigned& height)
 
 void FrameBufferObject::SetViewPort()
 {
-	int window_viewport_width = 1024;
-	int window_viewport_height = 768;
+	int window_viewport_width = Client::windowWidth;
+	int window_viewport_height = Client::windowHeight;
 
 	int x = -(window_viewport_width - static_cast<int>(fboWidth)) / 2;
 	int y = -(window_viewport_height - static_cast<int>(fboHeight)) / 2;
@@ -152,7 +154,7 @@ void FrameBufferObject::SetViewPort()
 
 void FrameBufferObject::ResetViewPort()
 {
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 }
 
 FrameBufferObject::~FrameBufferObject()

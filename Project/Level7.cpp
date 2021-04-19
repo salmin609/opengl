@@ -8,6 +8,8 @@
 #include "vs2017/SimpleMeshes.h"
 #include "VAO.h"
 #include <iostream>
+
+#include "Client.h"
 #include "FrameBuffer.h"
 Level7::Level7()
 {
@@ -75,7 +77,7 @@ void Level7::Update(float dt)
 {
 	(dt);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.f);
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 	glClear(GL_COLOR_BUFFER_BIT |
 		GL_DEPTH_BUFFER_BIT |
 		GL_STENCIL_BUFFER_BIT);
@@ -116,7 +118,7 @@ void Level7::Update(float dt)
 	computeShader->SendUniformVec3("ray10", &ray10);
 	computeShader->SendUniformVec3("ray11", &ray11);
 
-	glDispatchCompute(64, 96, 1);
+	glDispatchCompute(64, 100, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 	frameBufferObj->Bind();

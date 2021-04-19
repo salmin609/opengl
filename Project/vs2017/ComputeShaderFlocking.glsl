@@ -8,7 +8,7 @@ uniform float rule2Weight = 0.05;
 uniform float rule3Weight = 0.3;
 uniform float rule4Weight = 0.002;
 uniform vec3 goal;
-uniform float timeStep = 1;
+uniform float timeStep = 0.5;
 
 struct flockMember
 {

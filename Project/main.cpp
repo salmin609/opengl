@@ -22,8 +22,8 @@ int main(int /*argc*/, char* /*argv*/[]) {
 	
 
 	const char* title = "CS250: Project#2 Kimsangmin";
-	int width = 1024,
-		height = 768;
+	int width = Client::windowWidth,
+		height = Client::windowHeight;
 	SDL_Window* window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, width, height,
 		SDL_WINDOW_OPENGL);

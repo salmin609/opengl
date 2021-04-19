@@ -1,7 +1,9 @@
 #include "WaterFrameBuffer.h"
+
+#include "Client.h"
 #include "Texture.h"
-const int WaterFrameBuffer::reflectionWidth = 1024;
-const int WaterFrameBuffer::reflectionHeight = 768;
+const int WaterFrameBuffer::reflectionWidth = Client::windowWidth;
+const int WaterFrameBuffer::reflectionHeight = Client::windowHeight;
 const int WaterFrameBuffer::refractionWidth = 1280;
 const int WaterFrameBuffer::refractionHeight = 720;
 
@@ -47,7 +49,7 @@ void WaterFrameBuffer::BindRefractionBuffer() {
 }
 void WaterFrameBuffer::UnbindBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 }
 void WaterFrameBuffer::BindFrameBuffer(GLuint buffer, int width, int height) {
 	glBindTexture(GL_TEXTURE_2D, 0);

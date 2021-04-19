@@ -11,7 +11,7 @@ in VS_OUT
 	flat int materialIndex;
 } fs_in;
 
-uniform float bloomThreshMin = 0.8;
+uniform float bloomThreshMin = 1.0;
 uniform float bloomThreshMax = 1.2;
 
 struct materialT
@@ -22,12 +22,11 @@ struct materialT
 	vec3 ambientColor;
 };
 
-uniform materialT mat[100];
-//
-//layout (binding = 1, std140) uniform MATERIAL_BLOCK
-//{
-//	materialT material[32];
-//}materials;
+
+layout (binding = 2, std140) uniform MATERIAL_BLOCK
+{
+	materialT material[1000];
+}materials;
 
 void main(void)
 {
@@ -37,15 +36,12 @@ void main(void)
 
 	vec3 R = reflect(-L, N);
 
-	//materialT m = materials.material[fs_in.materialIndex];
-	materialT m = mat[fs_in.materialIndex];
+	materialT m = materials.material[fs_in.materialIndex];
 	vec3 diffuse = max(dot(N, L), 0.0) * m.diffuseColor;
 	vec3 specular = pow(max(dot(R, V), 0.0), m.specularPower) * m.specularColor;
 	vec3 ambient = m.ambientColor;
 
 	vec3 color = ambient + diffuse + specular;
-	//color = min(vec3(0.5), color);
-	//vec3 color = vec3(1.0, 1.0, 1.0);
 	color0 = vec4(color, 1.0);
 
 	float Y = dot(color, vec3(0.299, 0.587, 0.144));

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+
+#include "Client.h"
 #include "Shader_Table.hpp"
 #include "Graphic.h"
 #include "LoadedObj.h"
@@ -125,7 +127,7 @@ void Level6::Update(float dt)
 	static const float one = 1.0f;
 	static const float black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 	glClearBufferfv(GL_COLOR, 0, black);
 	glClearBufferfv(GL_DEPTH, 0, &one);
 

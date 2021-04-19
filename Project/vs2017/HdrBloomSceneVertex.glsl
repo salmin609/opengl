@@ -13,19 +13,16 @@ out VS_OUT
 
 uniform vec3 lightPos = vec3(0.0, 0.0, 0.0);
 
-uniform mat4 matProj;
-uniform mat4 matView;
-uniform mat4 matModel[100];
-//layout (binding = 0, std140) uniform TRANSFORM_BLOCK
-//{
-//	mat4 matProj;
-//	mat4 matView;
-//	mat4 matModel[32];
-//}transforms;
+layout (binding = 1, std140) uniform TRANSFORM_BLOCK
+{
+	mat4 matProj;
+	mat4 matView;
+	mat4 matModel[1000];
+}transforms;
 
 void main(void)
 {
-	mat4 matMv = matView * matModel[gl_InstanceID];
+	mat4 matMv = transforms.matProj * transforms.matView * transforms.matModel[gl_InstanceID];
 
 	vec4 p = matMv * vec4(position, 1.0);
 
@@ -37,5 +34,6 @@ void main(void)
 
 	vs_out.materialIndex = gl_InstanceID;
 
-	gl_Position = matProj * p;
+	//gl_Position = transforms.matProj * p;
+	gl_Position = p;
 }

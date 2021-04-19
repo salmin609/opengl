@@ -4,7 +4,7 @@ layout (binding = 0) uniform sampler2D hdrImage;
 layout (binding = 1) uniform sampler2D bloomImage;
 
 uniform float exposure = 1.5;
-uniform float bloomFactor = 1.0;
+uniform float bloomFactor = 0.8;
 uniform float sceneFactor = 1.0;
 
 out vec4 color;

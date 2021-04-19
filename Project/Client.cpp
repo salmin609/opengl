@@ -4,7 +4,6 @@
  *	Course				: CS250.
  *  Term				: Spring 2020.
  *************************************************************/
-
 #include <algorithm>
 #include "Client.h"
 #include "Level1.h"
@@ -14,6 +13,10 @@
 #include "Level5.h"
 #include "Level6.h"
 #include "Level7.h"
+
+int Client::windowWidth = 800;
+int Client::windowHeight = 800;
+
 Client::Client(void)
 {
 	graphic = new Graphic();

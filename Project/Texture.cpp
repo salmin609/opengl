@@ -1,9 +1,11 @@
 #include "Texture.h"
+
+#include "Client.h"
 #include "Image.h"
 Texture::Texture(GLenum internalFormat)
 {
-	width = 1024;
-	height = 768;
+	width = Client::windowWidth;
+	height = Client::windowHeight;
 	glGenTextures(1, &textureID);
 	pixelData = nullptr;
 	Bind();

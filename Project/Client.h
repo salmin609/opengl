@@ -33,7 +33,8 @@ public:
 	void draw(float dt);
 	void Increase_Graphic_Level();
 	void Decrease_Graphic_Level();
-	
+	static int windowWidth;
+	static int windowHeight;
 private:
 	Graphic* graphic;
 	Level1* level1;

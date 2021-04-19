@@ -2,10 +2,12 @@
 #include "Texture.h"
 #include <GL/glew.h>
 
+#include "Client.h"
+
 FrameBuffer::FrameBuffer()
 {
-	const int width = 1024;
-	const int height = 768;
+	const int width = Client::windowWidth;
+	const int height = Client::windowHeight;
 	glGenFramebuffers(1, &framebufferId);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
 
@@ -37,7 +39,7 @@ unsigned FrameBuffer::DepthTextureId()
 void FrameBuffer::Bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferId);
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
