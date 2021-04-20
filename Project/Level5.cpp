@@ -6,6 +6,9 @@
 #include "Object.h"
 #include "RandomNumGenerator.h"
 #include "LoadedObj.h"
+#include "Texture.h"
+#include "Model.h"
+#include "Buffer.h"
 Level5::Level5()
 {
 	screenWidth = Client::windowWidth;
@@ -13,26 +16,20 @@ Level5::Level5()
 	render = new Shader(shaderHdrBloomSceneVertex.c_str(), shaderHdrBloomSceneFragment.c_str());
 	filter = new Shader(shaderHdrBloomFilterVertex.c_str(), shaderHdrBloomFilterFragment.c_str());
 	resolve = new Shader(shaderHdrBloomResolveVertex.c_str(), shaderHdrBloomResolveFragment.c_str());
-
+	model = new Model(0.f, 2.5f);
 	sphere = new LoadedObj("Sphere");
-	object = new Object(&snubMesh, Point{ 0.f, 0.f, 0.f }, nullptr, nullptr);
-	object->Set_Scale(2.5f);
 
 	static const GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	static const GLfloat exposureLUT[20] = { 11.0f, 6.0f, 3.2f, 2.8f, 2.2f, 1.90f, 1.80f, 1.80f, 1.70f, 1.70f,  1.60f, 1.60f, 1.50f, 1.50f, 1.40f, 1.40f, 1.30f, 1.20f, 1.10f, 1.00f };
 
 	glGenFramebuffers(1, &renderFbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, renderFbo);
-	
-	glGenTextures(1, &texScene);
-	glBindTexture(GL_TEXTURE_2D, texScene);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA16F, screenWidth, screenHeight);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texScene, 0);
 
-	glGenTextures(1, &texBrightPass);
-	glBindTexture(GL_TEXTURE_2D, texBrightPass);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA16F, screenWidth, screenHeight);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texBrightPass, 0);
+	texScene = new Texture(GL_RGBA16F);
+	texScene->BindTextureToCurrentFrameBuffer(GL_COLOR_ATTACHMENT0);
+
+	texBrightPass = new Texture(GL_RGBA16F);
+	texBrightPass->BindTextureToCurrentFrameBuffer(GL_COLOR_ATTACHMENT1);
 
 	glGenTextures(1, &texDepth);
 	glBindTexture(GL_TEXTURE_2D, texDepth);
@@ -54,18 +51,9 @@ Level5::Level5()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	/*glGenTextures(1, &texLut);
-	glBindTexture(GL_TEXTURE_1D, texLut);
-	glTexStorage1D(GL_TEXTURE_1D, 1, GL_R32F, 20);
-	glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 20, GL_RED, GL_FLOAT, exposureLUT);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);*/
-
-	glGenBuffers(1, &uboTransform);
-	glBindBuffer(GL_UNIFORM_BUFFER, uboTransform);
-	glBufferData(GL_UNIFORM_BUFFER, (2 + SPHERE_COUNT) * sizeof(Matrix), NULL, GL_DYNAMIC_DRAW);
-
+	uboTransform = new Buffer(GL_UNIFORM_BUFFER, (2 + SPHERE_COUNT) * sizeof(Matrix), 
+		GL_DYNAMIC_DRAW, NULL);
+	
 	for (int i = 0; i < SPHERE_COUNT; i++)
 	{
 		const Vector3 randomVec = RandomNumber::RandomVector3(-5.f, 5.f);
@@ -82,9 +70,8 @@ Level5::Level5()
 		unsigned int : 32;
 	};
 
-	glGenBuffers(1, &uboMaterial);
-	glBindBuffer(GL_UNIFORM_BUFFER, uboMaterial);
-	glBufferData(GL_UNIFORM_BUFFER, SPHERE_COUNT * sizeof(material), NULL, GL_STATIC_DRAW);
+	uboMaterial = new Buffer(GL_UNIFORM_BUFFER, SPHERE_COUNT * sizeof(material),
+		GL_STATIC_DRAW, NULL);
 
 	material* m = (material*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, SPHERE_COUNT * sizeof(material), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 	float ambient = 0.001f;
@@ -111,9 +98,11 @@ Level5::~Level5()
 	delete filter;
 	delete resolve;
 	delete objectVao;
-	glDeleteTextures(1, &texScene);
-	//glDeleteTextures(1, &texLut);
-	glDeleteTextures(1, &texBrightPass);
+	delete texScene;
+	delete texBrightPass;
+	delete model;
+	delete uboTransform;
+	delete uboMaterial;
 }
 
 void Level5::Load()
@@ -141,7 +130,8 @@ void Level5::Update(float dt)
 	glDepthFunc(GL_LESS);
 
 	objectVao->Bind();
-	glBindBufferBase(GL_UNIFORM_BUFFER, 1, uboTransform);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, 1, uboTransform);
+	uboTransform->Bind(1);
 
 	transforms_t* transforms = (transforms_t*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(transforms_t), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
 	transforms->mat_proj = CameraToNDC(*CameraManager::instance->GetCamera());
@@ -151,14 +141,15 @@ void Level5::Update(float dt)
 	
 	for(int i = 0; i < SPHERE_COUNT; ++i)
 	{
-		object->SetPosition(Point(randomPos[i].x, randomPos[i].y, randomPos[i].z));
-		Matrix model2World = object->Get_Model_To_World();
+		model->ChangePos(Point(randomPos[i].x, randomPos[i].y, randomPos[i].z));
+		Matrix model2World = model->GetModelMatNotTransposed();
 		model2World = transpose(model2World);
 		transforms->mat_model[i] = model2World;
 	}
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 
-	glBindBufferBase(GL_UNIFORM_BUFFER, 2, uboMaterial);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, 2, uboMaterial);
+	uboMaterial->Bind(2);
 	
 	render->SendUniformFloat("bloomThreshMin", bloomThreshMin);
 	render->SendUniformFloat("bloomThreshMax", bloomThreshMax);
@@ -172,7 +163,7 @@ void Level5::Update(float dt)
 	//glBindVertexArray(vao);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, filterFbo[0]);
-	glBindTexture(GL_TEXTURE_2D, texBrightPass);
+	texBrightPass->Bind();
 	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -188,8 +179,7 @@ void Level5::Update(float dt)
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texFilter[1]);
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texBrightPass);
-	glBindTexture(GL_TEXTURE_2D, texScene);
+	texScene->Bind();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 

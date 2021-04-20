@@ -1,7 +1,7 @@
 #include "VAO.h"
 #include "Graphic.h"
 #include "Shader.h"
-
+#include "Buffer.h"
 VAO::VAO(Shader* shaderData)
 {
 	shader = shaderData;
@@ -12,10 +12,8 @@ VAO::VAO(Shader* shaderData)
 void VAO::Init(const std::vector<Vertex>& datas)
 {
 	glBindVertexArray(vaoId);
-	
-	glGenBuffers(1, &vboSlotId);
-	glBindBuffer(GL_ARRAY_BUFFER, vboSlotId);
-	glBufferData(GL_ARRAY_BUFFER, datas.size() * sizeof(Vertex), datas.data(), GL_STATIC_DRAW);
+	buffer = new Buffer(GL_ARRAY_BUFFER, (unsigned)(datas.size() * sizeof(Vertex)), GL_STATIC_DRAW, (void*)datas.data());
+	buffer->Bind();
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
 	glEnableVertexAttribArray(0);
@@ -29,9 +27,8 @@ void VAO::Init(float* data, int size, int indexNum, const std::vector<int>& size
 {
 	glBindVertexArray(vaoId);
 
-	glGenBuffers(1, &vboSlotId);
-	glBindBuffer(GL_ARRAY_BUFFER, vboSlotId);
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+	buffer = new Buffer(GL_ARRAY_BUFFER, size * sizeof(float), GL_STATIC_DRAW, (void*)data);
+	buffer->Bind();
 
 	const size_t sizeVecSize = sizePerIndex.size();
 	int stride = 0;
@@ -63,5 +60,5 @@ unsigned VAO::GetId()
 VAO::~VAO()
 {
 	glDeleteVertexArrays(1, &vaoId);
-	glDeleteBuffers(1, &vboSlotId);
+	delete buffer;
 }

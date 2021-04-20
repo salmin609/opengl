@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 class Shader;
+class Buffer;
 #include "Affine.h"
 
 class VAO
@@ -16,6 +17,7 @@ public:
 private:
 	unsigned vaoId;
 	Shader* shader;
-	unsigned vboSlotId;
+	//unsigned vboSlotId;
+	Buffer* buffer;
 };
 

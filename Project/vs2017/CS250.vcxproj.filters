@@ -324,6 +324,12 @@
     <ClInclude Include="..\Level7.h">
       <Filter>Engine\Hpp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Model.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Buffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">

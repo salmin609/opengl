@@ -3,6 +3,8 @@
 #include "Object.h"
 #include "State.h"
 #include "SnubDodecMesh.h"
+
+class Buffer;
 class FrameBufferObject;
 class Light_Mesh;
 class Object;
@@ -10,6 +12,7 @@ class Shader;
 class Texture;
 class VAO;
 class LoadedObj;
+class Model;
 class Level5 : public State
 {
 public:
@@ -23,23 +26,20 @@ private:
 	Shader* render;
 	Shader* filter;
 	Shader* resolve;
-
-	//unsigned vao;
+	Model* model;
 	unsigned renderFbo;
 	
-	unsigned texScene;
-	unsigned texBrightPass;
 	unsigned texDepth;
+	Texture* texScene;
+	Texture* texBrightPass;
 
 	unsigned filterFbo[2];
 	unsigned texFilter[2];
 
-	//unsigned texLut;
-	unsigned uboTransform;
-	unsigned uboMaterial;
+	Buffer* uboTransform;
+	Buffer* uboMaterial;
 	
 	SnubDodecMesh snubMesh;
-	Object* object;
 	VAO* objectVao;
 	LoadedObj* sphere;
 	int screenWidth;
