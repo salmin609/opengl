@@ -38,3 +38,8 @@ const static std::string shaderHdrBloomResolveVertex = "HdrBloomResolveVertex.gl
 const static std::string shaderHdrBloomResolveFragment = "HdrBloomResolveFragment.glsl";
 const static std::string shaderHdrBloomSceneVertex = "HdrBloomSceneVertex.glsl";
 const static std::string shaderHdrBloomSceneFragment = "HdrBloomSceneFragment.glsl";
+
+const static std::string shaderGroundTesselationControl = "GroundTesselationControl.glsl";
+const static std::string shaderGroundTesselationEvaluation = "GroundTesselationEvaluation.glsl";
+const static std::string shaderGroundVertex = "GroundVertex.glsl";
+const static std::string shaderGroundFragment = "GroundFragment.glsl";

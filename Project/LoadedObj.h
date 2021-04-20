@@ -10,7 +10,7 @@ public :
     int FaceCount(void) { return faceCount; }
     virtual void SetVertices();
     void SetIsRoughModel(bool trigger);
-
+    ~LoadedObj();
 private :
     std::string file;
     bool consistNormal = false;

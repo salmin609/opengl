@@ -60,20 +60,11 @@ Level5::Level5()
 		randomPos.push_back(randomVec);
 	}
 
-	struct material
-	{
-		Vector3 diffuse_color;
-		unsigned int : 32;
-		Vector3 specular_color;
-		float specular_power;
-		Vector3 ambient_color;
-		unsigned int : 32;
-	};
-
 	uboMaterial = new Buffer(GL_UNIFORM_BUFFER, SPHERE_COUNT * sizeof(material),
 		GL_STATIC_DRAW, NULL);
 
-	material* m = (material*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, SPHERE_COUNT * sizeof(material), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	material* m = static_cast<material*>(glMapBufferRange(GL_UNIFORM_BUFFER, 0, SPHERE_COUNT * sizeof(material),
+	                                                      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
 	float ambient = 0.001f;
 
 	for(int i = 0; i < SPHERE_COUNT; ++i)
@@ -109,6 +100,7 @@ void Level5::Load()
 {
 	Graphic::objects.clear();
 	Graphic::water = nullptr;
+	Graphic::groundId = nullptr;
 	CameraManager::instance->SetCameraPos(Vector3{ 0.942832f, 1.50537f, -1.57533f }, Vector3{ 0.f, -0.1f, 2.f });
 }
 
@@ -130,10 +122,10 @@ void Level5::Update(float dt)
 	glDepthFunc(GL_LESS);
 
 	objectVao->Bind();
-	//glBindBufferBase(GL_UNIFORM_BUFFER, 1, uboTransform);
 	uboTransform->Bind(1);
 
-	transforms_t* transforms = (transforms_t*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(transforms_t), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	transforms_t* transforms = static_cast<transforms_t*>(glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(transforms_t),
+	                                                                       GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
 	transforms->mat_proj = CameraToNDC(*CameraManager::instance->GetCamera());
 	transforms->mat_proj = transpose(transforms->mat_proj);
 	transforms->mat_view = WorldToCamera(*CameraManager::instance->GetCamera());
@@ -148,7 +140,6 @@ void Level5::Update(float dt)
 	}
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 
-	//glBindBufferBase(GL_UNIFORM_BUFFER, 2, uboMaterial);
 	uboMaterial->Bind(2);
 	
 	render->SendUniformFloat("bloomThreshMin", bloomThreshMin);

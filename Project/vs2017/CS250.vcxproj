@@ -47,7 +47,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..;..\third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -68,7 +68,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..;..\third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -163,11 +163,13 @@
     <ClInclude Include="..\CameraManager.h" />
     <ClInclude Include="..\Client.h" />
     <ClInclude Include="..\CubeMesh.h" />
+    <ClInclude Include="..\DebugApi.h" />
     <ClInclude Include="..\DrawingManager.h" />
     <ClInclude Include="..\FrameBuffer.h" />
     <ClInclude Include="..\Graphic.h" />
     <ClInclude Include="..\Ground.h" />
     <ClInclude Include="..\Image.h" />
+    <ClInclude Include="..\KtxFileLoader.h" />
     <ClInclude Include="..\Level1.h" />
     <ClInclude Include="..\Level2.h" />
     <ClInclude Include="..\Level3.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="..\Texture.h" />
     <ClInclude Include="..\UniformManager.h" />
     <ClInclude Include="..\VAO.h" />
+    <ClInclude Include="..\vmath.h" />
     <ClInclude Include="..\Water.h" />
     <ClInclude Include="..\WaterFrameBuffer.h" />
     <ClInclude Include="..\WaterRenderer.h" />
@@ -221,6 +224,10 @@
     <None Include="Fragmentshader_Texture.glsl" />
     <None Include="FrameBufferFragment.glsl" />
     <None Include="FrameBufferVertex.glsl" />
+    <None Include="GroundFragment.glsl" />
+    <None Include="GroundTesselationControl.glsl" />
+    <None Include="GroundTesselationEvaluation.glsl" />
+    <None Include="GroundVertex.glsl" />
     <None Include="HdrBloomFilterFragment.glsl" />
     <None Include="HdrBloomFilterVertex.glsl" />
     <None Include="HdrBloomResolveFragment.glsl" />

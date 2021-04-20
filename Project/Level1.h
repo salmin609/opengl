@@ -1,6 +1,4 @@
 #include "State.h"
-#include "SimpleCube_Mesh.h"
-#include "Sphere_mesh.h"
 #include "SnubDodecMesh.h"
 #include "CubeMesh.h"
 #include "Object.h"
@@ -25,13 +23,9 @@ private:
 	LoadedObj* quadObj;
 	
 	Object* center_circle;
-	Object* left_cube;
-	Object* right_cube;
 	Object* right_circle;
 	Object* light;
 	
-	Object* right_heart;
-	Object* left_heart;
 	Object* ground;
 	Object* deer;
 	Object* tree;
@@ -43,4 +37,9 @@ private:
 	Material_ ruby;
 	Material_ chrome;
 	Material_ red_plastic;
+
+	unsigned vao;
+	unsigned terrianDisplacement;
+	unsigned terrianColor;
+	Shader* groundShader;
 };

@@ -56,3 +56,8 @@ void LoadedObj::SetVertices()
 		BinaryFileManager::LoadDataFile(file, vertexDatas, faceCount);
 	}
 }
+
+LoadedObj::~LoadedObj()
+{
+	
+}

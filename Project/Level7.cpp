@@ -70,6 +70,7 @@ void Level7::Load()
 {
 	Graphic::objects.clear();
 	Graphic::water = nullptr;
+	Graphic::groundId = nullptr;
 	CameraManager::instance->SetCameraPos(Vector3{ 0.942832f, 1.50537f, -1.57533f }, Vector3{ 0.f, -0.1f, 2.f });
 }
 

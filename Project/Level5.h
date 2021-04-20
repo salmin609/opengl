@@ -54,6 +54,15 @@ private:
 		Matrix mat_view;
 		Matrix mat_model[SPHERE_COUNT];
 	};
+	struct material
+	{
+		Vector3 diffuse_color;
+		unsigned int : 32;
+		Vector3 specular_color;
+		float specular_power;
+		Vector3 ambient_color;
+		unsigned int : 32;
+	};
 	std::vector<Vector3> randomPos;
 
 	float bloomThreshMin = 1.0f;

@@ -18,7 +18,7 @@ void Level3::Load()
 	Graphic::objects.push_back(object);
 	CameraManager::instance->SetCameraPos(Vector3{ -7.f, 1.f, -5.f }, Vector3{0.8f, -0.09f, 0.45f});
 	//Graphic::objects.push_back(Graphic::light);
-	Graphic::ground = nullptr;
+	Graphic::groundId = nullptr;
 	Graphic::water = nullptr;
 }
 

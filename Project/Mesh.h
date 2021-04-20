@@ -78,7 +78,7 @@ protected:
 	bool isQuad = false;
 	bool isInstancing = false;
 	float timer;
-	VAO* vao;
+	VAO* vao = nullptr;
 };
 
 

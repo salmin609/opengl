@@ -104,6 +104,7 @@ void Level6::Load()
 {
 	CameraManager::instance->SetCameraPos(Vector3{ 0.f, 0.f, 300.f }, Vector3{ 0.f, 0.f, -1.f });
 	Graphic::objects.clear();
+	Graphic::groundId = nullptr;
 }
 
 void Level6::Update(float dt)

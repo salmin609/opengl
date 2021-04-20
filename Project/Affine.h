@@ -6,6 +6,7 @@
 #define CS250_AFFINE_H
 
 #include <cmath>
+
 #include <cassert>
 struct Vector3;
 

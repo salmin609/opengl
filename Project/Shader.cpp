@@ -1,3 +1,5 @@
+#pragma warning(disable: 4996)
+
 #include "Shader.h"
 #include <stdexcept>
 #include <fstream>
@@ -5,6 +7,9 @@
 #include <utility>
 #include <GL/glew.h>
 #include <GL/gl.h>
+
+
+//#include "DebugApi.h"
 
 Shader::Shader(const char* vertexPath, const char* fragPath)
 {
@@ -29,7 +34,7 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 		throw std::runtime_error("Failed to open fragment shader file");
 	}
 
-	const char* f_shader_code = file.c_str();
+	//const char* f_shader_code = file.c_str();
 
 	if (v_stream.is_open())
 	{
@@ -42,16 +47,18 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 		throw std::runtime_error("Failed to open vertex shader file");
 	}
 
-	const char* v_shader_code = vfile.c_str();
+	//const char* v_shader_code = vfile.c_str();
 
 	/*
 	 * Create & Compile fragment shader.
 	 * Check the compile status.
 	 */
 	//const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+
+	fragmentShaderId = Load(fragPath, GL_FRAGMENT_SHADER, true);
+	/*fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShaderId, 1, &f_shader_code, 0);
-	glCompileShader(fragmentShaderId);
+	glCompileShader(fragmentShaderId);*/
 
 	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
@@ -65,9 +72,10 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	 * Check the compile status.
 	 */
 	//const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+	vertexShaderId = Load(vertexPath, GL_VERTEX_SHADER, true);
+	/*vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderId, 1, &v_shader_code, 0);
-	glCompileShader(vertexShaderId);
+	glCompileShader(vertexShaderId);*/
 
 	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
@@ -130,12 +138,13 @@ Shader::Shader(const char* computeShader)
 		throw std::runtime_error("Failed to open compute shader file");
 	}
 
-	const char* v_shader_code = file.c_str();
+	//const char* v_shader_code = file.c_str();
 	
 	GLint is_succeed = 1;
-	computeShaderId = glCreateShader(GL_COMPUTE_SHADER);
+	/*computeShaderId = glCreateShader(GL_COMPUTE_SHADER);
 	glShaderSource(computeShaderId, 1, &v_shader_code, NULL);
-	glCompileShader(computeShaderId);
+	glCompileShader(computeShaderId);*/
+	computeShaderId = Load(computeShader, GL_COMPUTE_SHADER, true);
 
 	glGetShaderiv(computeShaderId, GL_COMPILE_STATUS, &is_succeed);
 	if (is_succeed == GL_FALSE)
@@ -158,9 +167,105 @@ Shader::Shader(const char* computeShader)
 	glDeleteShader(computeShaderId);
 }
 
+Shader::Shader(const char* vertex, const char* frag, const char* tessControl, const char* tessEval)
+{
+	GLint vs = Load(vertex, GL_VERTEX_SHADER, false);
+	GLint fs = Load(frag, GL_FRAGMENT_SHADER, false);
+	GLint tes = Load(tessEval, GL_TESS_EVALUATION_SHADER, false);
+	GLint tcs = Load(tessControl, GL_TESS_CONTROL_SHADER, false);
+	GLint is_succeed = 1;
+	programId = glCreateProgram();
+
+	glAttachShader(programId, vs);
+	glAttachShader(programId, fs);
+	glAttachShader(programId, tes);
+	glAttachShader(programId, tcs);
+
+	glLinkProgram(programId);
+	
+	glGetProgramiv(programId, GL_LINK_STATUS, &is_succeed);
+
+	if (is_succeed == GL_FALSE)
+	{
+		throw std::runtime_error("compute shader link fail");
+	}
+}
+
+unsigned Shader::Load(const char* fileName, GLenum type, bool checkError)
+{
+	GLuint result = 0;
+	FILE* fp;
+	size_t filesize;
+	char* data;
+
+	fp = fopen(fileName, "rb");
+
+	if (!fp)
+		return 0;
+
+	fseek(fp, 0, SEEK_END);
+	filesize = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	data = new char[filesize + 1];
+
+	if (!data)
+		goto fail_data_alloc;
+
+	fread(data, 1, filesize, fp);
+	data[filesize] = 0;
+	fclose(fp);
+
+	result = glCreateShader(type);
+
+	if (!result)
+		goto fail_shader_alloc;
+
+	glShaderSource(result, 1, &data, NULL);
+
+	delete[] data;
+
+	glCompileShader(result);
+
+	if (checkError)
+	{
+		GLint status = 0;
+		glGetShaderiv(result, GL_COMPILE_STATUS, &status);
+
+		if (!status)
+		{
+			char buffer[4096];
+			glGetShaderInfoLog(result, 4096, NULL, buffer);
+//#ifdef _WIN64
+//			OutputDebugStringA(fileName);
+//			OutputDebugStringA(":");
+//			OutputDebugStringA(buffer);
+//			OutputDebugStringA("\n");
+//#else
+//			fprintf(stderr, "%s: %s\n", filename, buffer);
+//#endif
+//			goto fail_compile_shader;
+		}
+	}
+
+	return result;
+
+//fail_compile_shader:
+//	glDeleteShader(result);
+
+fail_shader_alloc:;
+fail_data_alloc:
+	return result;
+}
+
 unsigned Shader::GetShaderId()
 {
 	return programId;
+}
+
+unsigned Shader::GetUniformLocation(const char* name)
+{
+	return glGetUniformLocation(programId, name);
 }
 
 void Shader::Use()

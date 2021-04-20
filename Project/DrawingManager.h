@@ -23,7 +23,7 @@ public:
 private:
 	void ClearBuffer();
 	
-	void DrawingGround();
+	void DrawingGround(float dt);
 	void DrawingShadow();
 	void DrawingObjs();
 	void DrawLight();
@@ -33,7 +33,7 @@ private:
 
 	Matrix camMat;
 	Matrix ndcMat;
-	
+	float totalTime = 0.f;
 	size_t objectsSize;
 	SkyBox* skyBox;
 	FrameBufferObject* frameBufferObj;

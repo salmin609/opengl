@@ -1,14 +1,16 @@
 #include "Level1.h"
 #include "Graphic.h"
+#include "Projection.h"
+#include "KtxFileLoader.h"
 
 const Vector    WHITE(1, 1, 1),
-PURPLE(1, 0, 1),
-BLACK(0, 0, 0),
-RED(1, 0, 0),
-GREEN(0, 1, 0),
-SKY(0.313725490f, 0.73725490196f, 0.8745098039f),
-HOT_PINK(1.f, 0.00784313725f, 0.55294117647f),
-YELLOW(1.f, 0.83137254901f, 0.f);
+                PURPLE(1, 0, 1),
+                BLACK(0, 0, 0),
+                RED(1, 0, 0),
+                GREEN(0, 1, 0),
+                SKY(0.313725490f, 0.73725490196f, 0.8745098039f),
+                HOT_PINK(1.f, 0.00784313725f, 0.55294117647f),
+                YELLOW(1.f, 0.83137254901f, 0.f);
 
 Level1::Level1()
 {
@@ -16,6 +18,18 @@ Level1::Level1()
 	quadObj = new LoadedObj("LowpolyTree");
 	Initialize_Material();
 	Init_Objects();
+
+	groundShader = new Shader(shaderGroundVertex.c_str(), shaderGroundFragment.c_str(), shaderGroundTesselationControl.c_str(),
+		shaderGroundTesselationEvaluation.c_str());
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glPatchParameteri(GL_PATCH_VERTICES, 4);
+	glEnable(GL_CULL_FACE);
+	terrianDisplacement = KtxFileLoader::load("terragen1.ktx");
+	glActiveTexture(GL_TEXTURE1);
+	terrianColor = KtxFileLoader::load("terragen_color.ktx");
 
 	Level1::Load();
 }
@@ -30,7 +44,7 @@ void Level1::Load()
 	Graphic::objects.push_back(tree);
 	
 	Graphic::light = light;
-	Graphic::ground = ground;
+	Graphic::groundId = groundShader;
 	Graphic::water = nullptr;
 }
 
@@ -45,13 +59,11 @@ void Level1::UnLoad()
 
 Level1::~Level1()
 {
+	delete deerObj;
+	delete quadObj;
 	delete center_circle;
-	delete left_cube;
-	delete right_cube;
 	delete right_circle;
 	delete light;
-	delete right_heart;
-	delete left_heart;
 	delete ground;
 	delete deer;
 	delete tree;

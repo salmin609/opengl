@@ -175,6 +175,9 @@
     <Filter Include="Shaders\Compute">
       <UniqueIdentifier>{49b1fe88-db2d-47b1-b780-63cecb4f525a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Tess">
+      <UniqueIdentifier>{9aceeb68-6ba6-4c86-a61e-a8ed0b5c43b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Camera.h">
@@ -330,6 +333,15 @@
     <ClInclude Include="..\Buffer.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\KtxFileLoader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DebugApi.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vmath.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -436,6 +448,18 @@
     </None>
     <None Include="HdrBloomSceneVertex.glsl">
       <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="GroundTesselationControl.glsl">
+      <Filter>Shaders\Tess</Filter>
+    </None>
+    <None Include="GroundTesselationEvaluation.glsl">
+      <Filter>Shaders\Tess</Filter>
+    </None>
+    <None Include="GroundVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="GroundFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>
 </Project>
