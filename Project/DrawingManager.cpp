@@ -12,6 +12,7 @@
 #include "WaterFrameBuffer.h"
 #include "vs2017/FrameBufferTexturing.h"
 #include "WaterRenderer.h"
+
 DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
@@ -122,7 +123,7 @@ void DrawingManager::DrawingGround(float dt)
 		//groundShader->SendUniformMat("mvpMat", &mvpMat);
 		//groundShader->SendUniformMat("mv_matrix", &camMat);
 		//groundShader->SendUniformMat("proj_matrix", &ndcMat);
-		groundShader->SendUniformFloat("dmapDepth", 2.0f);
+		groundShader->SendUniformFloat("dmapDepth", 12.0f);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);

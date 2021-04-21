@@ -37,7 +37,7 @@ private:
 	Material_ ruby;
 	Material_ chrome;
 	Material_ red_plastic;
-
+	Texture* check;
 	unsigned vao;
 	unsigned terrianDisplacement;
 	unsigned terrianColor;

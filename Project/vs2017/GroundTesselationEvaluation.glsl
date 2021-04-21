@@ -1,7 +1,6 @@
 #version 420 core
 
 layout (quads, fractional_odd_spacing) in;
-
 uniform sampler2D tex_displacement;
 
 uniform mat4 mv_matrix;

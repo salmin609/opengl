@@ -1,4 +1,7 @@
 #include "Level1.h"
+#include "Texture.h"
+#include "Client.h"
+#include "FrameBuffer.h"
 #include "Graphic.h"
 #include "Projection.h"
 #include "KtxFileLoader.h"
@@ -21,13 +24,15 @@ Level1::Level1()
 
 	groundShader = new Shader(shaderGroundVertex.c_str(), shaderGroundFragment.c_str(), shaderGroundTesselationControl.c_str(),
 		shaderGroundTesselationEvaluation.c_str());
-
+	groundShader->Use();
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-
+	
 	glPatchParameteri(GL_PATCH_VERTICES, 4);
-	glEnable(GL_CULL_FACE);
-	terrianDisplacement = KtxFileLoader::load("terragen1.ktx");
+	groundShader->SendUniformInt("tex_displacement", 0);
+	check = new Texture("height2.png");
+	//glEnable(GL_CULL_FACE);
+	//terrianDisplacement = KtxFileLoader::load("terragen1.ktx");
 	glActiveTexture(GL_TEXTURE1);
 	terrianColor = KtxFileLoader::load("terragen_color.ktx");
 
@@ -37,20 +42,44 @@ Level1::Level1()
 void Level1::Load()
 {
 	Graphic::objects.clear();
-	Graphic::objects.push_back(center_circle);
-	Graphic::objects.push_back(light);
-	Graphic::objects.push_back(right_circle);
-	Graphic::objects.push_back(deer);
-	Graphic::objects.push_back(tree);
+	//Graphic::objects.push_back(center_circle);
+	//Graphic::objects.push_back(light);
+	//Graphic::objects.push_back(right_circle);
+	//Graphic::objects.push_back(deer);
+	//Graphic::objects.push_back(tree);
 	
 	Graphic::light = light;
-	Graphic::groundId = groundShader;
+	//Graphic::groundId = groundShader;
 	Graphic::water = nullptr;
 }
 
 void Level1::Update(float dt)
 {
 	(dt);
+	glEnable(GL_CULL_FACE);
+	static const GLfloat black[] = { 0.85f, 0.95f, 1.0f, 1.0f };
+	static const GLfloat one = 1.0f;
+	
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
+	glClearBufferfv(GL_COLOR, 0, black);
+	glClearBufferfv(GL_DEPTH, 0, &one);
+	
+	groundShader->Use();
+	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
+	Matrix camMat = WorldToCamera(*CameraManager::instance->GetCamera());
+	Matrix mvp = ndcMat * camMat;
+	groundShader->SendUniformMat("mv_matrix", &camMat);
+	groundShader->SendUniformMat("proj_matrix", &ndcMat);
+	groundShader->SendUniformMat("mvpMat", &mvp);
+	groundShader->SendUniformFloat("dmap_depth", 3.f);
+	check->Bind(0);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glPatchParameteri(GL_PATCH_VERTICES, 4);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawArraysInstanced(GL_PATCHES, 0, 4, 200 * 200);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_CULL_FACE);
 }
 
 void Level1::UnLoad()
