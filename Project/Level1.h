@@ -15,6 +15,7 @@ public:
 	~Level1();
 	void Init_Objects();
 	void Initialize_Material();
+	static Texture* groundHeightMapTexture;
 private:
 	SnubDodecMesh snub_mesh;
 	CubeMesh cube_mesh;
@@ -37,7 +38,6 @@ private:
 	Material_ ruby;
 	Material_ chrome;
 	Material_ red_plastic;
-	Texture* check;
 	unsigned vao;
 	unsigned terrianDisplacement;
 	unsigned terrianColor;

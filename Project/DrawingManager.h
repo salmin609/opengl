@@ -23,7 +23,7 @@ public:
 private:
 	void ClearBuffer();
 	
-	void DrawingGround(float dt);
+	void DrawingGround();
 	void DrawingShadow();
 	void DrawingObjs();
 	void DrawLight();
