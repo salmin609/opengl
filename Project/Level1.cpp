@@ -1,10 +1,7 @@
 #include "Level1.h"
 #include "Texture.h"
-#include "Client.h"
-#include "FrameBuffer.h"
 #include "Graphic.h"
-#include "Projection.h"
-#include "KtxFileLoader.h"
+#include "Ground.h"
 
 Texture* Level1::groundHeightMapTexture = nullptr;
 
@@ -24,16 +21,7 @@ Level1::Level1()
 	Initialize_Material();
 	Init_Objects();
 
-	groundShader = new Shader(shaderGroundVertex.c_str(), shaderGroundFragment.c_str(), shaderGroundTesselationControl.c_str(),
-		shaderGroundTesselationEvaluation.c_str());
-	groundShader->Use();
-	
-	glPatchParameteri(GL_PATCH_VERTICES, 4);
-	groundShader->SendUniformInt("tex_displacement", 0);
-	groundHeightMapTexture = new Texture("height2.png");
-	glActiveTexture(GL_TEXTURE1);
-	terrianColor = KtxFileLoader::load("terragen_color.ktx");
-
+	ground = new Ground();
 	Level1::Load();
 }
 
@@ -47,7 +35,6 @@ void Level1::Load()
 	Graphic::objects.push_back(tree);
 	
 	Graphic::light = light;
-	Graphic::groundId = groundShader;
 	Graphic::water = nullptr;
 }
 
@@ -67,7 +54,6 @@ Level1::~Level1()
 	delete center_circle;
 	delete right_circle;
 	delete light;
-	delete ground;
 	delete deer;
 	delete tree;
 }
@@ -77,14 +63,12 @@ void Level1::Init_Objects()
 	center_circle = new Object(&snub_mesh, Point(0.f, 1.f, 0.f), &emerald);
 	right_circle = new Object(&snub_mesh, Point(2.f, 1.f, 0.f), &obsidian);
 	light = new Object(&light_mesh, Point{ 1.f, 3.f, 0.f }, &pearl, WHITE);
-	ground = new Object(&cube_mesh, Point(0.f, 0.f, 0.f), &emerald);
 	deer = new Object(deerObj, Point(0.f, 1.f, 0.f), nullptr);
 	tree = new Object(quadObj, Point(2.f, 0.f, 0.f), &emerald);
 	const Vector scale{ 0.35f, 0.35f, 0.35f };
 	center_circle->Set_Scale(scale);
 	right_circle->Set_Scale(scale);
 	light->Set_Scale(scale);
-	ground->Set_Scale(Vector(10.f, -0.1f, 10.f));
 }
 
 void Level1::Initialize_Material()

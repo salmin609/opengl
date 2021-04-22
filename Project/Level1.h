@@ -5,6 +5,8 @@
 #include "Light_Mesh.h"
 #include "LoadedObj.h"
 
+class Ground;
+
 class Level1 : public State
 {
 public:
@@ -27,7 +29,6 @@ private:
 	Object* right_circle;
 	Object* light;
 	
-	Object* ground;
 	Object* deer;
 	Object* tree;
 
@@ -38,8 +39,6 @@ private:
 	Material_ ruby;
 	Material_ chrome;
 	Material_ red_plastic;
-	unsigned vao;
-	unsigned terrianDisplacement;
-	unsigned terrianColor;
-	Shader* groundShader;
+
+	Ground* ground;
 };

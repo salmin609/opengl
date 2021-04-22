@@ -4,7 +4,7 @@
 #include "Graphic.h"
 #include "Projection.h"
 #include <iostream>
-
+#include "Ground.h"
 #include "Client.h"
 #include "FrameBuffer.h"
 #include "Level1.h"
@@ -63,7 +63,11 @@ void DrawingManager::Drawing(float dt)
 		ClearBuffer();
 		DrawingGround();
 		DrawingShadow();
-		waterRenderer->Render(dt, ndcMat, camMat);
+
+		if(isWaterExist)
+		{
+			waterRenderer->Render(dt, ndcMat, camMat);
+		}
 		//skyBox->Draw(ndcMat);
 		outLine->OutlinePrepare();
 		DrawingObjs();
@@ -104,7 +108,7 @@ void DrawingManager::DrawingGround()
 		groundShader->SendUniformMat("proj_matrix", &ndcMat);
 		groundShader->SendUniformMat("mvpMat", &mvp);
 		groundShader->SendUniformFloat("dmap_depth", 3.f);
-		Level1::groundHeightMapTexture->Bind();
+		Ground::groundHeightMapTexture->Bind();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
