@@ -23,7 +23,7 @@ Level8::Level8()
 
 	memset(particleVelocities, 0, particleCount * sizeof(ParticleVelocity));
 	
-	static const double cubeSize = 1400.0f;
+	static const double cubeSize = 1400.0;
 	
 	for(int i = 0; i < particleCount; ++i)
 	{
@@ -84,16 +84,14 @@ void Level8::Update(float dt)
 {
 	computeShader->Use();
 	computeShader->SendUniformFloat("dt", dt);
-
-	unsigned offsetsLoc = glGetUniformLocation(computeShader->GetShaderId(), "sphereOffsets");
-	unsigned radiusLoc = glGetUniformLocation(computeShader->GetShaderId(), "sphereRadius");
-	glUniform3fv(offsetsLoc, sphereCount, (float*)spheres.centers);
-	glUniform1fv(radiusLoc, sphereCount, spheres.radii);
+	computeShader->SendUniform3fv("sphereOffsets", &spheres.centers, sphereCount);
+	computeShader->SendUniform1fv("sphereRadius", &spheres.radii, sphereCount);
 	computeShader->SendUniformInt("gNumParticles", particleCount);
-	glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, positionBuffer[!index]->GetId(), 0, particleCount * sizeof(ParticlePos));
-	glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 1, velocityBuffer[!index]->GetId(), 0, particleCount * sizeof(ParticleVelocity));
-	glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 2, positionBuffer[index]->GetId(), 0, particleCount * sizeof(ParticlePos));
-	glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 3, velocityBuffer[index]->GetId(), 0, particleCount * sizeof(ParticleVelocity));
+
+	positionBuffer[!index]->BindStorageBuffer(0, particleCount * sizeof(ParticlePos));
+	velocityBuffer[!index]->BindStorageBuffer(1, particleCount * sizeof(ParticleVelocity));
+	positionBuffer[index]->BindStorageBuffer(2, particleCount * sizeof(ParticlePos));
+	velocityBuffer[index]->BindStorageBuffer(3, particleCount * sizeof(ParticleVelocity));
 
 	glDispatchCompute(m_NumWorkGroups[0], m_NumWorkGroups[1], m_NumWorkGroups[2]);
 	glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);

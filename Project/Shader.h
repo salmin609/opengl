@@ -20,6 +20,8 @@ public:
 	void SendUniformFloat(std::string uniformName, void* val) const;
 	void SendUniformFloat(std::string uniformName, float val) const;
 	void SendUniformVec3(std::string uniformName, void* val) const;
+	void SendUniform3fv(std::string uniformName, void* val, int count) const;
+	void SendUniform1fv(std::string uniformName, void* val, int count) const;
 	~Shader();
 private:
 	unsigned programId;

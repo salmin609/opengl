@@ -336,6 +336,20 @@ void Shader::SendUniformVec3(std::string uniformName, void* val) const
 	glUniform3f(loc, valInFloat[0], valInFloat[1], valInFloat[2]);
 }
 
+void Shader::SendUniform3fv(std::string uniformName, void* val, int count) const
+{
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	float* valInFloat = static_cast<float*>(val);
+	glUniform3fv(loc, count, valInFloat);
+}
+
+void Shader::SendUniform1fv(std::string uniformName, void* val, int count) const
+{
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	float* valInFloat = static_cast<float*>(val);
+	glUniform1fv(loc, count, valInFloat);
+}
+
 Shader::~Shader()
 {
 	glDeleteProgram(programId);
