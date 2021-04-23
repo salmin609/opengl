@@ -43,3 +43,8 @@ const static std::string shaderGroundTesselationControl = "GroundTesselationCont
 const static std::string shaderGroundTesselationEvaluation = "GroundTesselationEvaluation.glsl";
 const static std::string shaderGroundVertex = "GroundVertex.glsl";
 const static std::string shaderGroundFragment = "GroundFragment.glsl";
+
+const static std::string shaderParticleCollisionVertex = "ParticleCollisionVertex.glsl";
+const static std::string shaderParticleCollisionFragment = "ParticleCollisionFragment.glsl";
+const static std::string shaderParticleCollisionCompute = "ParticleCollisionCompute.glsl";
+const static std::string shaderParticleCollisionGeometry = "ParticleCollisionGeometry.glsl";

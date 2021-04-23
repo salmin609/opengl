@@ -19,7 +19,7 @@ DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject(nullptr, shaderFrameBufferVertex, 
-		shaderToonifyPostProcessFragment);
+		shaderFrameBufferFragment);
 	//skyBox = new SkyBox();
 	waterRenderer = new WaterRenderer();
 }
@@ -49,16 +49,17 @@ void DrawingManager::Drawing(float dt)
 
 			waterRenderer->GetRefractTexture()->Bind();
 			WaterInitialize(Hcoord{ 0, -1, 0, 1.f });
+			DrawingGround();
 			DrawingObjs();
 			waterRenderer->GetRefractTexture()->UnBind();
 
 			glDisable(GL_CLIP_DISTANCE0);
 		}
-
-		if (!isWaterExist)
+		frameBufferObj->Bind();
+		/*if (!isWaterExist)
 		{
 			frameBufferObj->Bind();
-		}
+		}*/
 		glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 		ClearBuffer();
 		DrawingGround();
@@ -73,11 +74,13 @@ void DrawingManager::Drawing(float dt)
 		DrawingObjs();
 		outLine->Draw();
 
-		if (!isWaterExist)
+		frameBufferObj->UnBind();
+		frameBufferObj->Use();
+		/*if (!isWaterExist)
 		{
 			frameBufferObj->UnBind();
 			frameBufferObj->Use();
-		}
+		}*/
 	}
 }
 
@@ -115,7 +118,6 @@ void DrawingManager::DrawingGround()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawArraysInstanced(GL_PATCHES, 0, 4, 64 * 64);
 		glDisable(GL_CULL_FACE);
-		//glDrawArrays(GL_PATCHES, 0, 100);
 	}
 }
 void DrawingManager::DrawingShadow()

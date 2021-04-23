@@ -6,6 +6,7 @@ class Buffer
 public:
 	Buffer(GLenum type, unsigned size, GLenum usage, void* data);
 	void Bind(unsigned uniformBufferSlot = 0);
+	unsigned GetId();
 	~Buffer();
 
 private:
@@ -30,8 +31,16 @@ inline void Buffer::Bind(unsigned uniformBufferSlot)
 	case GL_ARRAY_BUFFER:
 		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 		break;
+	case GL_SHADER_STORAGE_BUFFER:
+		glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+		break;
 	default: ;
 	}
+}
+
+inline unsigned Buffer::GetId()
+{
+	return bufferId;
 }
 
 inline Buffer::~Buffer()

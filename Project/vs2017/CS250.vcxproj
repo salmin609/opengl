@@ -117,6 +117,7 @@
     <ClCompile Include="..\Level5.cpp" />
     <ClCompile Include="..\Level6.cpp" />
     <ClCompile Include="..\Level7.cpp" />
+    <ClCompile Include="..\Level8.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="..\Level5.h" />
     <ClInclude Include="..\Level6.h" />
     <ClInclude Include="..\Level7.h" />
+    <ClInclude Include="..\Level8.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
     <ClInclude Include="..\Mesh.h" />
@@ -236,6 +238,10 @@
     <None Include="HdrBloomSceneVertex.glsl" />
     <None Include="LightFragment.glsl" />
     <None Include="LightVertex.glsl" />
+    <None Include="ParticleCollisionCompute.glsl" />
+    <None Include="ParticleCollisionFragment.glsl" />
+    <None Include="ParticleCollisionGeometry.glsl" />
+    <None Include="ParticleCollisionVertex.glsl" />
     <None Include="ParticleColoredFragment.glsl" />
     <None Include="ParticleColoredVertex.glsl" />
     <None Include="ShadowFragment.glsl" />

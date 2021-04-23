@@ -191,6 +191,29 @@ Shader::Shader(const char* vertex, const char* frag, const char* tessControl, co
 	}
 }
 
+Shader::Shader(const char* vertex, const char* frag, const char* geometry)
+{
+	GLint vs = Load(vertex, GL_VERTEX_SHADER, false);
+	GLint fs = Load(frag, GL_FRAGMENT_SHADER, false);
+	GLint gs = Load(geometry, GL_GEOMETRY_SHADER, false);
+	GLint is_succeed = 1;
+	
+	programId = glCreateProgram();
+
+	glAttachShader(programId, vs);
+	glAttachShader(programId, fs);
+	glAttachShader(programId, gs);
+	
+	glLinkProgram(programId);
+
+	glGetProgramiv(programId, GL_LINK_STATUS, &is_succeed);
+
+	if (is_succeed == GL_FALSE)
+	{
+		throw std::runtime_error("compute shader link fail");
+	}
+}
+
 unsigned Shader::Load(const char* fileName, GLenum type, bool checkError)
 {
 	GLuint result = 0;

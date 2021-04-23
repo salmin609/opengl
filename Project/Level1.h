@@ -17,7 +17,6 @@ public:
 	~Level1();
 	void Init_Objects();
 	void Initialize_Material();
-	static Texture* groundHeightMapTexture;
 private:
 	SnubDodecMesh snub_mesh;
 	CubeMesh cube_mesh;

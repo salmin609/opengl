@@ -3,7 +3,6 @@
 #include "Graphic.h"
 #include "Ground.h"
 
-Texture* Level1::groundHeightMapTexture = nullptr;
 
 const Vector    WHITE(1, 1, 1),
                 PURPLE(1, 0, 1),

@@ -5,9 +5,11 @@
 class Shader 
 {
 public:
+	
 	Shader(const char* vertexPath, const char* fragPath);
 	Shader(const char* computeShader);
 	Shader(const char* vertex, const char* frag, const char* tessControl, const char* tessEval);
+	Shader(const char* vertex, const char* frag, const char* geometry);
 	unsigned Load(const char* fileName, GLenum type, bool checkError);
 	unsigned GetShaderId();
 	unsigned GetUniformLocation(const char* name);

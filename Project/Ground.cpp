@@ -4,7 +4,7 @@
 #include "KtxFileLoader.h"
 
 Texture* Ground::groundHeightMapTexture = nullptr;
-
+Shader* Ground::groundShader = nullptr;
 Ground::Ground()
 {
 	groundShader = new Shader(shaderGroundVertex.c_str(), shaderGroundFragment.c_str(), shaderGroundTesselationControl.c_str(),

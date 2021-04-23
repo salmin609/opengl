@@ -15,8 +15,8 @@ public:
     Ground();
     ~Ground();
     static Texture* groundHeightMapTexture;
+	static Shader* groundShader;
 private:
-    Shader* groundShader;
     //Texture* groundHeightMapTexture;
     unsigned terrianColor;
 };

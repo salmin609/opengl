@@ -1,6 +1,7 @@
 #include "Level4.h"
 
 #include "Graphic.h"
+#include "Ground.h"
 #include "Object.h"
 #include "Water.h"
 
@@ -47,7 +48,7 @@ void Level4::Load()
 	//Graphic::objects.push_back(downCube);
 	Graphic::objects.push_back(Graphic::light);
 	CameraManager::instance->SetCameraPos(Vector3{ 0.f, 5.f, -5.f }, Vector3{ 0.f, -1.f, 1.f });
-	Graphic::groundId = nullptr;
+	Graphic::groundId = Ground::groundShader;
 	Graphic::water = waterObj;
 }
 

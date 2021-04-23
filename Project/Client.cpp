@@ -13,9 +13,9 @@
 #include "Level5.h"
 #include "Level6.h"
 #include "Level7.h"
-
-int Client::windowWidth = 800;
-int Client::windowHeight = 800;
+#include "Level8.h"
+int Client::windowWidth = 1280;
+int Client::windowHeight = 1000;
 
 Client::Client(void)
 {
@@ -28,14 +28,15 @@ Client::Client(void)
 	level5 = new Level5();
 	level6 = new Level6();
 	level7 = new Level7();
-
-	level1->SetNextPrevState(nullptr, level2);
+	level8 = new Level8();
+	level1->SetNextPrevState(nullptr, level8);
 	level2->SetNextPrevState(level1, level3);
 	level3->SetNextPrevState(level2, level4);
 	level4->SetNextPrevState(level3, level5);
 	level5->SetNextPrevState(level4, level6);
 	level6->SetNextPrevState(level5, level7);
-	level7->SetNextPrevState(level6, nullptr);
+	level7->SetNextPrevState(level6, level8);
+	level8->SetNextPrevState(level1, nullptr);
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;
@@ -112,6 +113,7 @@ Client::~Client(void)
 	delete level5;
 	delete level6;
 	delete level7;
+	delete level8;
 }
 
 void Client::Set_Selected_Null()
