@@ -7,6 +7,7 @@
 #include "DrawingManager.h"
 #include "CameraManager.h"
 #include "RaycastManager.h"
+#include "RandomNumGenerator.h"
 class Graphic
 {
 public:

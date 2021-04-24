@@ -6,24 +6,31 @@
 Level8::Level8()
 {
 	//particleCount = 1024 * 1024 * 2;
-	m_NumWorkGroups[0] = 1024 / 32;
-	m_NumWorkGroups[1] = 1024 * 2 / 32;
+	const int numX = 1024;
+	const int numY = 1024;
+	m_NumWorkGroups[0] = numX / 32;
+	m_NumWorkGroups[1] = numY * 2 / 32;
 	m_NumWorkGroups[2] = 1;
-	particleCount = 1024 * 1024 * 2;
+	particleCount = numX * numY * 2;
+	const float colorIncreasingLevel = 1.0f / particleCount * 3;
+	
+
 	for (int i = 0; i < sphereCount; ++i)
 	{
-		spheres.radii[i] = 100.0f + fmod((float)rand(), 50.0f);
-		spheres.centers[i].x = -700.0f + fmod((float)rand(), 1400.0f);
+		const Vector3 randomVec = RandomNumber::instance->RandomVector3(-1400.f, 1400.f);
+		const float randomRadius = RandomNumber::instance->RandomFloat(100.f, 500.f);
+		spheres.radii[i] = randomRadius;
+		spheres.centers[i].x = randomVec.x;
 		spheres.centers[i].y = 0.0f;
-		spheres.centers[i].z = -700.0f + fmod((float)rand(), 1400.0f);
+		spheres.centers[i].z = randomVec.z;
 	}
 
 	particlePositions = new ParticlePos[particleCount];
 	particleVelocities = new ParticleVelocity[particleCount];
+	particleColor = new Vector3[particleCount];
 
-	memset(particleVelocities, 0, particleCount * sizeof(ParticleVelocity));
-	
 	static const double cubeSize = 1400.0;
+	Vector3 tempColor{0.f, 0.f, 0.f};
 	
 	for(int i = 0; i < particleCount; ++i)
 	{
@@ -36,6 +43,12 @@ Level8::Level8()
 		particleVelocities[i].vy = -5.f + rand() % 10 + (rand() % 10) / 10.0f;
 		particleVelocities[i].fTimeToLive = 20.f + fmod((float)rand(), 10.f);
 
+		tempColor.x = tempColor.x < 1.f ? tempColor.x + colorIncreasingLevel : tempColor.x;
+		tempColor.y = tempColor.x > 1.f ? tempColor.y + colorIncreasingLevel : tempColor.y;
+		tempColor.z = tempColor.y > 1.f ? tempColor.z + colorIncreasingLevel : tempColor.z;
+
+		particleColor[i] = tempColor;
+		
 		particlePositions[i].w = 1.0;
 	}
 	
@@ -50,6 +63,7 @@ Level8::Level8()
 		positionBuffer[i] = new Buffer(GL_SHADER_STORAGE_BUFFER, particleCount * sizeof(ParticlePos), GL_STATIC_DRAW, particlePositions);
 		velocityBuffer[i] = new Buffer(GL_SHADER_STORAGE_BUFFER, particleCount * sizeof(ParticleVelocity), GL_STATIC_DRAW, particleVelocities);
 	}
+	colorBuffer = new Buffer(GL_ARRAY_BUFFER, particleCount * sizeof(Vector3), GL_STATIC_DRAW, particleColor);
 
 	glGenVertexArrays(2, drawVao);
 
@@ -57,12 +71,20 @@ Level8::Level8()
 	positionBuffer[0]->Bind();
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
+	
+	colorBuffer->Bind();
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(drawVao[1]);
 	positionBuffer[1]->Bind();
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
+	colorBuffer->Bind();
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+	
 	glBindVertexArray(0);
 }
 
@@ -70,6 +92,15 @@ Level8::~Level8()
 {
 	delete renderShader;
 	delete computeShader;
+	delete[] particlePositions;
+	delete[] particleVelocities;
+
+	for(int i = 0; i < 2; ++i)
+	{
+		delete positionBuffer[i];
+		delete velocityBuffer[i];
+	}
+	delete colorBuffer;
 }
 
 void Level8::Load()

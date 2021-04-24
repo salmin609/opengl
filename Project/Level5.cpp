@@ -4,7 +4,6 @@
 #include "Projection.h"
 #include "VAO.h"
 #include "Object.h"
-#include "RandomNumGenerator.h"
 #include "LoadedObj.h"
 #include "Texture.h"
 #include "Model.h"
@@ -56,7 +55,7 @@ Level5::Level5()
 	
 	for (int i = 0; i < SPHERE_COUNT; i++)
 	{
-		const Vector3 randomVec = RandomNumber::RandomVector3(-5.f, 5.f);
+		const Vector3 randomVec = RandomNumber::instance->RandomVector3(-5.f, 5.f);
 		randomPos.push_back(randomVec);
 	}
 

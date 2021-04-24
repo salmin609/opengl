@@ -17,10 +17,11 @@ void main(void)
 	vec4 viewPos = viewMat * vec4(position.xyz, 1.0);
 	gl_Position = projMat * viewPos;
 
-	float speed = clamp(position.w, 0.0, 400.0);
-	vec3 largeSpeed = vec3(0.4, 0.4, 0.4);
-	vec3 smallSpeed = vec3(1.0, 1.0, 1.0);
-
-	vec3 clr = mix(smallSpeed, largeSpeed, vec3(speed / 200.0, speed / 200.0, speed / 200.0));
-	vColor.transformedColor = vec4(clr, (viewPos.z + 3000) / 3000);
+//	float speed = clamp(position.w, 0.0, 400.0);
+//	vec3 largeSpeed = vec3(0.4, 0.4, 0.4);
+//	vec3 smallSpeed = vec3(1.0, 1.0, 1.0);
+//
+//	vec3 clr = mix(smallSpeed, largeSpeed, vec3(speed / 200.0, speed / 200.0, speed / 200.0));
+//	vColor.transformedColor = vec4(clr, (viewPos.z + 3000) / 3000);
+	vColor.transformedColor = vec4(color, 1.0);
 }

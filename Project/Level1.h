@@ -1,9 +1,9 @@
 #include "State.h"
 #include "SnubDodecMesh.h"
 #include "CubeMesh.h"
-#include "Object.h"
 #include "Light_Mesh.h"
 #include "LoadedObj.h"
+#include "Object.h"
 
 class Ground;
 

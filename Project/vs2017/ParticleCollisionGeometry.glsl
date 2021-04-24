@@ -11,21 +11,22 @@ in VData
 
 void main(void)
 {
+	float size = 1.0f;
 	for(int i = 0 ; i < gl_in.length(); ++i)
 	{
 		gl_Position = gl_in[i].gl_Position + vec4(0.0, 0.0, 0.0, 0.0);
 		vtxColor = vColor[i].transformedColor;
 		EmitVertex();
 
-		gl_Position = gl_in[i].gl_Position + vec4(0.0, 1.0, 0.0, 0.0);
+		gl_Position = gl_in[i].gl_Position + vec4(0.0, size, 0.0, 0.0);
         vtxColor = vColor[i].transformedColor;
         EmitVertex();
 
-        gl_Position = gl_in[i].gl_Position + vec4(1.0, 0.0, 0.0, 0.0);
+        gl_Position = gl_in[i].gl_Position + vec4(size, 0.0, 0.0, 0.0);
         vtxColor = vColor[i].transformedColor;
         EmitVertex();
 
-		gl_Position = gl_in[i].gl_Position + vec4(1.0, 1.0, 0.0, 0.0);
+		gl_Position = gl_in[i].gl_Position + vec4(size, size, 0.0, 0.0);
         vtxColor = vColor[i].transformedColor;
         EmitVertex();
 

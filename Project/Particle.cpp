@@ -1,6 +1,5 @@
 #include "Particle.h"
-#include "RandomNumGenerator.h"
-
+#include "Graphic.h"
 Particle::Particle()
 {
 	isInstancing = true;
@@ -15,17 +14,17 @@ void Particle::SetVertices()
 
 	for (size_t i = 0; i < particleNum; ++i)
 	{
-		const float randomx = RandomNumber::RandomFloat(0.f, 1.f);
-		const float randomy = RandomNumber::RandomFloat(0.f, 1.f);
-		const float randomz = RandomNumber::RandomFloat(0.f, 1.f);
+		const float randomx = RandomNumber::instance->RandomFloat(0.f, 1.f);
+		const float randomy = RandomNumber::instance->RandomFloat(0.f, 1.f);
+		const float randomz = RandomNumber::instance->RandomFloat(0.f, 1.f);
 
-		const float randomDirX = RandomNumber::RandomFloat(0.f, 10.f);
-		const float randomDirY = RandomNumber::RandomFloat(0.f, 10.f);
-		const float randomDirZ = RandomNumber::RandomFloat(0.f, 10.f);
+		const float randomDirX = RandomNumber::instance->RandomFloat(0.f, 10.f);
+		const float randomDirY = RandomNumber::instance->RandomFloat(0.f, 10.f);
+		const float randomDirZ = RandomNumber::instance->RandomFloat(0.f, 10.f);
 
-		const float randomRotX = RandomNumber::RandomFloat(0.f, 10.f);
-		const float randomRotY = RandomNumber::RandomFloat(0.f, 10.f);
-		const float randomRotZ = RandomNumber::RandomFloat(0.f, 10.f);
+		const float randomRotX = RandomNumber::instance->RandomFloat(0.f, 10.f);
+		const float randomRotY = RandomNumber::instance->RandomFloat(0.f, 10.f);
+		const float randomRotZ = RandomNumber::instance->RandomFloat(0.f, 10.f);
 
 		ParticleInstance data{ 2.f, Vector3{
 			randomx,
@@ -52,7 +51,7 @@ void Particle::MoveParticle(float dt)
 {
 	const float speed = 2.f;
 	const float rotateSpeed = 10.f;
-	const int randomIndex = RandomNumber::RandomInt(10);
+	const int randomIndex = RandomNumber::instance->RandomInt(10);
 	instancingNum += randomIndex;
 
 	if (instancingNum > particleNum)
@@ -72,17 +71,17 @@ void Particle::MoveParticle(float dt)
 		{
 			instancingNum--;
 			particle.life = 2.f;
-			particle.dir.x = RandomNumber::RandomFloat(0.f, 10.f);
-			particle.dir.y = RandomNumber::RandomFloat(0.f, 10.f);
-			particle.dir.z = RandomNumber::RandomFloat(0.f, 10.f);
+			particle.dir.x = RandomNumber::instance->RandomFloat(0.f, 10.f);
+			particle.dir.y = RandomNumber::instance->RandomFloat(0.f, 10.f);
+			particle.dir.z = RandomNumber::instance->RandomFloat(0.f, 10.f);
 
-			particle.rotate.x = RandomNumber::RandomFloat(0.f, 10.f);
-			particle.rotate.y = RandomNumber::RandomFloat(0.f, 10.f);
-			particle.rotate.z = RandomNumber::RandomFloat(0.f, 10.f);
+			particle.rotate.x = RandomNumber::instance->RandomFloat(0.f, 10.f);
+			particle.rotate.y = RandomNumber::instance->RandomFloat(0.f, 10.f);
+			particle.rotate.z = RandomNumber::instance->RandomFloat(0.f, 10.f);
 
-			particle.color.x = RandomNumber::RandomFloat(0.f, 1.f);
-			particle.color.y = RandomNumber::RandomFloat(0.f, 1.f);
-			particle.color.z = RandomNumber::RandomFloat(0.f, 1.f);
+			particle.color.x = RandomNumber::instance->RandomFloat(0.f, 1.f);
+			particle.color.y = RandomNumber::instance->RandomFloat(0.f, 1.f);
+			particle.color.z = RandomNumber::instance->RandomFloat(0.f, 1.f);
 		}
 		else
 		{

@@ -17,6 +17,7 @@ private:
 	Shader* computeShader;
 	Buffer* positionBuffer[2];
 	Buffer* velocityBuffer[2];
+	Buffer* colorBuffer;
 	int particleCount;
 	unsigned m_NumWorkGroups[3];
 	unsigned drawVao[2];
@@ -27,6 +28,7 @@ private:
 		float z;
 		float w;          //Holds the speed so when we get this in the pixel shader we can color our particles based on that.
 	};
+	
 
 	struct Spheres_t
 	{
@@ -47,5 +49,6 @@ private:
 	};
 	ParticlePos* particlePositions;
 	ParticleVelocity* particleVelocities;
+	Vector3* particleColor;
 	int index = 0;
 };

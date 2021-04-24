@@ -61,7 +61,7 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 
 	for (size_t i = 0; i < instancingNum; ++i)
 	{
-		Vector3 randomVec = RandomNumber::RandomVector3(-10.f, 10.f);
+		Vector3 randomVec = RandomNumber::instance->RandomVector3(-10.f, 10.f);
 		offsetVec.push_back(randomVec);
 		/*const int randomOffsetx = rand() % offsetDivisor;
 		const int randomOffsety = rand() % (offsetDivisor / 2);

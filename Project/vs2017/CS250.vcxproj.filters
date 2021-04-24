@@ -131,6 +131,9 @@
     <ClCompile Include="..\Level8.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\RandomNumGenerator.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="..\Level8.h">
       <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

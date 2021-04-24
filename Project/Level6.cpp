@@ -10,7 +10,6 @@
 #include "Projection.h"
 #include "Object.h"
 #include "PositionConverter.h"
-#include "RandomNumGenerator.h"
 
 Level6::Level6(): flockRenderVao(nullptr)
 {
@@ -83,8 +82,8 @@ Level6::Level6(): flockRenderVao(nullptr)
 
 	for (int i = 0; i < FLOCK_SIZE; i++)
 	{
-		ptr[i].position = (RandomNumber::RandomVector3(-5.f, 5.f) - 0.5f) * 300.f;
-		ptr[i].velocity = (RandomNumber::RandomVector3(-5.f, 5.f) - 0.5f);
+		ptr[i].position = (RandomNumber::instance->RandomVector3(-5.f, 5.f) - 0.5f) * 300.f;
+		ptr[i].velocity = (RandomNumber::instance->RandomVector3(-5.f, 5.f) - 0.5f);
 	}
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Object.h"
 #include "State.h"
 #include "SnubDodecMesh.h"
 
