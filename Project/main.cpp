@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include "Client.h"
+#include "InputManager.h"
 
 int main(int /*argc*/, char* /*argv*/[]) {
 
@@ -56,7 +57,10 @@ int main(int /*argc*/, char* /*argv*/[]) {
 					break;
 				case SDL_KEYDOWN:
 				{
-					SDL_Keycode code = event.key.keysym.sym;
+					const SDL_Keycode code = event.key.keysym.sym;
+
+					InputManager::instance->Press(code);
+						
 					if (code == SDLK_ESCAPE)
 						done = true;
 					else if (code == SDLK_SPACE)

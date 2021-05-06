@@ -1,6 +1,7 @@
 // Affine.h
 // -- points, vectors, transformations in 3D
 // cs250 8/17
+#pragma once
 
 #ifndef CS250_AFFINE_H
 #define CS250_AFFINE_H
@@ -97,11 +98,18 @@ struct Vector2
 		x += val.x;
 		y += val.y;
 	}
+	bool operator!=(Vector2 val)
+	{
+		return x != val.x && y != val.y;
+	}
 	float x, y;
 };
 struct Vector3
 {
 	Vector3() : x(0.f), y(0.f), z(0.f)
+	{
+	}
+	Vector3(Point val) : x(val.x), y(val.y), z(val.z)
 	{
 	}
 	Vector3(float val)
@@ -122,6 +130,12 @@ struct Vector3
 		y += val.y;
 		z += val.z;
 	}
+	bool operator!=(Vector3 val)
+	{
+		return x != val.x && y != val.y && z != val.z;
+	}
+	
+	
 	Vector3 operator-(float val)
 	{
 		Vector3 result{};
@@ -154,6 +168,16 @@ struct Vertex
 	Vector3 normal;
 	Vector2 texCoord;
 	Vector3 color;
+};
+struct Vector4
+{
+	Vector4() : x(0.f), y(0.f), z(0.f), w(1.f)
+	{
+	}
+	Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
+	{
+	}
+	float x, y, z, w;
 };
 
 #endif

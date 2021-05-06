@@ -16,6 +16,8 @@ class Level5;
 class Level6;
 class Level7;
 class Level8;
+class Level9;
+class InputManager;
 class Client {
 public:
 	Client(void);
@@ -46,5 +48,7 @@ private:
 	Level6* level6;
 	Level7* level7;
 	Level8* level8;
+	Level9* level9;
 	State* currState;
+	InputManager* input;
 };

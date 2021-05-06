@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __VMATH_H__
 #define __VMATH_H__
 

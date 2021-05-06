@@ -1,5 +1,7 @@
 #include "Particle.h"
 #include "Graphic.h"
+#include "RandomNumGenerator.h"
+
 Particle::Particle()
 {
 	isInstancing = true;

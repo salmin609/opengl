@@ -8,8 +8,8 @@ class VAO
 {
 public:
 	
-	VAO(Shader* shaderData);
-	void Init(const std::vector<Vertex>& datas);
+	VAO(Shader* shaderData = nullptr);
+	void Init(std::vector<Vertex>& datas, bool onlyPos = false);
 	void Init(float* data, int size, int indexNum, const std::vector<int>& sizePerIndex);
 	void Bind();
 	unsigned GetId();
@@ -17,7 +17,6 @@ public:
 private:
 	unsigned vaoId;
 	Shader* shader;
-	//unsigned vboSlotId;
 	Buffer* buffer;
 };
 

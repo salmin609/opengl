@@ -10,10 +10,10 @@
 #include <sstream>
 #include <utility>
 #include "Mesh.h"
-#include <random>
-#include "RandomNumGenerator.h"
+#include "Graphic.h"
 #include "vs2017/SimpleMeshes.h"
 #include "VAO.h"
+#include "RandomNumGenerator.h"
 #include "Texture.h"
 unsigned Mesh::Get_VAO_Id()
 {
@@ -63,25 +63,6 @@ void Mesh::InitializeInstanceObj(std::string spritePath, std::string vertexPath,
 	{
 		Vector3 randomVec = RandomNumber::instance->RandomVector3(-10.f, 10.f);
 		offsetVec.push_back(randomVec);
-		/*const int randomOffsetx = rand() % offsetDivisor;
-		const int randomOffsety = rand() % (offsetDivisor / 2);
-		const int randomOffsetz = rand() % offsetDivisor;
-
-		if (!minusTrigger)
-		{
-			offsetVec.push_back(Vector3{
-				static_cast<float>(randomOffsetx),
-				static_cast<float>(randomOffsety),
-				static_cast<float>(randomOffsetz) });
-		}
-		else
-		{
-			offsetVec.push_back(Vector3{
-				static_cast<float>(-randomOffsetx),
-				static_cast<float>(-randomOffsety),
-				static_cast<float>(-randomOffsetz) });
-		}
-		minusTrigger = !minusTrigger;*/
 	}
 
 	Init_VBO(offsetVec.data(), &instancingId, sizeof(Vector3) * offsetVec.size(),

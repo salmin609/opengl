@@ -1,6 +1,7 @@
 #pragma once
 #include "Affine.h"
 #include "State.h"
+class VAO;
 class Shader;
 class Buffer;
 const int sphereCount = 20;
@@ -20,7 +21,7 @@ private:
 	Buffer* colorBuffer;
 	int particleCount;
 	unsigned m_NumWorkGroups[3];
-	unsigned drawVao[2];
+	VAO* drawVao[2];
 	struct ParticlePos
 	{
 		float x;

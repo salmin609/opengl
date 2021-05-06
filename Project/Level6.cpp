@@ -10,6 +10,7 @@
 #include "Projection.h"
 #include "Object.h"
 #include "PositionConverter.h"
+#include "RandomNumGenerator.h"
 
 Level6::Level6(): flockRenderVao(nullptr)
 {

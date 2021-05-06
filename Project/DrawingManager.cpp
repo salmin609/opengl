@@ -19,7 +19,7 @@ DrawingManager::DrawingManager()
 {
 	outLine = new OutLine();
 	frameBufferObj = new FrameBufferObject(nullptr, shaderFrameBufferVertex, 
-		shaderFrameBufferFragment);
+		shaderToonifyPostProcessFragment);
 	//skyBox = new SkyBox();
 	waterRenderer = new WaterRenderer();
 }
@@ -103,7 +103,7 @@ void DrawingManager::DrawingGround()
 		glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 		glClearBufferfv(GL_COLOR, 0, black);
 		glClearBufferfv(GL_DEPTH, 0, &one);
-		
+		glPatchParameteri(GL_PATCH_VERTICES, 4);
 		groundShader->Use();
 		Matrix mvp = ndcMat * camMat;
 		

@@ -31,7 +31,7 @@ FrameBufferObject::FrameBufferObject(Texture* textureVal, std::string vertex , s
 	int val = 0;
 	float val2 = 0.2f;
 	float val3 = 5.0f;
-	float val4 = 0.5f;
+	float val4 = 0.f;
 	shader->Use();
 	shader->SendUniformInt("tex0", &val);
 	shader->SendUniformFloat("edge_thres", &val2);

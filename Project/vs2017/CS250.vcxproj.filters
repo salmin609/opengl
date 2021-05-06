@@ -134,6 +134,12 @@
     <ClCompile Include="..\RandomNumGenerator.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\Level9.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\InputManager.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -357,6 +363,15 @@
     <ClInclude Include="..\Header.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Level9.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterComputeShader.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\InputManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -487,6 +502,27 @@
     </None>
     <None Include="ParticleCollisionCompute.glsl">
       <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="cubeGeometry.glsl">
+      <Filter>Shaders\Geometry</Filter>
+    </None>
+    <None Include="tracePrepareVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="tracePrepareFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="traceVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="traceFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="traceBlitFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="traceBlitVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "LoadedObj.h"
 #include "Texture.h"
 #include "Model.h"
+#include "RandomNumGenerator.h"
 #include "Buffer.h"
 Level5::Level5()
 {
@@ -77,7 +78,7 @@ Level5::Level5()
 	}
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 
-	const std::vector<Vertex> vertices = sphere->GetVertexDatas();
+	std::vector<Vertex> vertices = sphere->GetVertexDatas();
 	objectVao = new VAO(render);
 	objectVao->Init(vertices);
 }

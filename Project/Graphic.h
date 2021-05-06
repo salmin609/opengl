@@ -1,5 +1,4 @@
 #pragma once
-
 #include <SDL2/SDL.h>
 #include "Affine.h"
 #include "Object.h"
@@ -7,7 +6,6 @@
 #include "DrawingManager.h"
 #include "CameraManager.h"
 #include "RaycastManager.h"
-#include "RandomNumGenerator.h"
 class Graphic
 {
 public:

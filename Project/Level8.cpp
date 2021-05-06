@@ -2,12 +2,13 @@
 #include "Graphic.h"
 #include "Buffer.h"
 #include "Projection.h"
-
+#include "RandomNumGenerator.h"
+#include "VAO.h"
 Level8::Level8()
 {
 	//particleCount = 1024 * 1024 * 2;
-	const int numX = 1024;
-	const int numY = 1024;
+	const int numX = 100;
+	const int numY = 100;
 	m_NumWorkGroups[0] = numX / 32;
 	m_NumWorkGroups[1] = numY * 2 / 32;
 	m_NumWorkGroups[2] = 1;
@@ -18,8 +19,8 @@ Level8::Level8()
 	for (int i = 0; i < sphereCount; ++i)
 	{
 		const Vector3 randomVec = RandomNumber::instance->RandomVector3(-1400.f, 1400.f);
-		const float randomRadius = RandomNumber::instance->RandomFloat(100.f, 500.f);
-		spheres.radii[i] = randomRadius;
+		//const float randomRadius = RandomNumber::instance->RandomFloat(100.f, 500.f);
+		spheres.radii[i] = 300.f;
 		spheres.centers[i].x = randomVec.x;
 		spheres.centers[i].y = 0.0f;
 		spheres.centers[i].z = randomVec.z;
@@ -62,12 +63,11 @@ Level8::Level8()
 	{
 		positionBuffer[i] = new Buffer(GL_SHADER_STORAGE_BUFFER, particleCount * sizeof(ParticlePos), GL_STATIC_DRAW, particlePositions);
 		velocityBuffer[i] = new Buffer(GL_SHADER_STORAGE_BUFFER, particleCount * sizeof(ParticleVelocity), GL_STATIC_DRAW, particleVelocities);
+		drawVao[i] = new VAO();
 	}
 	colorBuffer = new Buffer(GL_ARRAY_BUFFER, particleCount * sizeof(Vector3), GL_STATIC_DRAW, particleColor);
 
-	glGenVertexArrays(2, drawVao);
-
-	glBindVertexArray(drawVao[0]);
+	drawVao[0]->Bind();
 	positionBuffer[0]->Bind();
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
@@ -76,7 +76,7 @@ Level8::Level8()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 
-	glBindVertexArray(drawVao[1]);
+	drawVao[1]->Bind();
 	positionBuffer[1]->Bind();
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
@@ -99,6 +99,7 @@ Level8::~Level8()
 	{
 		delete positionBuffer[i];
 		delete velocityBuffer[i];
+		delete drawVao[i];
 	}
 	delete colorBuffer;
 }
@@ -135,13 +136,14 @@ void Level8::Update(float dt)
 	renderShader->Use();
 	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
 	Matrix camMat = WorldToCamera(*CameraManager::instance->GetCamera());
-
+	Matrix mvp = ndcMat * camMat;
+	
 	renderShader->SendUniformMat("viewMat", &camMat);
 	renderShader->SendUniformMat("projMat", &ndcMat);
+	renderShader->SendUniformMat("mvp", &mvp);
 
 	index = !index;
-
-	glBindVertexArray(drawVao[index]);
+	drawVao[index]->Bind();
 	glDrawArrays(GL_POINTS, 0, particleCount);
 	
 	glBindVertexArray(0);

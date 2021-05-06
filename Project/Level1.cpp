@@ -32,7 +32,7 @@ void Level1::Load()
 	Graphic::objects.push_back(right_circle);
 	Graphic::objects.push_back(deer);
 	Graphic::objects.push_back(tree);
-	
+	Graphic::groundId = Ground::groundShader;
 	Graphic::light = light;
 	Graphic::water = nullptr;
 }

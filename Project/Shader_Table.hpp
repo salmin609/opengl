@@ -48,3 +48,13 @@ const static std::string shaderParticleCollisionVertex = "ParticleCollisionVerte
 const static std::string shaderParticleCollisionFragment = "ParticleCollisionFragment.glsl";
 const static std::string shaderParticleCollisionCompute = "ParticleCollisionCompute.glsl";
 const static std::string shaderParticleCollisionGeometry = "ParticleCollisionGeometry.glsl";
+
+const static std::string shaderWaterCollisionCompute = "WaterComputeShader.glsl";
+const static std::string shaderPointToCubeGeometry = "cubeGeometry.glsl";
+
+const static std::string shaderRaytracingPrepareVertex = "tracePrepareVertex.glsl";
+const static std::string shaderRaytracingPrepareFragment = "tracePrepareFragment.glsl";
+const static std::string shaderRaytracingVertex = "traceVertex.glsl";
+const static std::string shaderRaytracingFragment = "traceFragment.glsl";
+const static std::string shaderRaytracingBlitVertex = "traceBlitVertex.glsl";
+const static std::string shaderRaytracingBlitFragment = "traceBlitFragment.glsl";
