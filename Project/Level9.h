@@ -17,33 +17,22 @@ public:
 	void Update(float dt) override;
 	void UnLoad() override;
 private:
-	struct ParticlePos
-	{
-		float x;
-		float y;
-		float z;
-		float w; //speed
-	};
-	struct ParticleVelocity
-	{
-		float vx;
-		float vy;
-		float vz;
-		float fTimeToLive; //Remaining time. 
-	};
+	Shader* render;
+	Shader* compute;
+	Buffer* positionBuffer;
+	Buffer* velocityBuffer;
+	Buffer* lifeBuffer;
+	Buffer* attratorBuffer;
 
-	Shader* renderShader;
-	Shader* computeShader;
-	Buffer* positionBuffer[2];
-	Buffer* velocityBuffer[2];
-	int particleCount;
-	unsigned numworkGroups[3];
-	VAO* drawVao[2];
-	ParticlePos* particlePositions;
-	ParticleVelocity* particleVelocity;
-	int index = 0;
-	LoadedObj* loadedObj;
-	Model* model;
-	unsigned positionBufferSize;
-	unsigned velocityBufferSize;
+	std::vector<Vector3> positionDatas;
+	std::vector<Vector4> velocityDatas;
+	std::vector<Vector4> attratorDatas;
+	std::vector<float> lifeDatas;
+	
+	int particleCountX;
+	int particleCountY;
+	int totalParticleNum;
+	int attractorCount;
+	int gfsCount;
+	float fpsAll;
 };

@@ -7,8 +7,8 @@
 Level8::Level8()
 {
 	//particleCount = 1024 * 1024 * 2;
-	const int numX = 100;
-	const int numY = 100;
+	const int numX = 10;
+	const int numY = 10;
 	m_NumWorkGroups[0] = numX / 32;
 	m_NumWorkGroups[1] = numY * 2 / 32;
 	m_NumWorkGroups[2] = 1;

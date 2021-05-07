@@ -103,11 +103,11 @@ void Level7::Update(float dt)
 	(dt);
 	if(!InputManager::instance->IsEmpty())
 	{
-		if(InputManager::instance->IsPressed('q'))
+		if(InputManager::instance->IsPressed('e'))
 		{
 			max_depth++;
 		}
-		if (InputManager::instance->IsPressed('e'))
+		if (InputManager::instance->IsPressed('q'))
 		{
 			max_depth--;
 		}

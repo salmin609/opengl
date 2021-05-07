@@ -32,7 +32,7 @@ Client::Client(void)
 	level7 = new Level7();
 	level8 = new Level8();
 	level9 = new Level9();
-	level1->SetNextPrevState(nullptr, level2);
+	level1->SetNextPrevState(nullptr, level9);
 	level2->SetNextPrevState(level1, level3);
 	level3->SetNextPrevState(level2, level4);
 	level4->SetNextPrevState(level3, level5);
@@ -40,7 +40,7 @@ Client::Client(void)
 	level6->SetNextPrevState(level5, level7);
 	level7->SetNextPrevState(level6, level8);
 	level8->SetNextPrevState(level7, level9);
-	level9->SetNextPrevState(level8, nullptr);
+	level9->SetNextPrevState(level1, nullptr);
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level1;

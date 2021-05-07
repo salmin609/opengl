@@ -6,6 +6,7 @@ class Buffer
 public:
 	Buffer(GLenum type, unsigned size, GLenum usage, void* data);
 	void Bind(unsigned uniformBufferSlot = 0);
+	void BindStorage(int index);
 	void BindStorageBuffer(int storageIndex, unsigned size);
 	unsigned GetId();
 	~Buffer();
@@ -37,6 +38,11 @@ inline void Buffer::Bind(unsigned uniformBufferSlot)
 		break;
 	default: ;
 	}
+}
+
+inline void Buffer::BindStorage(int index)
+{
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, bufferId);
 }
 
 inline void Buffer::BindStorageBuffer(int storageIndex, unsigned size)

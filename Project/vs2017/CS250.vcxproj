@@ -258,6 +258,9 @@
     <None Include="ParticleCollisionVertex.glsl" />
     <None Include="ParticleColoredFragment.glsl" />
     <None Include="ParticleColoredVertex.glsl" />
+    <None Include="particleComputeShader.glsl" />
+    <None Include="particleFragmentShader.glsl" />
+    <None Include="particleVertexShader.glsl" />
     <None Include="ShadowFragment.glsl" />
     <None Include="ShadowVertex.glsl" />
     <None Include="SimpleFragment.glsl" />

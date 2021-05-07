@@ -524,5 +524,14 @@
     <None Include="traceBlitVertex.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="particleComputeShader.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="particleFragmentShader.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="particleVertexShader.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
 </Project>
