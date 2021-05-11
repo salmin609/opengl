@@ -533,5 +533,8 @@
     <None Include="particleVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="particleGeometry.glsl">
+      <Filter>Shaders\Geometry</Filter>
+    </None>
   </ItemGroup>
 </Project>

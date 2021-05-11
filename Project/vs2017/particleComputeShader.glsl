@@ -1,92 +1,58 @@
-#version 430 core
+#version 430
+#extension GL_ARB_compute_shader : enable
+#extension GL_ARB_shader_storage_buffer_object : enable
 
-layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
-
-layout(std430, binding = 0) buffer positionBuffer
-{
-	vec3 positions[];
+struct particle{
+    vec4  currPos;
+    vec4  prevPos;
 };
 
-layout(std430, binding = 1) buffer velocityBuffer
-{
-	vec4 velocities[];
+layout(std430, binding=0) buffer particles{
+   particle p[];
 };
 
-layout(std430, binding = 2) buffer attratorBuffer
-{
-	vec4 attractors[];
-};
-
-layout(std430, binding = 3) buffer lifeBuffer
-{
-	float lifes[];
-};
-
+uniform vec4 attPos;
 uniform float dt;
+uniform int maxParticles;
 
-highp float rand(vec2 co)
-{
-    highp float a = 12.9898;
-    highp float b = 78.233;
-    highp float c = 43758.5453;
-    highp float dt= dot(co.xy ,vec2(a,b));
-    highp float sn= mod(dt,3.14);
-    return fract(sin(sn) * c);
-}
+layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+void main(){
+    uint gid = gl_GlobalInvocationID.x;
 
-float VecLen(vec3 v)
-{
-    return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-}
+    if(gid <= maxParticles){
+        particle part = p[gid];
 
-vec3 normalize (vec3 v)
-{
-	return v / VecLen(v);
-}
+        // The direction of this vector corresponds to the direction of the gravity.
+        // A zero vector will freeze the particles when not interacted with them.
+        vec4 gv = normalize(vec4(0, -1, 0, 0));
 
-vec3 calcForceFor (vec3 forcePoint, vec3 pos)
-{
-	// Force:
-	float gauss = 10000.0;
-	float e = 2.71828183;
-	float k_weak = 1.0;
-	vec3 dir = forcePoint - pos.xyz;
-	float g = pow (e, -pow(VecLen(dir), 2) / gauss);
-	vec3 f = normalize(dir) * k_weak * (1+ mod(rand(dir.xy), 10) - mod(rand(dir.yz), 10)) / 10.0 * g;
-	return f;
-}
+        // Direction vector of the acceleration.
+        // The length of this vector determines strength of attractor.
+        vec4 a = vec4(0);
 
-void main(void)
-{
-	uint index = gl_GlobalInvocationID.x + gl_GlobalInvocationID.y * gl_NumWorkGroups.x * gl_WorkGroupSize.x;
+        if(attPos.w >= 0.0f){
+            // Take particle's distance from origin as coefficient, so that every
+            // particle behaves differently. Change coefficient to change attractor's strength.
+            a = normalize(attPos - part.currPos) * length(part.currPos.xyz) * 5.f;
+        }
 
-	float newDt = dt * 100.0;
-	vec3 forcePoint = vec3(0);
+        // Add gravity vector times its strength.
+        a += gv * 0.5f;
 
-	for(int i = 0 ; i < 32; ++i)
-	{
-		forcePoint += attractors[i].xyz;
-	}
+        // Slightly modified verlet integration http://lonesock.net/article/verlet.html
+        vec4 tempCurrPos = 1.99f * part.currPos - 0.99f * part.prevPos + a * dt * dt;
+        part.prevPos = part.currPos;
+        part.currPos = tempCurrPos;
 
-	vec4 vel = velocities[index];
-	vec3 pos = positions[index];
-	float newW = lifes[index];
+        //sphere
+        if(length(part.currPos.xyz) > 100)
+        {
+            vec4 norm = vec4(normalize(part.currPos.xyz), 0.0f);
+            part.currPos.xyz = norm.xyz * 100.f;
+            part.prevPos.xyz = norm.xyz * 100.f;
+        }
 
-	float kv = 1.5;
-	vec3 f = calcForceFor(forcePoint, pos) + rand(pos.xz) / 100.0;
-	vec3 v = normalize(vel.xyz + (f * newDt)) * kv;
 
-	v += (forcePoint - pos) * 0.00005;
-
-	vec3 s = pos + v * newDt;
-	newW -= 0.0001f * newDt;
-
-	if(newW <= 0)
-	{
-		s = -s + rand(s.xy) * 20.0 - rand(s.yz) * 20.0;
-		newW = 0.99f;
-	}
-	lifes[index] = newW;
-	positions[index] = s;
-	velocities[index] = vec4(v, vel.w);
+        p[gid] = part;
+    }
 }

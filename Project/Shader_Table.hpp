@@ -62,3 +62,4 @@ const static std::string shaderRaytracingBlitFragment = "traceBlitFragment.glsl"
 const static std::string shaderParticleCompute = "particleComputeShader.glsl";
 const static std::string shaderParticleVertex = "particleVertexShader.glsl";
 const static std::string shaderParticleFragment = "particleFragmentShader.glsl";
+const static std::string shaderParticleGeometry = "particleGeometry.glsl";

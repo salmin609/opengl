@@ -1,72 +1,60 @@
 #include "Graphic.h"
 #include "Level9.h"
+
+#include <memory>
+
 #include "Shader_Table.hpp"
 #include "Affine.h"
 #include "Shader.h"
 #include "Buffer.h"
 #include "Client.h"
+#include "InputManager.h"
+#include "PositionConverter.h"
 #include "Projection.h"
 #include "VAO.h"
-#include "LoadedObj.h"
 #include "RandomNumGenerator.h"
-#include "Model.h"
 Level9::Level9()
 {
-	fpsAll = 0.f;
+	attrator = Vector4{ 0.f, 0.f, 0.f, 1.f };
 	gfsCount = 0;
-	particleCountX = 1000;
-	particleCountY = 1000;
+	fpsTimer = 0.f;
+	
+	particleCountX = 1000000;
+	particleCountY = 1;
 	totalParticleNum = particleCountX * particleCountY;
-	//particleCount = 500000;
 	attractorCount = 16;
-	render = new Shader(shaderParticleVertex.c_str(), shaderParticleFragment.c_str());
+	
+	render = new Shader(shaderParticleVertex.c_str(), shaderParticleFragment.c_str(), shaderParticleGeometry.c_str());
 	compute = new Shader(shaderParticleCompute.c_str());
 
-	for(int i = 0 ; i < totalParticleNum; ++i)
-	{
-		//Vector3 randomPos = RandomNumber::instance->RandomVector3(0.f, 200.f);
-		//float randomLife = RandomNumber::instance->RandomFloat(1.f, 10.f);
-		//Vector3 randomVel = RandomNumber::instance->RandomVector3(-1.f, 1.f);
-		float randLife = static_cast<float>(rand()) / RAND_MAX;
-		Vector3 randomPos;
-		Vector3 randomVel;
-		randomPos.x = static_cast<float>(rand() % 2000) / (500.0f);
-		randomPos.y = static_cast<float>(rand() % 2000) / (500.0f);
-		randomPos.z = static_cast<float>(rand() % 2000) / (500.0f);
+	const auto particles = std::make_unique<Particle[]>(totalParticleNum);
 
-		randomVel.x = static_cast<float>(rand() % 100) / 500.0f - static_cast<float>(rand() % 100) / 500.0f;
-		randomVel.y = static_cast<float>(rand() % 100) / 500.0f - static_cast<float>(rand() % 100) / 500.0f;
-		randomVel.z = static_cast<float>(rand() % 100) / 500.0f - static_cast<float>(rand() % 100) / 500.0f;
-		
-		positionDatas.push_back(randomPos);
-		velocityDatas.push_back(Vector4{ randomVel.x, randomVel.y, randomVel.z, 0.0f });
-		lifeDatas.push_back(randLife);
-	}
-	
-	for(int i = 0 ; i < attractorCount; ++i)
+	for(int i = 0; i < totalParticleNum; ++i)
 	{
-		//Vector3 randomAttr = RandomNumber::instance->RandomVector3(-10.f, 10.f);
-		Vector3 vec;
-		vec.x = static_cast<float>(rand() % 500) / 30.0f - static_cast<float>(rand() % 500) / 30.0f;
-		vec.y = static_cast<float>(rand() % 500) / 30.0f - static_cast<float>(rand() % 500) / 30.0f;
-		vec.z = static_cast<float>(rand() % 500) / 30.0f - static_cast<float>(rand() % 500) / 30.0f;
-		attratorDatas.push_back(Vector4{ vec.x, vec.y, vec.z, 0.0f });
+		const Vector3 randomPos = RandomNumber::instance->RandomVector3(-10.f, 10.f);
+		const Vector4 randomPosInVector4{ randomPos.x, randomPos.y, randomPos.z ,1.f};
+		particles[i].currPos = randomPosInVector4;
+		particles[i].prevPos = randomPosInVector4;
 	}
-	
-	positionBuffer = new Buffer(GL_ARRAY_BUFFER, totalParticleNum * sizeof(Vector3), GL_DYNAMIC_COPY, positionDatas.data());
-	velocityBuffer = new Buffer(GL_ARRAY_BUFFER, totalParticleNum * sizeof(Vector4), GL_DYNAMIC_COPY, velocityDatas.data());
-	attratorBuffer = new Buffer(GL_ARRAY_BUFFER, attractorCount * sizeof(Vector4), GL_DYNAMIC_COPY, attratorDatas.data());
-	lifeBuffer = new Buffer(GL_ARRAY_BUFFER, totalParticleNum * sizeof(float), GL_DYNAMIC_COPY, lifeDatas.data());
+	compute->Use();
+	particleBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Particle) * totalParticleNum, GL_DYNAMIC_DRAW, particles.get());
+	particleBuffer->BindStorage(0);
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, particleBuffer->GetId());
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, particleBuffer->GetId());
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Particle), (GLvoid*)0);
+	glBindVertexArray(0);
 }
 
 Level9::~Level9()
 {
 	delete render;
 	delete compute;
-	delete positionBuffer;
-	delete velocityBuffer;
-	delete attratorBuffer;
-	delete lifeBuffer;
+	delete particleBuffer;
+	glDeleteVertexArrays(1, &vao);
 }
 
 void Level9::Load()
@@ -78,18 +66,19 @@ void Level9::Load()
 
 void Level9::Update(float dt)
 {
+	fpsTimer += dt;
 	gfsCount++;
 
-	if(gfsCount >= 1000)
+	if(gfsCount > 1000)
 	{
-		fpsAll = 0.f;
 		gfsCount = 0;
+		fpsTimer = 0.f;
 	}
-	Matrix ndcMat = CameraToNDC(*CameraManager::instance->GetCamera());
-	Affine camMat = WorldToCamera(*CameraManager::instance->GetCamera());
 	
-	fpsAll += dt;
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	const Camera cam = *CameraManager::instance->GetCamera();
+	Matrix ndcMat = CameraToNDC(cam);
+	Affine camMat = WorldToCamera(cam);
+	
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClearDepth(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,43 +86,47 @@ void Level9::Update(float dt)
 	glBlendFunc(GL_ONE, GL_ONE);
 	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 
-	attratorBuffer->Bind();
-	
-	Vector4* attractor = (Vector4*)glMapBufferRange(GL_ARRAY_BUFFER, 0, attractorCount * sizeof(Vector4),
-		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-
-	for(int i = 0 ; i < attractorCount; ++i)
+	if(InputManager::instance->IsPressed('q'))
 	{
-		attractor[i].x = sinf(fpsAll) * (float)(rand() % 500) / 10.0f;
-		attractor[i].y = cosf(fpsAll) * (float)(rand() % 500) / 10.0f;
-		attractor[i].z = tanf(fpsAll);
+		isActive = !isActive;
 	}
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-
+	
+	//int newx = 0, newy = 0;
+	//SDL_GetMouseState(&newx, &newy);
+	//const Point curr = PositionConverter::GetMousePosInWorldCoord(static_cast<float>(newx), static_cast<float>(newy));
+	//Vector3 goal{ curr.x, curr.y, -10.f};
+	////Vector3 goal{ 0.f, 0.f, 0.f };
+	//Vector4 goalVec4{ goal.x, goal.y, goal.z, 1.f };
+	attrator.x = cosf(fpsTimer) * static_cast<float>(rand() % 100);
+	attrator.y = sinf(fpsTimer) * static_cast<float>(rand() % 100);
+	attrator.z = tanf(fpsTimer);
+	
 	compute->Use();
-	compute->SendUniformFloat("dt", dt);
-	positionBuffer->BindStorage(0);
-	velocityBuffer->BindStorage(1);
-	attratorBuffer->BindStorage(2);
-	lifeBuffer->BindStorage(3);
+	//particleBuffer->BindStorage(0);
+	compute->SendUniformInt("maxParticles", totalParticleNum);
 
-	glDispatchCompute(particleCountX / 32, particleCountY / 32, 1);
+	Vector4 attractor;
+
+	isActive ? attractor = Vector4{ attrator.x, attrator.y, attrator.z, 1.f } : attractor = Vector4{ attrator.x, attrator.y, attrator.z, -1.f };
+	
+	compute->SendUniform4fv("attPos", &attractor, 1);
+	compute->SendUniformFloat("dt", dt);
+
+	glDispatchCompute((totalParticleNum / 256) + 1, 1, 1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	glUseProgram(0);
-
+	Point camEye = cam.Eye();
+	Vector4 camEyeVec4 = Vector4{ camEye.x, camEye.y, camEye.z, 1.f };
 	render->Use();
+	glBindVertexArray(vao);
+	
 	render->SendUniformMat("viewMatrix", &camMat);
 	render->SendUniformMat("projMatrix", &ndcMat);
-
-	positionBuffer->Bind();
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	lifeBuffer->Bind();
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, 0);
-
+	render->SendUniform4fv("camPos", &camEyeVec4, 1);
+	render->SendUniformFloat("quadLength", 0.01f);
+	render->SendUniformFloat("time", fpsTimer);
+	
 	glDrawArrays(GL_POINTS, 0, totalParticleNum);
-	glUseProgram(0);
 }
 
 void Level9::UnLoad()

@@ -343,6 +343,13 @@ void Shader::SendUniform3fv(std::string uniformName, void* val, int count) const
 	glUniform3fv(loc, count, valInFloat);
 }
 
+void Shader::SendUniform4fv(std::string uniformName, void* val, int count) const
+{
+	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	float* valInFloat = static_cast<float*>(val);
+	glUniform4fv(loc, count, valInFloat);
+}
+
 void Shader::SendUniform1fv(std::string uniformName, void* val, int count) const
 {
 	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());

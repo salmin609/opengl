@@ -1,12 +1,8 @@
-#version 430 core
+#version 430
 
-layout (location = 0) in vec3 vertPos;
-layout (location = 1) in float life;
-uniform mat4 viewMatrix, projMatrix; 
+layout(location=0) in vec4 currentPos;
+layout(location=1) in vec4 prevPos;
 
-out float color;
-
-void main(){ 
-	color = life;
-	gl_Position =  projMatrix * viewMatrix * vec4(vertPos, 1.0); 
+void main(void){
+    gl_Position = currentPos;
 }

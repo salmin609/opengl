@@ -17,22 +17,23 @@ public:
 	void Update(float dt) override;
 	void UnLoad() override;
 private:
+	struct Particle
+	{
+		Vector4 currPos;
+		Vector4 prevPos;
+	};
+	
 	Shader* render;
 	Shader* compute;
-	Buffer* positionBuffer;
-	Buffer* velocityBuffer;
-	Buffer* lifeBuffer;
-	Buffer* attratorBuffer;
-
-	std::vector<Vector3> positionDatas;
-	std::vector<Vector4> velocityDatas;
-	std::vector<Vector4> attratorDatas;
-	std::vector<float> lifeDatas;
-	
+	//VAO* vao;
+	unsigned vao;
+	Buffer* particleBuffer;
 	int particleCountX;
 	int particleCountY;
 	int totalParticleNum;
 	int attractorCount;
+	Vector4 attrator;
 	int gfsCount;
-	float fpsAll;
+	float fpsTimer;
+	bool isActive = true;
 };

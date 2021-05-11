@@ -260,6 +260,7 @@
     <None Include="ParticleColoredVertex.glsl" />
     <None Include="particleComputeShader.glsl" />
     <None Include="particleFragmentShader.glsl" />
+    <None Include="particleGeometry.glsl" />
     <None Include="particleVertexShader.glsl" />
     <None Include="ShadowFragment.glsl" />
     <None Include="ShadowVertex.glsl" />
