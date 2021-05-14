@@ -130,6 +130,12 @@ struct Vector3
 		y += val.y;
 		z += val.z;
 	}
+	void operator+=(Vector3 val)
+	{
+		x += val.x;
+		y += val.y;
+		z += val.z;
+	}
 	bool operator!=(Vector3 val)
 	{
 		return x != val.x && y != val.y && z != val.z;

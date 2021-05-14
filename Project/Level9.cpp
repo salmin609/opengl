@@ -1,25 +1,23 @@
 #include "Graphic.h"
 #include "Level9.h"
-
 #include <memory>
-
 #include "Shader_Table.hpp"
 #include "Affine.h"
 #include "Shader.h"
 #include "Buffer.h"
 #include "Client.h"
 #include "InputManager.h"
-#include "PositionConverter.h"
 #include "Projection.h"
 #include "VAO.h"
 #include "RandomNumGenerator.h"
+#include "TgaTexture.h"
 Level9::Level9()
 {
-	attrator = Vector4{ 0.f, 0.f, 0.f, 1.f };
+	attrator = Vector3{ 0.f, 0.f, 1.f };
 	gfsCount = 0;
 	fpsTimer = 0.f;
 	
-	particleCountX = 1000000;
+	particleCountX = 10000;
 	particleCountY = 1;
 	totalParticleNum = particleCountX * particleCountY;
 	attractorCount = 16;
@@ -42,11 +40,13 @@ Level9::Level9()
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, particleBuffer->GetId());
-	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, particleBuffer->GetId());
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Particle), (GLvoid*)0);
 	glBindVertexArray(0);
+
+	tgaTexture = new TgaTexture("Particle.tga");
+	tgaTexture->Use(render->GetShaderId());
 }
 
 Level9::~Level9()
@@ -69,7 +69,7 @@ void Level9::Update(float dt)
 	fpsTimer += dt;
 	gfsCount++;
 
-	if(gfsCount > 1000)
+	if(gfsCount > 10000)
 	{
 		gfsCount = 0;
 		fpsTimer = 0.f;
@@ -90,16 +90,10 @@ void Level9::Update(float dt)
 	{
 		isActive = !isActive;
 	}
-	
-	//int newx = 0, newy = 0;
-	//SDL_GetMouseState(&newx, &newy);
-	//const Point curr = PositionConverter::GetMousePosInWorldCoord(static_cast<float>(newx), static_cast<float>(newy));
-	//Vector3 goal{ curr.x, curr.y, -10.f};
-	////Vector3 goal{ 0.f, 0.f, 0.f };
-	//Vector4 goalVec4{ goal.x, goal.y, goal.z, 1.f };
-	attrator.x = cosf(fpsTimer) * static_cast<float>(rand() % 100);
-	attrator.y = sinf(fpsTimer) * static_cast<float>(rand() % 100);
-	attrator.z = tanf(fpsTimer);
+
+	Vector camBack = cam.Back();
+	attrator = Vector3{cam.Eye().x , cam.Eye().y , cam.Eye().z};
+	attrator += Vector3{ -camBack.x * 50.f, -camBack.y * 50.f, -camBack.z * 50.f };
 	
 	compute->Use();
 	//particleBuffer->BindStorage(0);
@@ -119,7 +113,7 @@ void Level9::Update(float dt)
 	Vector4 camEyeVec4 = Vector4{ camEye.x, camEye.y, camEye.z, 1.f };
 	render->Use();
 	glBindVertexArray(vao);
-	
+	tgaTexture->Bind();
 	render->SendUniformMat("viewMatrix", &camMat);
 	render->SendUniformMat("projMatrix", &ndcMat);
 	render->SendUniform4fv("camPos", &camEyeVec4, 1);

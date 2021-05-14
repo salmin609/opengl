@@ -6,6 +6,7 @@ class LoadedObj;
 class VAO;
 class Buffer;
 class Shader;
+class TgaTexture;
 
 class Level9 : public State
 {
@@ -32,8 +33,9 @@ private:
 	int particleCountY;
 	int totalParticleNum;
 	int attractorCount;
-	Vector4 attrator;
+	Vector3 attrator;
 	int gfsCount;
 	float fpsTimer;
 	bool isActive = true;
+	TgaTexture* tgaTexture;
 };

@@ -15,6 +15,17 @@ uniform vec4 attPos;
 uniform float dt;
 uniform int maxParticles;
 
+vec3 random3(vec3 c) {
+	float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
+	vec3 r;
+	r.z = fract(512.0*j);
+	j *= .125;
+	r.x = fract(512.0*j);
+	j *= .125;
+	r.y = fract(512.0*j);
+	return r-0.5;
+}
+
 layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 void main(){
     uint gid = gl_GlobalInvocationID.x;
@@ -33,7 +44,9 @@ void main(){
         if(attPos.w >= 0.0f){
             // Take particle's distance from origin as coefficient, so that every
             // particle behaves differently. Change coefficient to change attractor's strength.
-            a = normalize(attPos - part.currPos) * length(part.currPos.xyz) * 5.f;
+            vec3 randomVec = vec3(500, 500, 500);
+            a = normalize(attPos - part.currPos) * length(part.currPos.xyz) * 2.f;
+            a += vec4(random3(randomVec), 0.0);
         }
 
         // Add gravity vector times its strength.
@@ -44,13 +57,13 @@ void main(){
         part.prevPos = part.currPos;
         part.currPos = tempCurrPos;
 
-        //sphere
-        if(length(part.currPos.xyz) > 100)
-        {
-            vec4 norm = vec4(normalize(part.currPos.xyz), 0.0f);
-            part.currPos.xyz = norm.xyz * 100.f;
-            part.prevPos.xyz = norm.xyz * 100.f;
-        }
+//        //sphere
+//        float dis = distance(part.currPos, attPos);
+//
+//        if(dis > 50.f)
+//        {
+//            part.prevPos = part.currPos;
+//        }
 
 
         p[gid] = part;

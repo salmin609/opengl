@@ -112,12 +112,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\DrawingManager.cpp" />
+    <ClCompile Include="..\FluidCompute.cpp" />
+    <ClCompile Include="..\FluidGrid.cpp" />
     <ClCompile Include="..\FrameBuffer.cpp" />
     <ClCompile Include="..\Graphic.cpp" />
     <ClCompile Include="..\Ground.cpp" />
     <ClCompile Include="..\Image.cpp" />
     <ClCompile Include="..\InputManager.cpp" />
     <ClCompile Include="..\Level1.cpp" />
+    <ClCompile Include="..\Level10.cpp" />
     <ClCompile Include="..\Level2.cpp" />
     <ClCompile Include="..\Level3.cpp" />
     <ClCompile Include="..\Level4.cpp" />
@@ -128,6 +131,7 @@
     <ClCompile Include="..\Level9.cpp" />
     <ClCompile Include="..\Light_Mesh.cpp" />
     <ClCompile Include="..\LoadedObj.cpp" />
+    <ClCompile Include="..\loadTga.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\Mesh.cpp" />
     <ClCompile Include="..\Mesh_Object.cpp" />
@@ -175,6 +179,9 @@
     <ClInclude Include="..\CubeMesh.h" />
     <ClInclude Include="..\DebugApi.h" />
     <ClInclude Include="..\DrawingManager.h" />
+    <ClInclude Include="..\FluidCompute.h" />
+    <ClInclude Include="..\FluidGrid.h" />
+    <ClInclude Include="..\FluidParticle.h" />
     <ClInclude Include="..\FrameBuffer.h" />
     <ClInclude Include="..\Graphic.h" />
     <ClInclude Include="..\Ground.h" />
@@ -183,6 +190,7 @@
     <ClInclude Include="..\InputManager.h" />
     <ClInclude Include="..\KtxFileLoader.h" />
     <ClInclude Include="..\Level1.h" />
+    <ClInclude Include="..\Level10.h" />
     <ClInclude Include="..\Level2.h" />
     <ClInclude Include="..\Level3.h" />
     <ClInclude Include="..\Level4.h" />
@@ -193,6 +201,7 @@
     <ClInclude Include="..\Level9.h" />
     <ClInclude Include="..\Light_Mesh.h" />
     <ClInclude Include="..\LoadedObj.h" />
+    <ClInclude Include="..\loadTga.h" />
     <ClInclude Include="..\Mesh.h" />
     <ClInclude Include="..\Mesh_Object.h" />
     <ClInclude Include="..\Model.h" />
@@ -213,6 +222,7 @@
     <ClInclude Include="..\Sphere_mesh.h" />
     <ClInclude Include="..\State.h" />
     <ClInclude Include="..\Texture.h" />
+    <ClInclude Include="..\TgaTexture.h" />
     <ClInclude Include="..\UniformManager.h" />
     <ClInclude Include="..\VAO.h" />
     <ClInclude Include="..\vmath.h" />
@@ -235,6 +245,8 @@
     <None Include="cubeGeometry.glsl" />
     <None Include="FlockingFragmentShader.glsl" />
     <None Include="FlockingShaderVertex.glsl" />
+    <None Include="FluidFragment.glsl" />
+    <None Include="FluidVertex.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />

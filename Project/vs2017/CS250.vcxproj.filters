@@ -140,6 +140,18 @@
     <ClCompile Include="..\InputManager.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\loadTga.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Level10.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FluidCompute.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FluidGrid.cpp">
+      <Filter>Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -372,6 +384,24 @@
     <ClInclude Include="..\InputManager.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\loadTga.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TgaTexture.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Level10.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FluidCompute.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FluidGrid.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FluidParticle.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -535,6 +565,12 @@
     </None>
     <None Include="particleGeometry.glsl">
       <Filter>Shaders\Geometry</Filter>
+    </None>
+    <None Include="FluidFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="FluidVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -63,3 +63,6 @@ const static std::string shaderParticleCompute = "particleComputeShader.glsl";
 const static std::string shaderParticleVertex = "particleVertexShader.glsl";
 const static std::string shaderParticleFragment = "particleFragmentShader.glsl";
 const static std::string shaderParticleGeometry = "particleGeometry.glsl";
+
+const static std::string shaderFluidVertex = "FluidVertex.glsl";
+const static std::string shaderFluidFragment = "FluidFragment.glsl";
