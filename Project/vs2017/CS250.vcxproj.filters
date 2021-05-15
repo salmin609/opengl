@@ -572,5 +572,8 @@
     <None Include="FluidVertex.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="FluidCompute.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
   </ItemGroup>
 </Project>

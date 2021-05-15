@@ -12,5 +12,5 @@ void main()
 {
 	gl_Position = MVP * vec4(vertexPos , 1);
 	color = c;
-	gl_PointSize = radius * 1000;
+	gl_PointSize = radius * 2000;
 }

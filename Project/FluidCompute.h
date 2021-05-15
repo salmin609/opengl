@@ -11,23 +11,32 @@ public:
 	~FluidCompute();
 	void Update();
 	int ParticleTotalNum();
-	float CalculateW(int i, int j);
 	float* ParticlePositionData();
+	WaterParticle* Particles();
 	std::vector<Vector3> ParticlePos();
+	int PxNum();
+	int PyNum();
 private:
+	float GetC(int i);
+	float CalculateW(int i, int j);
+	Vector3 CalculateDW(int i, int j);
 	void PredictPosition();
 	void UpdateVelocityPos();
 	void CollisionDetection();
+	void ComputeDensity();
+	void ComputeDeltaP();
+	void ComputeLambda();
 	std::vector<std::thread> threads;
+	std::vector<WaterParticle> bufferPart;
 	
 	pWaterParticle* particles = nullptr;
 	std::vector<Vector3> particlesPos;
 	FluidGrid* grid;
 	
 	const float pDist = 0.08f;
-	const int pxNum = 10;
-	const int pyNum = 10;
-	const int pzNum = 10;
+	const int pxNum = 32;
+	const int pyNum = 32;
+	const int pzNum = 1;
 	const int pTotalNum = pxNum * pyNum * pzNum;
 	const float pStartX = -pDist * pxNum / 2.f;
 	const float pStartY = -pDist * pyNum / 2.f;
@@ -44,7 +53,7 @@ private:
 	const float pRadius = 20.f;
 	const float pMass = 1.25e-5f;
 	
-	const int threadNum = 8;
+	const int threadNum = 4;
 	const int workLoad = pTotalNum / threadNum;
 
 	const float gravity = 9.8f;

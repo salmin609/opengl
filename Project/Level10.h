@@ -25,10 +25,14 @@ public:
 private:
 	FluidCompute* fluid;
 	Shader* render;
+	Shader* compute;
 	int pTotalNum;
+	int pxNum;
+	int pyNum;
 	std::vector<Vector3> colors;
 	std::vector<Vector3> radii;
 
+	Buffer* particleBuffer;
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
 	Buffer* radiiBuffer;

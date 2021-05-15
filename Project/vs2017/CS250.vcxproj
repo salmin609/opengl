@@ -245,6 +245,7 @@
     <None Include="cubeGeometry.glsl" />
     <None Include="FlockingFragmentShader.glsl" />
     <None Include="FlockingShaderVertex.glsl" />
+    <None Include="FluidCompute.glsl" />
     <None Include="FluidFragment.glsl" />
     <None Include="FluidVertex.glsl" />
     <None Include="Fragmentshader.glsl" />

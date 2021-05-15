@@ -48,6 +48,7 @@ Client::Client(void)
 	graphic->InitUniformBlockMatrices();
 	
 	currState = level10;
+	currState->Load();
 }
 
 void Client::mousepress()
