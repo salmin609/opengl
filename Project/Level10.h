@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "Affine.h"
+#include "FluidParticle.h"
 #include "State.h"
 
 class Model;
@@ -32,8 +33,25 @@ private:
 	std::vector<Vector3> colors;
 	std::vector<Vector3> radii;
 
-	Buffer* particleBuffer;
+	std::vector<Vector4> predictedPos;
+	std::vector<Vector4> pos;
+	std::vector<Vector4> vel;
+	std::vector<Vector4> force;
+	std::vector<int> ids;
+	std::vector<float> density;
+	std::vector<float> lambda;
+	std::vector<Neighbors> neighbors;
+	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
 	Buffer* radiiBuffer;
+
+	Buffer* particlePos;
+	Buffer* particleForce;
+	Buffer* particleVel;
+	Buffer* particleId;
+	Buffer* particleDensity;
+	Buffer* particleLambda;
+	Buffer* particlePredictedPos;
+	Buffer* particleNeighbors;
 };

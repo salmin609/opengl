@@ -10,7 +10,7 @@ out vec3 color;
 
 void main()
 {
-	gl_Position = MVP * vec4(vertexPos , 1);
+	gl_Position = MVP * vec4(vertexPos, 1);
 	color = c;
 	gl_PointSize = radius * 2000;
 }
