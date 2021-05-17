@@ -17,22 +17,24 @@ Level10::Level10()
 	fluid = new FluidCompute();
 	render = new Shader(shaderFluidVertex.c_str(), shaderFluidFragment.c_str());
 	compute = new Shader(shaderFluidCompute.c_str());
+	computeNeighbor = new Shader(shaderFluidComputeNeighbor.c_str());
 	pxNum = fluid->PxNum();
 	pyNum = fluid->PyNum();
-	pTotalNum = pxNum * pyNum;
+	pzNum = fluid->PzNum();
+	pTotalNum = pxNum * pyNum * pzNum;
 
 	WaterParticle* particles = fluid->Particles();
 
 	std::vector<Vector3> particlePosVec = fluid->ParticlePos();
 	Neighbors neighbor;
-	for(int i = 0; i < 50; ++i)
+	for(int i = 0; i < neighborCount; ++i)
 	{
 		neighbor.neighbor[i] = -1;
 	}
 	for(int i = 0; i < pTotalNum; ++i)
 	{
-		colors.push_back(Vector3(1.0, 1.0, 1.0));
-		radii.push_back(0.002f);
+		colors.push_back(Vector3(0.831f, 0.945f, 0.976f));
+		radii.push_back(0.008f);
 		Vector3 posVal = particles[i].pos;
 		Vector3 velVal = particles[i].vel;
 		Vector3 forceVal = particles[i].force;
@@ -48,7 +50,10 @@ Level10::Level10()
 		lambda.push_back(lambdaVal);
 		predictedPos.emplace_back(particlePosVec[i].x, particlePosVec[i].y, particlePosVec[i].z, 1.f);
 		neighbors.push_back(neighbor);
+		neighborsCheckCount.push_back(0);
 	}
+	
+	compute->Use();
 	particlePos = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, pos.data());
 	particlePos->BindStorage(0);
 	
@@ -72,6 +77,13 @@ Level10::Level10()
 
 	particleNeighbors = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Neighbors) * pTotalNum, GL_DYNAMIC_DRAW, neighbors.data());
 	particleNeighbors->BindStorage(7);
+
+	particleNeighborsCheckCount = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(int) * pTotalNum, GL_DYNAMIC_DRAW, neighborsCheckCount.data());
+	
+	computeNeighbor->Use();
+	particlePos->BindStorage(0);
+	particleNeighbors->BindStorage(1);
+	particleNeighborsCheckCount->BindStorage(2);
 	
 	vertexBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector3) * pTotalNum, GL_STATIC_DRAW, pos.data());
 	colorBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector3) * pTotalNum, GL_STATIC_DRAW, colors.data());
@@ -84,6 +96,19 @@ Level10::~Level10()
 	delete vertexBuffer;
 	delete colorBuffer;
 	delete radiiBuffer;
+
+	delete render;
+	delete compute;
+	delete computeNeighbor;
+
+	delete particlePos;
+	delete particleForce;
+	delete particleVel;
+	delete particleId;
+	delete particleDensity;
+	delete particleLambda;
+	delete particlePredictedPos;
+	delete particleNeighbors;
 }
 
 void Level10::Load()
@@ -101,8 +126,25 @@ void Level10::Update(float dt)
 	//fluid->Update();
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
+	computeNeighbor->Use();
+	glDispatchCompute((pTotalNum / 128), 1, 1);
+	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+	if(InputManager::instance->IsPressed('q'))
+	{
+		particleNeighborsCheckCount->BindStorage(2);
+		int* neighborCheckCount = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),
+			GL_MAP_READ_BIT));
+		std::vector<int> checkCount;
+		for (int i = 0; i < pTotalNum; ++i)
+		{
+			checkCount.push_back(neighborCheckCount[i]);
+		}
+		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+	}
+
 	compute->Use();
-	glDispatchCompute((pTotalNum / 32), 1 , 1);
+	glDispatchCompute((pTotalNum / 128), 1 , 1);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 	const Camera cam = *CameraManager::instance->GetCamera();
@@ -110,85 +152,7 @@ void Level10::Update(float dt)
 	Affine camMat = WorldToCamera(cam);
 	Matrix mvp = ndcMat * camMat;
 	
-	if (InputManager::instance->IsPressed('a'))
-	{
-		particlePos->BindStorage(0);
-		Vector4* ptrChekc = reinterpret_cast<Vector4*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Vector4), GL_MAP_READ_BIT));
-		std::vector<Vector4> checkVal;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkVal.push_back(ptrChekc[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particleId->BindStorage(1);
-		int* idCheck = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int), GL_MAP_READ_BIT));
-		std::vector<int> checkId;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkId.push_back(idCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particleDensity->BindStorage(2);
-		float* denCheck = reinterpret_cast<float*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(float), GL_MAP_READ_BIT));
-		std::vector<float> checkDen;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkDen.push_back(denCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particleLambda->BindStorage(3);
-		float* lamCheck = reinterpret_cast<float*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(float), GL_MAP_READ_BIT));
-		std::vector<float> checkLam;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkLam.push_back(lamCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particleVel->BindStorage(4);
-		Vector4* velCheck = reinterpret_cast<Vector4*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Vector4), GL_MAP_READ_BIT));
-		std::vector<Vector4> checkVel;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkVel.push_back(velCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-
-		particleForce->BindStorage(5);
-		Vector4* forceCheck = reinterpret_cast<Vector4*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Vector4), GL_MAP_READ_BIT));
-		std::vector<Vector4> checkForce;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkForce.push_back(forceCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particlePredictedPos->BindStorage(6);
-		Vector4* predictedCheck = reinterpret_cast<Vector4*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Vector4), GL_MAP_READ_BIT));
-		std::vector<Vector4> checkPredicted;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkPredicted.push_back(predictedCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-		particleNeighbors->BindStorage(7);
-		Neighbors* neighborsCheck = reinterpret_cast<Neighbors*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Neighbors), GL_MAP_READ_BIT));
-		std::vector<Neighbors> checkNeighbor;
-		for (int i = 0; i < pTotalNum; i++)
-		{
-			checkNeighbor.push_back(neighborsCheck[i]);
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-	}
 	
-
-
 	static Vector3  lightDir = Vector3{ 1.f, 0.f, 0.f };
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
@@ -197,25 +161,7 @@ void Level10::Update(float dt)
 	render->SendUniformMat("MVP", &mvp);
 	render->SendUniform3fv("lightDir", &lightDir, 1);
 
-	/*std::vector<Vector3> particlePos = fluid->ParticlePos();
-	vertexBuffer->Bind();
-	Vector3* ptr = reinterpret_cast<Vector3*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, pTotalNum * sizeof(Vector3), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-
-	for (int i = 0; i < pTotalNum; i++)
-	{
-		const Vector3 vec = particlePos[i];
-		ptr[i].x = vec.x;
-		ptr[i].y = vec.y;
-		ptr[i].z = vec.z;
-	}
-	glUnmapBuffer(GL_ARRAY_BUFFER);*/
-
-	
-	
-	//vertexBuffer->Bind();
 	particlePos->Bind();
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(WaterParticle), (GLvoid*)offsetof(WaterParticle, pos));
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector4), (void*)0);
 	glEnableVertexAttribArray(0);
 
@@ -228,6 +174,41 @@ void Level10::Update(float dt)
 	glEnableVertexAttribArray(2);
 
 	glDrawArrays(GL_POINTS, 0, pTotalNum);
+
+	particleNeighbors->BindStorage(1);
+	Neighbors* neighbor = reinterpret_cast<Neighbors*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Neighbors),
+		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+
+	for (int i = 0; i < pTotalNum; ++i)
+	{
+		for(int j = 0 ; j < neighborCount; ++j)
+		{
+			neighbor[i].neighbor[j] = -1;
+		}
+	}
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+	particleNeighborsCheckCount->BindStorage(2);
+	int* neighborCheckCount = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),
+		GL_MAP_READ_BIT));
+	std::vector<int> checkCount1;
+	for (int i = 0; i < pTotalNum; ++i)
+	{
+		checkCount1.push_back(neighborCheckCount[i]);
+	}
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+	
+
+	particleNeighborsCheckCount->BindStorage(2);
+	int* neighborCountCheck = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),
+		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+
+	for (int i = 0; i < pTotalNum; ++i)
+	{
+		neighborCountCheck[i] = 0;
+	}
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
 }
 
 void Level10::UnLoad()

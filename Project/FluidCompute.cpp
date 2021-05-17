@@ -5,8 +5,7 @@ FluidCompute::FluidCompute()
 {
 	particles = new WaterParticle*[pTotalNum];
 	grid = new FluidGrid(wxMin, wxMax, wyMin, wyMax, wzMin, wzMax, h, h);
-
-	int check = 0;
+	//neighbors.reserve(100);
 	for(int i = 0; i < pxNum; ++i)
 	{
 		for(int j = 0 ; j < pyNum; ++j)
@@ -16,8 +15,8 @@ FluidCompute::FluidCompute()
 				WaterParticle* tempParticle = new WaterParticle();
 				tempParticle->pos.x = pStartX + static_cast<float>(i) * pDist;
 				tempParticle->pos.y = pStartY + static_cast<float>(j) * pDist;
-				tempParticle->pos.z = pStartZ + static_cast<float>(check) * pDist;
-				check++;
+				tempParticle->pos.z = pStartZ + static_cast<float>(k) * pDist;
+				
 
 				tempParticle->force.x = 0.f;
 				tempParticle->force.y = -gravity;
@@ -70,6 +69,7 @@ void FluidCompute::Update()
 	UpdateVelocityPos();
 
 	grid->Adjust();
+	
 }
 
 void FluidCompute::PredictPosition()
@@ -424,6 +424,11 @@ int FluidCompute::PxNum()
 int FluidCompute::PyNum()
 {
 	return pyNum;
+}
+
+int FluidCompute::PzNum()
+{
+	return pzNum;
 }
 
 float FluidCompute::GetC(int i)

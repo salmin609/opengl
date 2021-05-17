@@ -575,5 +575,8 @@
     <None Include="FluidCompute.glsl">
       <Filter>Shaders\Compute</Filter>
     </None>
+    <None Include="ComputeShaderFluidNeighbor.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
   </ItemGroup>
 </Project>

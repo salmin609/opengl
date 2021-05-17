@@ -27,9 +27,11 @@ private:
 	FluidCompute* fluid;
 	Shader* render;
 	Shader* compute;
+	Shader* computeNeighbor;
 	int pTotalNum;
 	int pxNum;
 	int pyNum;
+	int pzNum;
 	std::vector<Vector3> colors;
 	std::vector<Vector3> radii;
 
@@ -41,6 +43,7 @@ private:
 	std::vector<float> density;
 	std::vector<float> lambda;
 	std::vector<Neighbors> neighbors;
+	std::vector<int> neighborsCheckCount;
 	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
@@ -54,4 +57,5 @@ private:
 	Buffer* particleLambda;
 	Buffer* particlePredictedPos;
 	Buffer* particleNeighbors;
+	Buffer* particleNeighborsCheckCount;
 };

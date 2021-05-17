@@ -241,6 +241,7 @@
     <None Include="ComputeShader.glsl" />
     <None Include="ComputeShaderBasic.glsl" />
     <None Include="ComputeShaderFlocking.glsl" />
+    <None Include="ComputeShaderFluidNeighbor.glsl" />
     <None Include="ComputeShaderPrefix.glsl" />
     <None Include="cubeGeometry.glsl" />
     <None Include="FlockingFragmentShader.glsl" />

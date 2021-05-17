@@ -16,6 +16,7 @@ public:
 	std::vector<Vector3> ParticlePos();
 	int PxNum();
 	int PyNum();
+	int PzNum();
 private:
 	float GetC(int i);
 	float CalculateW(int i, int j);
@@ -33,10 +34,11 @@ private:
 	std::vector<Vector3> particlesPos;
 	FluidGrid* grid;
 	
+	
 	const float pDist = 0.08f;
 	const int pxNum = 32;
 	const int pyNum = 32;
-	const int pzNum = 1;
+	const int pzNum = 32;
 	const int pTotalNum = pxNum * pyNum * pzNum;
 	const float pStartX = -pDist * pxNum / 2.f;
 	const float pStartY = -pDist * pyNum / 2.f;

@@ -11,14 +11,15 @@ struct WaterParticle
 	Vector3 force;
 };
 
+const int neighborCount = 100;
+
 struct Neighbors
 {
-	int neighbor[50];
+	int neighbor[neighborCount];
 };
 
 typedef struct WaterParticle WaterParticle;
 typedef struct WaterParticle* pWaterParticle;
-
 
 struct Indices
 {
