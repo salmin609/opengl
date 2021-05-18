@@ -44,7 +44,7 @@ private:
 	const float pStartY = -pDist * pyNum / 2.f;
 	const float pStartZ = -pDist * pzNum / 2.f;
 
-	float d = 0.2f;
+	float d = 1.f;
 	float wxMin = -d;
 	float wxMax = 2.f * d;
 	float wyMin = -2.f * d;

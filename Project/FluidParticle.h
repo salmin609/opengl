@@ -25,3 +25,19 @@ struct Indices
 {
 	int ix, iy, iz;
 };
+
+struct Bubble {
+	int type;
+	float radius;
+	Vector4 pos;
+	Vector4 vel;
+	float lifetime;
+};
+
+enum BubbleType
+{
+	None = -1,
+	Spray = 0,
+	Bubble = 1,
+	Foam = 2
+};

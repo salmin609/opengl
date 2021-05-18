@@ -45,6 +45,17 @@ private:
 	std::vector<Neighbors> neighbors;
 	std::vector<int> neighborsCheckCount;
 	
+	std::vector<int> bubbleTypes;
+	std::vector<float> bubbleRadiuses;
+	std::vector<Vector4> bubblePoses;
+	std::vector<Vector4> bubbleVelocities;
+	std::vector<float> bubbleLifetimes;
+
+	std::vector<int> bubbleTypeCheck;
+	std::vector<Vector4> bubbleGeneratedPos;
+	std::vector<Vector4> bubbleGeneratedColor;
+	std::vector<float> bubbleGeneratedRadius;
+	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
 	Buffer* radiiBuffer;
@@ -58,4 +69,10 @@ private:
 	Buffer* particlePredictedPos;
 	Buffer* particleNeighbors;
 	Buffer* particleNeighborsCheckCount;
+
+	Buffer* bubbleType;
+	Buffer* bubbleRadius;
+	Buffer* bubblePos;
+	Buffer* bubbleVel;
+	Buffer* bubbleLifetime;
 };
