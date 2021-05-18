@@ -357,7 +357,7 @@
     <ClInclude Include="..\Model.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\Buffer.h">
+    <ClInclude Include="..\Buffer.hpp">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="..\KtxFileLoader.h">
@@ -577,6 +577,9 @@
     </None>
     <None Include="ComputeShaderFluidNeighbor.glsl">
       <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="fluidGeometry.glsl">
+      <Filter>Shaders\Geometry</Filter>
     </None>
   </ItemGroup>
 </Project>

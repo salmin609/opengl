@@ -36,9 +36,9 @@ private:
 	
 	
 	const float pDist = 0.08f;
-	const int pxNum = 32;
-	const int pyNum = 32;
-	const int pzNum = 32;
+	const int pxNum = 20;
+	const int pyNum = 20;
+	const int pzNum = 20;
 	const int pTotalNum = pxNum * pyNum * pzNum;
 	const float pStartX = -pDist * pxNum / 2.f;
 	const float pStartY = -pDist * pyNum / 2.f;

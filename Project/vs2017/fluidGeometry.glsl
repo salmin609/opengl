@@ -3,7 +3,15 @@
 layout(points) in;
 layout(triangle_strip, max_vertices = 4) out;
 
+
+in VData
+{
+	vec3 color;
+}vColor[];
+
+//in vec3 color;
 out vec2 ex_TexCoor;
+out vec3 fsInColor;
 
 uniform mat4  viewMatrix;
 uniform mat4  projMatrix;
@@ -22,21 +30,26 @@ void main(void){
 
     gl_Position = particlePos - rightVector - upVector;
     ex_TexCoor = vec2(0,0);
+    fsInColor = vColor[0].color;
     EmitVertex();
 
     gl_Position = particlePos + rightVector - upVector;
     gl_Position.x += 0.05;
     ex_TexCoor = vec2(1,0);
+    fsInColor = vColor[0].color;
     EmitVertex();
 
     gl_Position = particlePos - rightVector + upVector;
     gl_Position.y += 0.05;
     ex_TexCoor = vec2(0,1);
+    fsInColor = vColor[0].color;
     EmitVertex();
 
     gl_Position = particlePos + rightVector + upVector;
     gl_Position.y += 0.05;
     gl_Position.x += 0.05;
     ex_TexCoor = vec2(1,1);
+    fsInColor = vColor[0].color;
     EmitVertex();
+    //fsInColor = color;
 }

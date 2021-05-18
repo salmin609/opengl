@@ -10,7 +10,7 @@
 #include <iostream>
 #include "Client.h"
 #include "FrameBuffer.h"
-#include "Buffer.h"
+#include "Buffer.hpp"
 #include "InputManager.h"
 #include "Shader_Table.hpp"
 /*

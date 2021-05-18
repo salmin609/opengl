@@ -20,5 +20,8 @@ void main(void){
     outputColor.y *= green;
     outputColor.z *= blue;
 
+    float rgbLength = length(outputColor.rgb);
+    if(rgbLength < 0.3f)
+        outputColor.w = 0.0f;
     color = outputColor;
 }

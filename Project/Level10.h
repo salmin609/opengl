@@ -44,6 +44,10 @@ private:
 	std::vector<float> lambda;
 	std::vector<Neighbors> neighbors;
 	std::vector<int> neighborsCheckCount;
+
+	std::vector<ParticleVec4> particleVec4Vals;
+	std::vector<ParticleVal> particleVals;
+	std::vector<BubbleVec4> bubbleVec4Vals;
 	
 	std::vector<int> bubbleTypes;
 	std::vector<float> bubbleRadiuses;
@@ -55,10 +59,16 @@ private:
 	std::vector<Vector4> bubbleGeneratedPos;
 	std::vector<Vector4> bubbleGeneratedColor;
 	std::vector<float> bubbleGeneratedRadius;
+
+	Buffer* particleValVec4Buffer;
+	Buffer* particleValBuffer;
 	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
 	Buffer* radiiBuffer;
+	Buffer* colorBufferBubble;
+	Buffer* radiiBufferBubble;
+	
 
 	Buffer* particlePos;
 	Buffer* particleForce;
@@ -72,7 +82,13 @@ private:
 
 	Buffer* bubbleType;
 	Buffer* bubbleRadius;
-	Buffer* bubblePos;
-	Buffer* bubbleVel;
+	Buffer* bubbleVec4;
+	//Buffer* bubbleVel;
 	Buffer* bubbleLifetime;
+
+	float pointSize = 0.00008f;
+	float bubbleSize = 0.00008f;
+	TgaTexture* tgaTexture;
+	int gfsCount;
+	float fpsTimer;
 };

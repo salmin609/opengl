@@ -6,11 +6,15 @@ layout(location = 2) in float radius;
 
 uniform mat4 MVP;
 
-out vec3 color;
+out VData{
+	vec3 color;
+}vColor;
+
+//out vec3 color;
 
 void main()
 {
 	gl_Position = MVP * vec4(vertexPos, 1);
-	color = c;
-	gl_PointSize = radius * 1000;
+	vColor.color = c;
+	//gl_PointSize = radius * 1000;
 }

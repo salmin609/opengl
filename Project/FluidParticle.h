@@ -11,6 +11,20 @@ struct WaterParticle
 	Vector3 force;
 };
 
+struct ParticleVec4
+{
+	Vector4 velocity;
+	Vector4 force;
+	Vector4 predictedPos;
+};
+
+struct ParticleVal
+{
+	float density;
+	float lambda;
+	int id;
+};
+
 const int neighborCount = 100;
 
 struct Neighbors
@@ -40,4 +54,10 @@ enum BubbleType
 	Spray = 0,
 	Bubble = 1,
 	Foam = 2
+};
+
+struct BubbleVec4
+{
+	Vector4 bubblePos;
+	Vector4 bubbleVel;
 };

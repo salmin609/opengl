@@ -4,7 +4,7 @@
 #include "Shader_Table.hpp"
 #include "Affine.h"
 #include "Shader.h"
-#include "Buffer.h"
+#include "Buffer.hpp"
 #include "Client.h"
 #include "InputManager.h"
 #include "Projection.h"

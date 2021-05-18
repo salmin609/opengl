@@ -1,26 +1,23 @@
-#version 330 core
+#version 430
 
-out vec4 outColor;
-in vec3 color;
+in vec2 ex_TexCoor;
+in vec3 fsInColor;
+out vec4 colorOut;
 
-uniform vec3 lightDir;
+uniform sampler2D texture;
 
-void main()
-{
-	vec3 N;
-	N.xy = gl_PointCoord * 2.0 - vec2(1.0);
-	float mag = dot(N.xy, N.xy);
+void main(void){
+    vec4 outputColor = texture2D(texture, ex_TexCoor) * 3.f;
 
-	if(mag > 1.0)
-	{
-		discard;
-	}
-	N.z = sqrt(1.0 - mag);
-	float diffuse = dot(N, lightDir);
+    float rgbLength = length(outputColor.rgb);
+    if(rgbLength < 0.3f)
+        outputColor.w = 0.0f;
 
-	if(diffuse < 0.0f)
-	{
-		diffuse = -diffuse;
-	}
-	outColor = vec4(color * diffuse, 1.0);
+    
+    outputColor.x *= (fsInColor.x );
+    outputColor.y *= (fsInColor.y );
+    outputColor.z *= (fsInColor.z );
+
+
+    colorOut = outputColor;
 }

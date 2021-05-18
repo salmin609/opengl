@@ -1,7 +1,7 @@
 #include "VAO.h"
 #include "Graphic.h"
 #include "Shader.h"
-#include "Buffer.h"
+#include "Buffer.hpp"
 VAO::VAO(Shader* shaderData) : shader(nullptr), buffer(nullptr)
 {
 	shader = shaderData;

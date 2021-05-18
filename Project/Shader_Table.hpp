@@ -68,3 +68,4 @@ const static std::string shaderFluidVertex = "FluidVertex.glsl";
 const static std::string shaderFluidFragment = "FluidFragment.glsl";
 const static std::string shaderFluidCompute = "FluidCompute.glsl";
 const static std::string shaderFluidComputeNeighbor = "ComputeShaderFluidNeighbor.glsl";
+const static std::string shaderFluidGeometry = "fluidGeometry.glsl";

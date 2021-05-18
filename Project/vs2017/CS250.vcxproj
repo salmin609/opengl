@@ -172,7 +172,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\BinaryFileManager.h" />
-    <ClInclude Include="..\Buffer.h" />
+    <ClInclude Include="..\Buffer.hpp" />
     <ClInclude Include="..\Camera.h" />
     <ClInclude Include="..\CameraManager.h" />
     <ClInclude Include="..\Client.h" />
@@ -248,6 +248,7 @@
     <None Include="FlockingShaderVertex.glsl" />
     <None Include="FluidCompute.glsl" />
     <None Include="FluidFragment.glsl" />
+    <None Include="fluidGeometry.glsl" />
     <None Include="FluidVertex.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />

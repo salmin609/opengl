@@ -1,6 +1,6 @@
 #include "Level8.h"
 #include "Graphic.h"
-#include "Buffer.h"
+#include "Buffer.hpp"
 #include "Projection.h"
 #include "RandomNumGenerator.h"
 #include "VAO.h"

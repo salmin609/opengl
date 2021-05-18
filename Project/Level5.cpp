@@ -8,7 +8,7 @@
 #include "Texture.h"
 #include "Model.h"
 #include "RandomNumGenerator.h"
-#include "Buffer.h"
+#include "Buffer.hpp"
 Level5::Level5()
 {
 	screenWidth = Client::windowWidth;
