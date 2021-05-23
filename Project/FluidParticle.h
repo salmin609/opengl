@@ -18,6 +18,14 @@ struct ParticleVec4
 	Vector4 predictedPos;
 };
 
+struct ParticleVec42
+{
+	Vector4 pos;
+	Vector4 velocity;
+	Vector4 force;
+	Vector4 predictedPos;
+};
+
 struct ParticleVal
 {
 	float density;
@@ -25,7 +33,7 @@ struct ParticleVal
 	int id;
 };
 
-const int neighborCount = 100;
+const int neighborCount = 3 * 3 * 3;
 
 struct Neighbors
 {

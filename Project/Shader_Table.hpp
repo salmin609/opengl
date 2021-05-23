@@ -67,5 +67,9 @@ const static std::string shaderParticleGeometry = "particleGeometry.glsl";
 const static std::string shaderFluidVertex = "FluidVertex.glsl";
 const static std::string shaderFluidFragment = "FluidFragment.glsl";
 const static std::string shaderFluidCompute = "FluidCompute.glsl";
+const static std::string shaderFluidCompute2 = "FluidCompute2.glsl";
 const static std::string shaderFluidComputeNeighbor = "ComputeShaderFluidNeighbor.glsl";
 const static std::string shaderFluidGeometry = "fluidGeometry.glsl";
+
+const static std::string shaderFluidVertex2 = "FluidVertex2.glsl";
+const static std::string shaderFluidFragment2 = "FluidFragment2.glsl";

@@ -86,8 +86,8 @@ private:
 	//Buffer* bubbleVel;
 	Buffer* bubbleLifetime;
 
-	float pointSize = 0.00008f;
-	float bubbleSize = 0.00008f;
+	float pointSize = 0.001f;
+	float bubbleSize = 0.001f;
 	TgaTexture* tgaTexture;
 	int gfsCount;
 	float fpsTimer;

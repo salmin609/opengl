@@ -25,18 +25,18 @@ void main(void){
     EmitVertex();
 
     gl_Position = particlePos + rightVector - upVector;
-    gl_Position.x += 0.05;
+    gl_Position.x += 0.5;
     ex_TexCoor = vec2(1,0);
     EmitVertex();
 
     gl_Position = particlePos - rightVector + upVector;
-    gl_Position.y += 0.05;
+    gl_Position.y += 0.5;
     ex_TexCoor = vec2(0,1);
     EmitVertex();
 
     gl_Position = particlePos + rightVector + upVector;
-    gl_Position.y += 0.05;
-    gl_Position.x += 0.05;
+    gl_Position.y += 0.5;
+    gl_Position.x += 0.5;
     ex_TexCoor = vec2(1,1);
     EmitVertex();
 }

@@ -18,6 +18,7 @@ class Level7;
 class Level8;
 class Level9;
 class Level10;
+class Level11;
 class InputManager;
 class Client {
 public:
@@ -51,6 +52,7 @@ private:
 	Level8* level8;
 	Level9* level9;
 	Level10* level10;
+	Level11* level11;
 	State* currState;
 	InputManager* input;
 };

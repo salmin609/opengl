@@ -121,6 +121,7 @@
     <ClCompile Include="..\InputManager.cpp" />
     <ClCompile Include="..\Level1.cpp" />
     <ClCompile Include="..\Level10.cpp" />
+    <ClCompile Include="..\Level11.cpp" />
     <ClCompile Include="..\Level2.cpp" />
     <ClCompile Include="..\Level3.cpp" />
     <ClCompile Include="..\Level4.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="..\KtxFileLoader.h" />
     <ClInclude Include="..\Level1.h" />
     <ClInclude Include="..\Level10.h" />
+    <ClInclude Include="..\Level11.h" />
     <ClInclude Include="..\Level2.h" />
     <ClInclude Include="..\Level3.h" />
     <ClInclude Include="..\Level4.h" />
@@ -247,9 +249,12 @@
     <None Include="FlockingFragmentShader.glsl" />
     <None Include="FlockingShaderVertex.glsl" />
     <None Include="FluidCompute.glsl" />
+    <None Include="FluidCompute2.glsl" />
     <None Include="FluidFragment.glsl" />
+    <None Include="FluidFragment2.glsl" />
     <None Include="fluidGeometry.glsl" />
     <None Include="FluidVertex.glsl" />
+    <None Include="FluidVertex2.glsl" />
     <None Include="Fragmentshader.glsl" />
     <None Include="FragmentShaderInstance.glsl" />
     <None Include="Fragmentshader_Texture.glsl" />

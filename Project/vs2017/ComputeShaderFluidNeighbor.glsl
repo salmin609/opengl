@@ -4,7 +4,7 @@
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 const int particleNum = 20 * 20 * 20;
 
-const int neighborCount = 100;
+const int neighborCount = 300;
 struct ParticleNeighbors
 {
 	int neighborIndices[neighborCount];

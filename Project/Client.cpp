@@ -16,6 +16,7 @@
 #include "Level8.h"
 #include "Level9.h"
 #include "Level10.h"
+#include "Level11.h"
 #include "InputManager.h"
 int Client::windowWidth = 600;
 int Client::windowHeight = 600;
@@ -34,6 +35,7 @@ Client::Client(void)
 	level8 = new Level8();
 	level9 = new Level9();
 	level10 = new Level10();
+	level11 = new Level11();
 	level1->SetNextPrevState(nullptr, level10);
 	level2->SetNextPrevState(level1, level3);
 	level3->SetNextPrevState(level2, level4);
@@ -44,10 +46,12 @@ Client::Client(void)
 	level8->SetNextPrevState(level7, level9);
 	level9->SetNextPrevState(level8, level10);
 	level10->SetNextPrevState(level1, nullptr);
+	level11->SetNextPrevState(nullptr, nullptr);
+	
 	
 	graphic->InitUniformBlockMatrices();
 	
-	currState = level10;
+	currState = level11;
 	currState->Load();
 }
 

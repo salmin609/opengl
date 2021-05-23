@@ -152,6 +152,9 @@
     <ClCompile Include="..\FluidGrid.cpp">
       <Filter>Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\Level11.cpp">
+      <Filter>Engine\Cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -402,6 +405,9 @@
     <ClInclude Include="..\FluidParticle.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Level11.h">
+      <Filter>Engine\Hpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -580,6 +586,15 @@
     </None>
     <None Include="fluidGeometry.glsl">
       <Filter>Shaders\Geometry</Filter>
+    </None>
+    <None Include="FluidCompute2.glsl">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="FluidFragment2.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="FluidVertex2.glsl">
+      <Filter>Shaders\Vertex</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #extension GL_ARB_shader_storage_buffer_object : enable
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
-const int neighborCount = 100;
+const int neighborCount = 300;
 const int pTotalCount = 20 * 20 * 20;
 
 struct ParticleNeighbors
@@ -73,14 +73,16 @@ layout(std430, binding = 7) buffer particlePoses
 
 const float PI = 3.1415926f;
 
-const float tStep = 1.0f / 24;
+const float tStep = 1.0f / 30;
 const float gravity = 9.8f;
 const float h = 0.14f;
 const float hsqr = h * h;
 const float sigma = 0.1f;
 const float wk = 315.f / (64 * PI * float(pow(h, 9)));
 const float dwk = 15.f / (PI * float(pow(h, 6)));
+
 const float scorrk = wk * float(pow(0.99 * hsqr, 3));
+
 const float pDensity0 = 1500.f;
 const float pRadius = 20.f;
 const float pMass = 1.25e-5f;
@@ -108,11 +110,11 @@ const float mink=0.1;
 const float maxk=0.3;
 const float kb=0.8;
 const float kd=0.1;
-const float mass=0.1;
+const float mass=0.2;
 const int kta=50;
 const float maxlifetime=3;
-const int LIMIT1=5;
-const int LIMIT2=50;
+const int LIMIT1 = 5;
+const int LIMIT2 = 50;
 
 float Clamp(float v, float minVal, float maxVal)
 {
@@ -196,6 +198,7 @@ vec3 GetVelocity(float x, float y, float z)
 			for(int k = newIzMin; k < newIzMax + 1; ++k)
 			{
 				int index = i * newIxMax * newIyMax + j * newIyMax + k;
+				//int index = i * 20 + j * 20 * 20 + k;
 				vec4 posVal = particlePos[index];
 				vec4 velVal = particleInfoVec4[index].velocity;
 
@@ -239,6 +242,7 @@ int GetDensity(float x, float y, float z)
 	int iyMax = int((y + h - wyMin) / h);
 	int izMin = int((z - h - wzMin) / h);
 	int izMax = int((z + h - wzMin) / h);
+
 	ivec3 minVal = ivec3(ixMin, iyMin, izMin);
 	ivec3 maxVal = ivec3(ixMax, iyMax, izMax);
 
@@ -260,6 +264,7 @@ int GetDensity(float x, float y, float z)
 		{
 			for(int k = newIzMin; k < newIzMax + 1; ++k)
 			{
+				//int index = i * 20 + j * 20 * 20 + k;
 				int index = i * newIxMax * newIyMax + j * newIyMax + k;
 				vec4 posVal = particlePos[index];
 
@@ -514,7 +519,7 @@ void ComputeDeltaP()
 		int neighboringIndex = neighborVal[neighborIndex];
 		float neighborLambdaVal = particleInfoValue[neighboringIndex].lambda;
 
-		float scorr = -0.01f * float(pow(CalculateW(index, neighboringIndex) / scorrk, 4));
+		float scorr = -0.1f * float(pow(CalculateW(index, neighboringIndex) / scorrk, 4));
 		vec3 t = CalculateDW(neighboringIndex, index);
 		float c = lambdaVal + neighborLambdaVal + scorr;
 

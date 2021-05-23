@@ -298,61 +298,61 @@ void Shader::Use()
 
 void Shader::SendUniformMat(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniformMatrix4fv(loc, 1, GL_TRUE, valInFloat);
 }
 
 void Shader::SendUniformInt(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	int* valInInt = static_cast<int*>(val);
 	glUniform1i(loc, *valInInt);
 }
 
 void Shader::SendUniformInt(std::string uniformName, int val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	glUniform1i(loc, val);
 }
 
 void Shader::SendUniformFloat(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform1f(loc, *valInFloat);
 }
 
 void Shader::SendUniformFloat(std::string uniformName, float val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	glUniform1f(loc, val);
 }
 
 void Shader::SendUniformVec3(std::string uniformName, void* val) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform3f(loc, valInFloat[0], valInFloat[1], valInFloat[2]);
 }
 
 void Shader::SendUniform3fv(std::string uniformName, void* val, int count) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform3fv(loc, count, valInFloat);
 }
 
 void Shader::SendUniform4fv(std::string uniformName, void* val, int count) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform4fv(loc, count, valInFloat);
 }
 
 void Shader::SendUniform1fv(std::string uniformName, void* val, int count) const
 {
-	const unsigned loc = glGetUniformLocation(programId, uniformName.c_str());
+	const int loc = glGetUniformLocation(programId, uniformName.c_str());
 	float* valInFloat = static_cast<float*>(val);
 	glUniform1fv(loc, count, valInFloat);
 }

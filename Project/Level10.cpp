@@ -16,7 +16,8 @@
 Level10::Level10()
 {
 	fluid = new FluidCompute();
-	render = new Shader(shaderFluidVertex.c_str(), shaderFluidFragment.c_str(), shaderFluidGeometry.c_str());
+	//render = new Shader(shaderFluidVertex.c_str(), shaderFluidFragment.c_str(), shaderFluidGeometry.c_str());
+	render = new Shader(shaderFluidVertex.c_str(), shaderFluidFragment.c_str());
 	compute = new Shader(shaderFluidCompute.c_str());
 	computeNeighbor = new Shader(shaderFluidComputeNeighbor.c_str());
 	pxNum = fluid->PxNum();
@@ -34,7 +35,7 @@ Level10::Level10()
 	}
 	for(int i = 0; i < pTotalNum; ++i)
 	{
-		colors.push_back(Vector3(0.831f, 0.945f, 0.976f));
+		colors.push_back(Vector3(0.f, 0.3764705882f, 1.f));
 		radii.push_back(pointSize);
 		Vector3 posVal = particles[i].pos;
 		Vector3 velVal = particles[i].vel;
@@ -171,10 +172,10 @@ Level10::~Level10()
 void Level10::Load()
 {
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 	glClearColor(1.f, 1.f, 1.f, 1.f);
-	CameraManager::instance->SetCameraPos(Vector3{ 0.992733f, 0.126221f, 1.1071f }, Vector3{ -1.f, -0.1f, -1.f });
-	//glPointSize(10.f);
+	CameraManager::instance->SetCameraPos(Vector3{ 0.13937f, 0.0234417f, 1.64168f }, Vector3{ 0.f, -0.2f, -1.f });
+	glPointSize(10.f);
 }
 
 
@@ -192,7 +193,7 @@ void Level10::Update(float dt)
 		fpsTimer = 0.f;
 	}
 	//fluid->Update();
-	//glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 	
 	computeNeighbor->Use();
 	particlePos->BindStorage(0);
@@ -227,14 +228,9 @@ void Level10::Update(float dt)
 	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 
 	render->Use();
-	render->SendUniformMat("viewMatrix", &camMat);
-	render->SendUniformMat("projMatrix", &ndcMat);
-	render->SendUniform4fv("camPos", &camEyeVec4, 1);
-	render->SendUniformFloat("quadLength", 0.000005f);
+
 	render->SendUniformMat("MVP", &mvp);
-	render->SendUniform3fv("lightDir", &lightDir, 1);
-	render->SendUniformFloat("time", fpsTimer);
-	tgaTexture->Bind();
+	render->SendUniform3fv("lightdir", &lightDir, 1);
 
 	particlePos->Bind();
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector4), (void*)0);
@@ -264,15 +260,15 @@ void Level10::Update(float dt)
 		{
 			if(BubbleTypeCheck[i] == BubbleType::Bubble)
 			{
-				bubbleGeneratedColor.push_back(Vector4(0.0f, 1.0f, 0.0f, 1.f));
+				bubbleGeneratedColor.push_back(Vector4(1.0f, 1.0f, 1.0f, 1.f));
 			}
 			else if (BubbleTypeCheck[i] == BubbleType::Foam)
 			{
-				bubbleGeneratedColor.push_back(Vector4(0.0f, 0.0f, 1.0f, 1.f));
+				bubbleGeneratedColor.push_back(Vector4(1.f, 1.f, 1.f, 1.f));
 			}
 			else if (BubbleTypeCheck[i] == BubbleType::Spray)
 			{
-				bubbleGeneratedColor.push_back(Vector4(1.0f, 1.0f, 0.0f, 1.f));
+				bubbleGeneratedColor.push_back(Vector4(0.831f, 0.945f, 0.976f, 1.f));
 			}
 			bubbleTypeCheck.push_back(i);
 			bubbleGeneratedRadius.push_back(bubbleSize);
@@ -294,7 +290,6 @@ void Level10::Update(float dt)
 	
 	radiiBuffer->Check<float>();
 	
-	typeSize = 0;
 	if(typeSize > 0)
 	{
 		vertexBuffer->Bind();
@@ -337,8 +332,9 @@ void Level10::Update(float dt)
 		radiiBufferBubble->Check<float>();
 
 		render->Use();
+
 		render->SendUniformMat("MVP", &mvp);
-		render->SendUniform3fv("lightDir", &lightDir, 1);
+		render->SendUniform3fv("lightdir", &lightDir, 1);
 		
 		glEnableVertexAttribArray(0);
 		vertexBuffer->Bind();
@@ -352,7 +348,7 @@ void Level10::Update(float dt)
 		radiiBufferBubble->Bind();
 		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		const int size = static_cast<int>(typeSize);
-		//glDrawArrays(GL_POINTS, 0, size);
+		glDrawArrays(GL_POINTS, 0, size);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		//glDisableVertexAttribArray(2);
