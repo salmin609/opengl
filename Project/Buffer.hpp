@@ -12,7 +12,7 @@ public:
 	unsigned GetId();
 
 	template <typename T>
-	void Check();
+	std::vector<T> Check();
 	
 	~Buffer();
 
@@ -26,7 +26,7 @@ private:
 };
 
 template <typename T>
-void Buffer::Check()
+std::vector<T> Buffer::Check()
 {
 	if(type == GL_SHADER_STORAGE_BUFFER)
 	{
@@ -47,6 +47,8 @@ void Buffer::Check()
 		check.push_back(checkVal[i]);
 	}
 	glUnmapBuffer(type);
+
+	return check;
 }
 
 inline Buffer::Buffer(GLenum type, unsigned sizeVal, GLenum usage, void* data) : type(type)

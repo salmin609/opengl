@@ -23,17 +23,19 @@ public:
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
+	
 private:
 	FluidCompute* fluid;
 	Shader* render;
 	Shader* compute;
 	Shader* computeNeighbor;
 	int pTotalNum;
+	int ogTotalNum;
 	int pxNum;
 	int pyNum;
 	int pzNum;
 	std::vector<Vector3> colors;
-	std::vector<Vector3> radii;
+	//std::vector<Vector3> radii;
 
 	std::vector<Vector4> predictedPos;
 	std::vector<Vector4> pos;
@@ -65,7 +67,7 @@ private:
 	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
-	Buffer* radiiBuffer;
+	//Buffer* radiiBuffer;
 	Buffer* colorBufferBubble;
 	Buffer* radiiBufferBubble;
 	
@@ -86,7 +88,7 @@ private:
 	//Buffer* bubbleVel;
 	Buffer* bubbleLifetime;
 
-	float pointSize = 0.001f;
+	float pointSize = 0.02f;
 	float bubbleSize = 0.001f;
 	TgaTexture* tgaTexture;
 	int gfsCount;

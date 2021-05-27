@@ -8,7 +8,7 @@
 #include "Camera.h"
 
 //Initialize camera
-Camera::Camera() : right(1.f,0.f,0.f), up(0.f, 1.f, 0.f), back(0.f, 0.f, 1.f), width(10.f), height(10.f), distance(5.f), near(0.1f), far(10.f)
+Camera::Camera() : right(1.f,0.f,0.f), up(0.f, 1.f, 0.f), back(0.f, 0.f, 1.f), width(10.f), height(10.f), distance(5.f), near(0.001f), far(10.f)
 {
 }
 

@@ -3,8 +3,10 @@
 #extension GL_ARB_shader_storage_buffer_object : enable
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
 
-const int neighborCount = 300;
-const int pTotalCount = 20 * 20 * 20;
+const int neighborCount = 100;
+//const int pTotalCount = 30 * 30  * 30 ;
+
+uniform int pTotalCount;
 
 struct ParticleNeighbors
 {
@@ -73,7 +75,7 @@ layout(std430, binding = 7) buffer particlePoses
 
 const float PI = 3.1415926f;
 
-const float tStep = 1.0f / 30;
+const float tStep = 1.0f / 24;
 const float gravity = 9.8f;
 const float h = 0.14f;
 const float hsqr = h * h;
@@ -83,11 +85,11 @@ const float dwk = 15.f / (PI * float(pow(h, 6)));
 
 const float scorrk = wk * float(pow(0.99 * hsqr, 3));
 
-const float pDensity0 = 1500.f;
-const float pRadius = 20.f;
+const float pDensity0 = 3000.f;
+const float pRadius = 0.1f;
 const float pMass = 1.25e-5f;
 
-const float d = 0.5f;
+const float d = 1.5f;
 const float wxMin = -d;
 const float wxMax = 2.f * d;
 const float wyMin = -2.f * d;
@@ -116,6 +118,16 @@ const float maxlifetime=3;
 const int LIMIT1 = 5;
 const int LIMIT2 = 50;
 
+#define EPSILON 0.0001f
+
+float euclidean_distance2(const vec3 r) {
+    return r.x * r.x + r.y * r.y + r.z * r.z;
+}
+
+float euclidean_distance(const vec3 r) {
+    return sqrt(r.x * r.x + r.y * r.y + r.z * r.z);
+}
+
 float Clamp(float v, float minVal, float maxVal)
 {
 	if(v > maxVal)
@@ -136,12 +148,69 @@ float CalculateW(int i, int j)
 	float dy = posJ.y - posI.y;
 	float dz = posJ.z - posI.z;
 
+//	float tmp = pRadius * pRadius - euclidean_distance2(vec3(dx, dy, dz));
+//
+//	if(tmp < EPSILON)
+//		return 0.0f;
+//
+//	return wk * pow((tmp), 3);
+
 	float rsqr = float(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
 
 	if(hsqr < rsqr)
 		return 0.0f;
 
 	return wk * float(pow(hsqr - rsqr, 3));
+}
+
+
+vec3 CalculateDW(int i, int j)
+{
+	vec3 result = vec3(0.0);
+
+	if(i == j)
+		return result;
+
+	vec4 posI = particlePos[i];
+	vec4 posJ = particlePos[j];
+
+	float dx = posJ.x - posI.x;
+	float dy = posJ.y - posI.y;
+	float dz = posJ.z - posI.z;
+
+//	float radius2 = euclidean_distance2(vec3(dx, dy, dz));
+//
+//	if(radius2 >= pRadius * pRadius)
+//		return vec3(0.0f);
+//
+//	if(radius2 < EPSILON)
+//		return vec3(0.0f);
+//
+//	float radius = sqrt(radius2);
+//
+//	if(pRadius < radius)
+//		return vec3(0.0f);
+//
+//	const float kernel_constant = - (15 / (PI * pow(pRadius, 6))) * 3 * pow(pRadius - radius, 2) / radius;
+//
+//	return vec3(kernel_constant * dx, 
+//	kernel_constant * dy, 
+//	kernel_constant * dz);
+
+
+
+	float r = float(sqrt(float(pow(dx, 2) + pow(dy, 2) + pow(dz, 2))));
+
+	if(h < r)
+		return result;
+
+	float c = 3 * dwk * float(pow(h - r, 2) / (r + 1e-10));
+
+	result.x = dx * c;
+	result.y = dy * c;
+	result.z = dz * c;
+
+	return result;
 }
 
 ivec3 Normalize(ivec3 val)
@@ -297,33 +366,6 @@ vec3 GetNormal(int index)
 	return result;
 }
 
-vec3 CalculateDW(int i, int j)
-{
-	vec3 result = vec3(0.0);
-
-	if(i == j)
-		return result;
-
-	vec4 posI = particlePos[i];
-	vec4 posJ = particlePos[j];
-
-	float dx = posJ.x - posI.x;
-	float dy = posJ.y - posI.y;
-	float dz = posJ.z - posI.z;
-
-	float r = float(sqrt(float(pow(dx, 2) + pow(dy, 2) + pow(dz, 2))));
-
-	if(h < r)
-		return result;
-
-	float c = 3 * dwk * float(pow(h - r, 2) / (r + 1e-10));
-
-	result.x = dx * c;
-	result.y = dy * c;
-	result.z = dz * c;
-
-	return result;
-}
 float GetC(int i)
 {
 	//float densityVal = density[i];
@@ -345,6 +387,7 @@ void PredictPosition(uint index)
 	velVal.z += forceVal.z * tStep;
 
 	forceVal.x = 0.f;
+	//forceVal.y = forceVal.y + (-gravity * tStep);
 	forceVal.y = -gravity;
 	forceVal.z = 0.f;
 
@@ -430,38 +473,38 @@ void CollisionDetection()
 	uint index = int(gl_GlobalInvocationID.x);
 	vec4 posVal = particlePos[index];
 	vec4 velVal = particleInfoVec4[index].velocity;
-
+	float wallForce = -0.5f;
 	if(posVal.x < wxMin)
 	{
 		posVal.x = wxMin;
-		velVal.x *= -1;
+		velVal.x *= wallForce;
 	}
 	if(posVal.x > wxMax)
 	{
 		posVal.x = wxMax;
-		velVal.x *= -1;
+		velVal.x *= wallForce;
 	}
 
 	if(posVal.y < wyMin)
 	{
 		posVal.y = wyMin;
-		velVal.y *= -1;
+		velVal.y *= wallForce;
 	}
 	if(posVal.y > wyMax)
 	{
 		posVal.y = wyMax;
-		velVal.y *= -1;
+		velVal.y *= wallForce;
 	}
 
 	if(posVal.z < wzMin)
 	{
 		posVal.z = wzMin;
-		velVal.z *= -1;
+		velVal.z *= wallForce;
 	}
 	if(posVal.z > wzMax)
 	{
 		posVal.z = wzMax;
-		velVal.z *= -1;
+		velVal.z *= wallForce;
 	}
 
 	particlePos[index] = posVal;
@@ -751,6 +794,6 @@ void main()
 	}
 	
 	UpdateVelocityPos();
-	GenerateBubble();
-	UpdateBubbles();
+	//GenerateBubble();
+	//UpdateBubbles();
 }

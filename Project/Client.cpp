@@ -51,7 +51,7 @@ Client::Client(void)
 	
 	graphic->InitUniformBlockMatrices();
 	
-	currState = level11;
+	currState = level10;
 	currState->Load();
 }
 

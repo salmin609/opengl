@@ -33,7 +33,11 @@ struct ParticleVal
 	int id;
 };
 
-const int neighborCount = 3 * 3 * 3;
+const int neighborCount = 100;
+const int binCountX = 16;
+const int binCountY = 20;
+const int binCountZ = 20;
+const int binCount = binCountX * binCountY * binCountZ;
 
 struct Neighbors
 {
@@ -68,4 +72,9 @@ struct BubbleVec4
 {
 	Vector4 bubblePos;
 	Vector4 bubbleVel;
+};
+
+struct CheckIndices
+{
+	int x, y, z, w;
 };

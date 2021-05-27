@@ -22,7 +22,7 @@ void main() {
     posEye = vec3(MV * position);
     float dist = length(posEye);
     gl_PointSize = 1000 * pointRadius * (pointScale / dist);
-    gl_PointSize = 10;
+    gl_PointSize = 5;
 
     vec3 tmp = position.xyz;
     tmp.y = -tmp.y;

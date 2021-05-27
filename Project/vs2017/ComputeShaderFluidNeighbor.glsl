@@ -2,9 +2,10 @@
 #extension GL_ARB_compute_shader : enable
 #extension GL_ARB_shader_storage_buffer_object : enable
 layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
-const int particleNum = 20 * 20 * 20;
+//const int particleNum = 30  * 30  * 30 ;
+uniform int particleNum;
 
-const int neighborCount = 300;
+const int neighborCount = 100;
 struct ParticleNeighbors
 {
 	int neighborIndices[neighborCount];

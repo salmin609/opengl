@@ -74,7 +74,7 @@ void CameraManager::SetCameraPos(Vector3 cameraPos, Vector3 cameraLookAt)
 
 void CameraManager::CameraReInit()
 {
-	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.1f, 1000.f);
+	cam = Camera(defaultCamPos, lookat, ey, 0.5f * pi, 1.f, 0.01f, 1000.f);
 }
 
 Vector CameraManager::GetLookAtDirection()

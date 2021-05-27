@@ -35,10 +35,10 @@ private:
 	FluidGrid* grid;
 	
 	
-	const float pDist = 0.08f;
-	const int pxNum = 20;
-	const int pyNum = 20;
-	const int pzNum = 20;
+	const float pDist = 0.09f;
+	const int pxNum = 5;
+	const int pyNum = 5;
+	const int pzNum = 5;
 	const int pTotalNum = pxNum * pyNum * pzNum;
 	const float pStartX = -pDist * pxNum / 2.f;
 	const float pStartY = -pDist * pyNum / 2.f;

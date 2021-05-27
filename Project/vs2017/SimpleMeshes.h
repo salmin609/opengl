@@ -2,6 +2,8 @@
 
 namespace SimpleMesh
 {
+    
+	
 	inline static float* SimpleCube(int& size)
 	{
 		size = 108;
@@ -69,4 +71,6 @@ namespace SimpleMesh
 
 		return quadVertices;
 	}
+
+	
 }
