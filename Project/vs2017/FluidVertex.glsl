@@ -24,7 +24,7 @@ void main()
 
 	col = c;
 	float dist = length(posEye);
-	float pointScale = 2.5f;
+	float pointScale = 1.f;
 	gl_PointSize = (radius * 1000) * (pointScale  / dist);
 	pointRadius = gl_PointSize;
 }

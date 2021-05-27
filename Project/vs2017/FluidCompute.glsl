@@ -75,7 +75,7 @@ layout(std430, binding = 7) buffer particlePoses
 
 const float PI = 3.1415926f;
 
-const float tStep = 1.0f / 24;
+const float tStep = 1.0f / 30;
 const float gravity = 9.8f;
 const float h = 0.14f;
 const float hsqr = h * h;
@@ -89,7 +89,7 @@ const float pDensity0 = 3000.f;
 const float pRadius = 0.1f;
 const float pMass = 1.25e-5f;
 
-const float d = 1.5f;
+const float d = 0.5f;
 const float wxMin = -d;
 const float wxMax = 2.f * d;
 const float wyMin = -2.f * d;
