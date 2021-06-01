@@ -448,6 +448,7 @@ void PredictPosition(uint index)
 	posVal.z = predictedPosVal.z + velVal.z * tStep;
 
 	particlePos[index]= posVal;
+	//particleInfoVec4[index].predictedPos = posVal;
 	particleInfoVec4[index].force = forceVal;
 }
 void ComputeDensity()
@@ -619,18 +620,7 @@ void ComputeDeltaP()
 		float neighborLambdaVal = particleInfoValue[neighboringIndex].lambda;
 		vec3 neighborPosVal = vec3(particlePos[neighboringIndex]);
 
-//		s_corr = -fluidK * pow(Wpoly6(posVal - neighborPosVal, kernelRadius) / 
-//		Wpoly6(vec3(ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
-//		ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
-//		ONE_OVER_SQRT_OF_3 * fluidDelta_q), kernelRadius), fluidN);
-//		
-//		delta_pi = delta_pi + (lambdaVal + neighborLambdaVal + s_corr) * grad_Wspiky(posVal - neighborPosVal, kernelRadius);
-
 		float scorr = -0.1f * float(pow(CalculateW(index, neighboringIndex) / scorrk, 4));
-//		float scorr = -0.1f * float(pow(CalculateW(index, neighboringIndex) / 
-//		Wpoly6(vec3(ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
-//		ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
-//		ONE_OVER_SQRT_OF_3 * fluidDelta_q), h), 4));
 		vec3 t = CalculateDW(neighboringIndex, index);
 		float c = lambdaVal + neighborLambdaVal + scorr;
 
