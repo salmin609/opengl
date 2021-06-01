@@ -527,7 +527,7 @@ void CollisionDetection()
 	uint index = int(gl_GlobalInvocationID.x);
 	vec4 posVal = particlePos[index];
 	vec4 velVal = particleInfoVec4[index].velocity;
-	float wallForce = -0.1f;
+	float wallForce = -1.f;
 	if(posVal.x < wxMin)
 	{
 		posVal.x = wxMin;
@@ -866,10 +866,10 @@ void main()
 	
 	UpdateVelocityPos();
 
-//	for(int i = 0; i < neighborCount - 1; ++i)
-//	{
-//		neighbor[int(gid)].neighborIndices[i] = -1;
-//	}
+	for(int i = 0; i < neighborCount - 1; ++i)
+	{
+		neighbor[int(gid)].neighborIndices[i] = -1;
+	}
 
 	//GenerateBubble();
 	//UpdateBubbles();

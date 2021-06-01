@@ -263,6 +263,18 @@ void Level10::Update(float dt)
 	{
 		wxMax += 3.f;
 	}
+	if (InputManager::instance->IsPressed('v'))
+	{
+		wyMax += 3.f;
+	}
+	if (InputManager::instance->IsPressed('r'))
+	{
+		wxMax += 0.1f;
+	}
+	if (InputManager::instance->IsPressed('e'))
+	{
+		wxMax -= 0.1f;
+	}
 
 	//float halfx = (wxMin + wxMax) / 2;
 	//float halfy = (wyMin + wyMax) / 2;
@@ -371,135 +383,6 @@ void Level10::Update(float dt)
 
 	glDrawArrays(GL_POINTS, 0, pTotalNum);
 	glDisableVertexAttribArray(0);
-
-	/*Vector3 white = Vector3(0.2f, 0.2f, 0.2f);
-	boxRender->Use();
-	boxRender->SendUniformVec3("color_val", &white);
-	boxRender->SendUniformMat("to_ndc", &ndcMat);
-	boxRender->SendUniformMat("cam", &camMat);
-
-	boxPositionBuffer->Bind();
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector4), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);*/
-	
-	//bubbleType->BindStorage();
-	//int* BubbleTypeCheck = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),
-	//	GL_MAP_READ_BIT));
-	//for (int i = 0; i < pTotalNum; ++i)
-	//{
-	//	if(BubbleTypeCheck[i] != BubbleType::None)
-	//	{
-	//		if(BubbleTypeCheck[i] == BubbleType::Bubble)
-	//		{
-	//			bubbleGeneratedColor.push_back(Vector4(1.0f, 1.0f, 1.0f, 1.f));
-	//		}
-	//		else if (BubbleTypeCheck[i] == BubbleType::Foam)
-	//		{
-	//			bubbleGeneratedColor.push_back(Vector4(1.f, 1.f, 1.f, 1.f));
-	//		}
-	//		else if (BubbleTypeCheck[i] == BubbleType::Spray)
-	//		{
-	//			bubbleGeneratedColor.push_back(Vector4(0.831f, 0.945f, 0.976f, 1.f));
-	//		}
-	//		bubbleTypeCheck.push_back(i);
-	//		bubbleGeneratedRadius.push_back(bubbleSize);
-	//	}
-	//}
-	//glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-	//size_t typeSize = bubbleTypeCheck.size();
-
-	//bubbleVec4->BindStorage();
-	//BubbleVec4* bubblePosCheck = reinterpret_cast<BubbleVec4*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(BubbleVec4),
-	//	GL_MAP_READ_BIT));
-	//
-	//for(size_t i = 0 ; i < typeSize; ++i)
-	//{
-	//	const int index = bubbleTypeCheck[i];
-	//	bubbleGeneratedPos.push_back(bubblePosCheck[index].bubblePos);
-	//}
-	//glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-	//
-	//radiiBuffer->Check<float>();
-	//
-	//if(typeSize > 0)
-	//{
-	//	vertexBuffer->Bind();
-	//	Vector3* data = reinterpret_cast<Vector3*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, typeSize * sizeof(Vector3),
-	//		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-
-	//	for(size_t i = 0 ; i < typeSize; ++i)
-	//	{
-	//		const Vector4 posVal = bubbleGeneratedPos[i];
-	//		data[i] = Vector3(posVal.x, posVal.y, posVal.z);
-	//	}
-	//	glUnmapBuffer(GL_ARRAY_BUFFER);
-
-	//	vertexBuffer->Check<Vector3>();
-
-	//	colorBufferBubble->Bind();
-	//	Vector3* dataColor = reinterpret_cast<Vector3*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, typeSize * sizeof(Vector3),
-	//		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-
-	//	for (size_t i = 0; i < typeSize; ++i)
-	//	{
-	//		const Vector4 colorVal = bubbleGeneratedColor[i];
-	//		dataColor[i] = Vector3(colorVal.x, colorVal.y, colorVal.z);
-	//	}
-	//	glUnmapBuffer(GL_ARRAY_BUFFER);
-
-	//	colorBufferBubble->Check<Vector3>();
-
-	//	radiiBufferBubble->Bind();
-	//	float* dataRadii = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, typeSize * sizeof(float),
-	//		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-
-	//	for (size_t i = 0; i < typeSize; ++i)
-	//	{
-	//		const float radiiVal = bubbleGeneratedRadius[i];
-	//		dataRadii[i] = radiiVal;
-	//	}
-	//	glUnmapBuffer(GL_ARRAY_BUFFER);
-
-	//	radiiBufferBubble->Check<float>();
-
-	//	render->Use();
-
-	//	render->SendUniformMat("MVP", &mvp);
-	//	render->SendUniform3fv("lightdir", &lightDir, 1);
-	//	
-	//	glEnableVertexAttribArray(0);
-	//	vertexBuffer->Bind();
-	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	//	glEnableVertexAttribArray(1);
-	//	colorBufferBubble->Bind();
-	//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	//	glEnableVertexAttribArray(2);
-	//	radiiBufferBubble->Bind();
-	//	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//	const int size = static_cast<int>(typeSize);
-	//	glDrawArrays(GL_POINTS, 0, size);
-	//	glDisableVertexAttribArray(0);
-	//	glDisableVertexAttribArray(1);
-	//	//glDisableVertexAttribArray(2);
-	//	
-	//}
-	
-	particleNeighbors->BindStorage();
-	Neighbors* neighbor = reinterpret_cast<Neighbors*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(Neighbors),
-		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-
-	for (int i = 0; i < pTotalNum; ++i)
-	{
-		for(int j = 0 ; j < neighborCount; ++j)
-		{
-			neighbor[i].neighbor[j] = -1;
-		}
-	}
-	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	
 	particleNeighborsCheckCount->BindStorage();
 	int* neighborCountCheck = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),
