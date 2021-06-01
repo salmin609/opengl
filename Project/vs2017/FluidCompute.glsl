@@ -86,7 +86,7 @@ const float dwk = 15.f / (PI * float(pow(h, 6)));
 
 const float scorrk = wk * float(pow(0.99 * hsqr, 3));
 
-const float pDensity0 = 1000.f;
+const float pDensity0 = 3000.f;
 const float pRadius = 0.1f;
 const float pMass = 1.25e-5f;
 
