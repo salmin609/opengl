@@ -29,6 +29,7 @@ private:
 	Shader* render;
 	Shader* compute;
 	Shader* computeNeighbor;
+	Shader* boxRender;
 	int pTotalNum;
 	int ogTotalNum;
 	int pxNum;
@@ -70,7 +71,8 @@ private:
 	//Buffer* radiiBuffer;
 	Buffer* colorBufferBubble;
 	Buffer* radiiBufferBubble;
-	
+
+	Buffer* boxPositionBuffer;
 
 	Buffer* particlePos;
 	Buffer* particleForce;
@@ -88,9 +90,17 @@ private:
 	//Buffer* bubbleVel;
 	Buffer* bubbleLifetime;
 
-	float pointSize = 0.02f;
+	float pointSize = 0.04f;
 	float bubbleSize = 0.001f;
 	TgaTexture* tgaTexture;
 	int gfsCount;
 	float fpsTimer;
+
+	float d = 1.5f;
+	float wxMin = -d;
+	float wxMax = 2.f * d;
+	float wyMin = -2.f * d;
+	float wyMax = d;
+	float wzMin = -d;
+	float wzMax = d;
 };

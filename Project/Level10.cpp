@@ -20,6 +20,7 @@ Level10::Level10()
 	render = new Shader(shaderFluidVertex.c_str(), shaderFluidFragment.c_str());
 	compute = new Shader(shaderFluidCompute.c_str());
 	computeNeighbor = new Shader(shaderFluidComputeNeighbor.c_str());
+	boxRender = new Shader(shader_simple_vertex.c_str(), shader_simple_fragment.c_str());
 	pxNum = fluid->PxNum();
 	pyNum = fluid->PyNum();
 	pzNum = fluid->PzNum();
@@ -122,6 +123,8 @@ Level10::Level10()
 
 	tgaTexture = new TgaTexture("Particle.tga");
 	tgaTexture->Use(render->GetShaderId());
+
+	boxPositionBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector4) * 36, GL_STATIC_DRAW, nullptr);
 }
 
 Level10::~Level10()
@@ -225,7 +228,7 @@ void Level10::Update(float dt)
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
 	compute->Use();
-	
+
 	particleValVec4Buffer->BindStorage(0);
 	particleValBuffer->BindStorage(1);
 	particleNeighbors->BindStorage(2);
@@ -235,6 +238,102 @@ void Level10::Update(float dt)
 	bubbleLifetime->BindStorage(6);
 	particlePos->BindStorage(7);
 
+	if(InputManager::instance->IsPressed('z'))
+	{
+		d -= 0.1f;
+		wxMin = -d;
+		wxMax = 2.f * d;
+		wyMin = -2.f * d;
+		wyMax = d;
+		wzMin = -d;
+		wzMax = d;
+		
+	}
+	if (InputManager::instance->IsPressed('x'))
+	{
+		d += 0.1f;
+		wxMin = -d;
+		wxMax = 2.f * d;
+		wyMin = -2.f * d;
+		wyMax = d;
+		wzMin = -d;
+		wzMax = d;
+	}
+	if (InputManager::instance->IsPressed('c'))
+	{
+		wxMax += 3.f;
+	}
+
+	//float halfx = (wxMin + wxMax) / 2;
+	//float halfy = (wyMin + wyMax) / 2;
+	//float halfz = (wzMin + wzMax) / 2;
+
+	//std::vector positions = {
+	//	// YZ left
+	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
+	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 2
+	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
+
+	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
+	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 2
+	//	Vector4(wxMin, wyMax, wzMax, 1.0f),   // 3
+
+	//	// YZ right
+	//	Vector4(wxMax, wyMin, wzMin, 1.0f), // 0
+	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
+
+	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
+	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
+
+	//	// XZ bottom
+	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
+	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
+	//				   
+	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMin, wzMax, 1.0f),   // 3
+	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
+	//	// XZ top
+	//	Vector4(wxMin, wyMax, wzMin, 1.0f), // 0
+	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
+	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
+
+	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
+	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
+
+	//	// XY near
+	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
+	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
+	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 1
+	//						  
+	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 1
+	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
+	//	Vector4(wxMax, wyMax, wzMin, 1.0f),   // 3
+
+	//	// XZ far
+	//	Vector4(wxMin, wyMin, wzMax, 1.0f), // 0
+	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 2
+	//						  
+	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
+	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
+	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 2
+	//};
+
+	//boxPositionBuffer->WriteData<Vector4>(positions);
+	
+
+	compute->SendUniformFloat("d", d);
+	//compute->SendUniformFloat("tStep", dt);
+	compute->SendUniformFloat("wxMin", wxMin);
+	compute->SendUniformFloat("wxMax", wxMax);
+	compute->SendUniformFloat("wyMin", wyMin);
+	compute->SendUniformFloat("wyMax", wyMax);
+	compute->SendUniformFloat("wzMin", wzMin);
+	compute->SendUniformFloat("wzMax", wzMax);
 	compute->SendUniformInt("pTotalCount", pTotalNum);
 
 	glDispatchCompute((pTotalNum / 128) + 1, 1 , 1);
@@ -272,6 +371,18 @@ void Level10::Update(float dt)
 
 	glDrawArrays(GL_POINTS, 0, pTotalNum);
 	glDisableVertexAttribArray(0);
+
+	/*Vector3 white = Vector3(0.2f, 0.2f, 0.2f);
+	boxRender->Use();
+	boxRender->SendUniformVec3("color_val", &white);
+	boxRender->SendUniformMat("to_ndc", &ndcMat);
+	boxRender->SendUniformMat("cam", &camMat);
+
+	boxPositionBuffer->Bind();
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector4), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);*/
 	
 	//bubbleType->BindStorage();
 	//int* BubbleTypeCheck = reinterpret_cast<int*>(glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, pTotalNum * sizeof(int),

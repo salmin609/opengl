@@ -74,8 +74,9 @@ layout(std430, binding = 7) buffer particlePoses
 
 
 const float PI = 3.1415926f;
-
-const float tStep = 1.0f / 30;
+//uniform float tStep;
+const float tStep = 1.0f / 60;
+const float pMoveSpeed = 1.0f / 60;
 const float gravity = 9.8f;
 const float h = 0.14f;
 const float hsqr = h * h;
@@ -85,18 +86,26 @@ const float dwk = 15.f / (PI * float(pow(h, 6)));
 
 const float scorrk = wk * float(pow(0.99 * hsqr, 3));
 
-const float pDensity0 = 3000.f;
+const float pDensity0 = 1000.f;
 const float pRadius = 0.1f;
 const float pMass = 1.25e-5f;
 
-const float d = 0.5f;
-const float wxMin = -d;
-const float wxMax = 2.f * d;
-const float wyMin = -2.f * d;
-const float wyMax = d;
-const float wzMin = -d;
-const float wzMax = d;
+uniform float d;
+uniform float wxMin;
+uniform float wxMax;
+uniform float wyMin;
+uniform float wyMax;
+uniform float wzMin;
+uniform float wzMax;
 
+//const float d = 1.5f;
+//const float wxMin = -d;
+//const float wxMax = 2.f * d;
+//const float wyMin = -2.f * d;
+//const float wyMax = d;
+//const float wzMin = -d;
+//const float wzMax = d;
+//
 const int xNum = int(ceil((wxMax - wxMin)/ h));
 const int yNum = int(ceil((wyMax - wyMin) / h));
 const int zNum = int(ceil((wzMax - wzMin) / h));
@@ -118,7 +127,21 @@ const float maxlifetime=3;
 const int LIMIT1 = 5;
 const int LIMIT2 = 50;
 
+
+const float kernelRadius = 0.14f;
+const float kBoundsDensity = 50.0f;
+const float restDensity  = 8000.0f;
+const float fluidepsilon = 1000.0f;
+const float fluidK		 = 0.0005f;
+const float fluidDelta_q = 0.03f;
+const int	fluidN		 = 4;
+const float fluidK_vc    = 75.0f;
+const float fluidC       = 0.05f;
+
 #define EPSILON 0.0001f
+#define ONE_OVER_SQRT_OF_3 0.577350f
+#define MAX_DELTA_PI vec3(0.1f, 0.1f, 0.1f)
+
 
 float euclidean_distance2(const vec3 r) {
     return r.x * r.x + r.y * r.y + r.z * r.z;
@@ -127,6 +150,35 @@ float euclidean_distance2(const vec3 r) {
 float euclidean_distance(const vec3 r) {
     return sqrt(r.x * r.x + r.y * r.y + r.z * r.z);
 }
+
+float Wpoly6(vec3 r, float h)
+{
+	const float tmp = h * h - euclidean_distance2(r);
+
+	if(tmp < EPSILON)
+		return 0.0f;
+
+	  return (315.0f / (64.0f * PI * pow(h, 9))) * pow((tmp), 3);
+}
+
+vec3 grad_Wspiky(vec3 r, float h) 
+{
+    const float radius2 = euclidean_distance2(r);
+    if (radius2 >= h * h) {
+        return vec3(0.f);
+    }
+    if (radius2 <= EPSILON) {
+        return vec3(0.f);
+    }
+
+    const float radius = sqrt(radius2);
+    const float kernel_constant = - (15 / (PI * pow(h, 6))) * 3 * pow(h - radius, 2) / radius;
+
+    return vec3(kernel_constant * r.x,
+                kernel_constant * r.y,
+                kernel_constant * r.z);
+}
+
 
 float Clamp(float v, float minVal, float maxVal)
 {
@@ -430,19 +482,16 @@ void UpdateVelocityPos()
 	//vec4 velVal = velocity[index];
 	vec4 predictedPosVal = particleInfoVec4[index].predictedPos;
 
-	particleInfoVec4[index].velocity.x = (posVal.x - predictedPosVal.x) / tStep;
-	particleInfoVec4[index].velocity.y = (posVal.y - predictedPosVal.y) / tStep;
-	particleInfoVec4[index].velocity.z = (posVal.z - predictedPosVal.z) / tStep;
+	particleInfoVec4[index].velocity.x = (posVal.x - predictedPosVal.x) / pMoveSpeed;
+	particleInfoVec4[index].velocity.y = (posVal.y - predictedPosVal.y) / pMoveSpeed;
+	particleInfoVec4[index].velocity.z = (posVal.z - predictedPosVal.z) / pMoveSpeed;
 
 	int neighborVal[neighborCount] = neighbor[index].neighborIndices;
 	uint neighborIndex = 0;
 
 	while(neighborVal[neighborIndex] != -1)
 	{
-		if(neighborIndex > neighborCount - 1)
-		{
-			break;
-		}
+
 		
 		int neighboringIndex = neighborVal[neighborIndex];
 
@@ -453,13 +502,18 @@ void UpdateVelocityPos()
 		float vijx = neighborVel.x - particleInfoVec4[index].velocity.x;
 		float vijy = neighborVel.y - particleInfoVec4[index].velocity.y;
 		float vijz = neighborVel.z - particleInfoVec4[index].velocity.z;
-		float c = 0.001f;
+		float c = 0.002f;
 
 		particleInfoVec4[index].velocity.x += c * vijx * w;
 		particleInfoVec4[index].velocity.y += c * vijy * w;
 		particleInfoVec4[index].velocity.z += c * vijz * w;
 
 		neighborIndex++;
+
+		if(neighborIndex > neighborCount - 1)
+		{
+			break;
+		}
 	}
 	predictedPosVal.x = posVal.x;
 	predictedPosVal.y = posVal.y;
@@ -473,7 +527,7 @@ void CollisionDetection()
 	uint index = int(gl_GlobalInvocationID.x);
 	vec4 posVal = particlePos[index];
 	vec4 velVal = particleInfoVec4[index].velocity;
-	float wallForce = -0.5f;
+	float wallForce = -0.1f;
 	if(posVal.x < wxMin)
 	{
 		posVal.x = wxMin;
@@ -549,8 +603,10 @@ void ComputeDeltaP()
 	float lambdaVal = particleInfoValue[index].lambda;
 	int neighborVal[neighborCount] = neighbor[index].neighborIndices;
 	uint neighborIndex = 0;
-	vec4 posVal = particlePos[index];
+	vec3 posVal = vec3(particlePos[index]);
 	vec3 sum = vec3(0.0);
+	float s_corr = 0.0f;
+	vec3 delta_pi = vec3(0.0);
 
 	while(neighborVal[neighborIndex] != -1)
 	{
@@ -561,8 +617,20 @@ void ComputeDeltaP()
 		
 		int neighboringIndex = neighborVal[neighborIndex];
 		float neighborLambdaVal = particleInfoValue[neighboringIndex].lambda;
+		vec3 neighborPosVal = vec3(particlePos[neighboringIndex]);
+
+//		s_corr = -fluidK * pow(Wpoly6(posVal - neighborPosVal, kernelRadius) / 
+//		Wpoly6(vec3(ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
+//		ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
+//		ONE_OVER_SQRT_OF_3 * fluidDelta_q), kernelRadius), fluidN);
+//		
+//		delta_pi = delta_pi + (lambdaVal + neighborLambdaVal + s_corr) * grad_Wspiky(posVal - neighborPosVal, kernelRadius);
 
 		float scorr = -0.1f * float(pow(CalculateW(index, neighboringIndex) / scorrk, 4));
+//		float scorr = -0.1f * float(pow(CalculateW(index, neighboringIndex) / 
+//		Wpoly6(vec3(ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
+//		ONE_OVER_SQRT_OF_3 * fluidDelta_q, 
+//		ONE_OVER_SQRT_OF_3 * fluidDelta_q), h), 4));
 		vec3 t = CalculateDW(neighboringIndex, index);
 		float c = lambdaVal + neighborLambdaVal + scorr;
 
@@ -576,6 +644,8 @@ void ComputeDeltaP()
 		neighborIndex++;
 	}
 
+	//delta_pi = delta_pi / pDensity0;
+
 	float t = pMass / pDensity0;
 	sum.x *= t;
 	sum.y *= t;
@@ -584,7 +654,8 @@ void ComputeDeltaP()
 	posVal.y += sum.y;
 	posVal.z += sum.z;
 
-	particlePos[index] = posVal;
+	particlePos[index] = vec4(posVal, 1.f);
+	//particlePos[index] = vec4(posVal + clamp(delta_pi, -MAX_DELTA_PI, MAX_DELTA_PI), 1.f);
 }
 
 void GenerateBubble()
@@ -794,6 +865,12 @@ void main()
 	}
 	
 	UpdateVelocityPos();
+
+//	for(int i = 0; i < neighborCount - 1; ++i)
+//	{
+//		neighbor[int(gid)].neighborIndices[i] = -1;
+//	}
+
 	//GenerateBubble();
 	//UpdateBubbles();
 }

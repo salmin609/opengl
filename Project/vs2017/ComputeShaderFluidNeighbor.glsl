@@ -83,4 +83,8 @@ void CalculateNeighboringIndices()
 void main()
 {
 	CalculateNeighboringIndices();
+
+	//uint gid = gl_GlobalInvocationID.x;
+
+	//neighborCheckCount[int(gid)] = 0;
 }
