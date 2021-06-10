@@ -48,7 +48,6 @@ Level10::Level10()
 		float lambdaVal = particles[i].lambda;
 
 		ParticleVec4 vec4Val;
-		vec4Val.force = Vector4{ forceVal.x, forceVal.y, forceVal.z, 1.f };
 		vec4Val.velocity = Vector4{ velVal.x, velVal.y, velVal.z, 1.f };
 		vec4Val.predictedPos = Vector4{ particlePosVal.x, particlePosVal.y, particlePosVal.z, 1.f };
 
@@ -74,10 +73,8 @@ Level10::Level10()
 		neighbors.push_back(neighbor);
 		neighborsCheckCount.push_back(0);
 
-		bubbleTypes.push_back(BubbleType::None);
 		bubbleVec4Vals.push_back(bubbleVec4Val);
-		bubbleRadiuses.push_back(0.f);
-		bubbleLifetimes.push_back(0.f);
+
 	}
 	
 	compute->Use();
@@ -93,20 +90,11 @@ Level10::Level10()
 	particleNeighbors = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Neighbors) * pTotalNum, GL_DYNAMIC_DRAW, neighbors.data());
 	particleNeighbors->BindStorage(2);
 
-	bubbleType = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(int) * pTotalNum, GL_DYNAMIC_DRAW, bubbleTypes.data());
-	bubbleType->BindStorage(3);
-
-	bubbleRadius = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(float) * pTotalNum, GL_DYNAMIC_DRAW, bubbleRadiuses.data());
-	bubbleRadius->BindStorage(4);
-
-	bubbleVec4 = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(BubbleVec4) * pTotalNum, GL_DYNAMIC_DRAW, bubbleVec4Vals.data());
-	bubbleVec4->BindStorage(5);
-
-	bubbleLifetime = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(float) * pTotalNum, GL_DYNAMIC_DRAW, bubbleLifetimes.data());
-	bubbleLifetime->BindStorage(6);
+	particleForceBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, force.data());
+	particleForceBuffer->BindStorage(3);
 
 	particlePos = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, pos.data());
-	particlePos->BindStorage(7);
+	particlePos->BindStorage(4);
 
 	particleNeighborsCheckCount = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(int) * pTotalNum, GL_DYNAMIC_DRAW, neighborsCheckCount.data());
 	
@@ -154,7 +142,7 @@ void Level10::Load()
 {
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glClearColor(1.f, 1.f, 1.f, 1.f);
-	CameraManager::instance->SetCameraPos(Vector3{ 0.307639f, -0.754864f, 0.162793f }, Vector3{ 0.f, -1.5f, -1.f });
+	CameraManager::instance->SetCameraPos(Vector3{ 0.326587f, -0.116406f, 2.73291f }, Vector3{ 0.f, -1.0f, -1.f });
 	glPointSize(10.f);
 }
 
@@ -169,6 +157,7 @@ void Level10::Update(float dt)
 		std::vector<Vector4> prevPosVal = particlePos->Check<Vector4>();
 		std::vector<int> prevNeighborCheckVal = particleNeighborsCheckCount->Check<int>();
 		std::vector<Vector3> prevColorVal = colorBuffer->Check<Vector3>();
+		std::vector<Vector4> prevForceVal = particleForceBuffer->Check<Vector4>();
 		//std::vector<Vector3> prevRadiiVal = radiiBuffer->Check<Vector3>();
 		
 		UnLoad();
@@ -182,6 +171,7 @@ void Level10::Update(float dt)
 		prevNeighborVal.insert(prevNeighborVal.end(), neighbors.begin(), neighbors.end());
 		prevPosVal.insert(prevPosVal.end(), pos.begin(), pos.end());
 		prevNeighborCheckVal.insert(prevNeighborCheckVal.end(), neighborsCheckCount.begin(), neighborsCheckCount.end());
+		prevForceVal.insert(prevForceVal.end(), force.begin(), force.end());
 		
 		prevColorVal.insert(prevColorVal.end(), colors.begin(), colors.end());
 		//prevRadiiVal.insert(prevRadiiVal.end(), radii.begin(), radii.end());
@@ -195,7 +185,9 @@ void Level10::Update(float dt)
 		//bubbleLifetime = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(float) * pTotalNum, GL_DYNAMIC_DRAW, bubbleLifetimes.data());
 		particlePos = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, prevPosVal.data());
 		particleNeighborsCheckCount = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(int) * pTotalNum, GL_DYNAMIC_DRAW, prevNeighborCheckVal.data());
+		particleForceBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, prevForceVal.data());
 
+		
 		vertexBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector3) * pTotalNum, GL_STATIC_DRAW, nullptr);
 		colorBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector3) * pTotalNum, GL_STATIC_DRAW, prevColorVal.data());
 		//radiiBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(float) * pTotalNum, GL_STATIC_DRAW, prevRadiiVal.data());
@@ -232,11 +224,8 @@ void Level10::Update(float dt)
 	particleValVec4Buffer->BindStorage(0);
 	particleValBuffer->BindStorage(1);
 	particleNeighbors->BindStorage(2);
-	bubbleType->BindStorage(3);
-	bubbleRadius->BindStorage(4);
-	bubbleVec4->BindStorage(5);
-	bubbleLifetime->BindStorage(6);
-	particlePos->BindStorage(7);
+	particleForceBuffer->BindStorage(3);
+	particlePos->BindStorage(4);
 
 	if(InputManager::instance->IsPressed('z'))
 	{
@@ -275,71 +264,19 @@ void Level10::Update(float dt)
 	{
 		wxMax -= 0.1f;
 	}
+	if (InputManager::instance->IsPressed('f'))
+	{
+		std::vector<Vector4> prevForceVal = particleForceBuffer->Check<Vector4>();
 
-	//float halfx = (wxMin + wxMax) / 2;
-	//float halfy = (wyMin + wyMax) / 2;
-	//float halfz = (wzMin + wzMax) / 2;
-
-	//std::vector positions = {
-	//	// YZ left
-	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
-	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 2
-	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
-
-	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
-	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 2
-	//	Vector4(wxMin, wyMax, wzMax, 1.0f),   // 3
-
-	//	// YZ right
-	//	Vector4(wxMax, wyMin, wzMin, 1.0f), // 0
-	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
-
-	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
-	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
-
-	//	// XZ bottom
-	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
-	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
-	//				   
-	//	Vector4(wxMin, wyMin, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMin, wzMax, 1.0f),   // 3
-	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
-	//	// XZ top
-	//	Vector4(wxMin, wyMax, wzMin, 1.0f), // 0
-	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
-	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
-
-	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMax, wzMin, 1.0f),  // 2
-	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
-
-	//	// XY near
-	//	Vector4(wxMin, wyMin, wzMin, 1.0f), // 0
-	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
-	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 1
-	//						  
-	//	Vector4(wxMin, wyMax, wzMin, 1.0f),  // 1
-	//	Vector4(wxMax, wyMin, wzMin, 1.0f),  // 2
-	//	Vector4(wxMax, wyMax, wzMin, 1.0f),   // 3
-
-	//	// XZ far
-	//	Vector4(wxMin, wyMin, wzMax, 1.0f), // 0
-	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 2
-	//						  
-	//	Vector4(wxMin, wyMax, wzMax, 1.0f),  // 1
-	//	Vector4(wxMax, wyMax, wzMax, 1.0f),   // 3
-	//	Vector4(wxMax, wyMin, wzMax, 1.0f),  // 2
-	//};
-
-	//boxPositionBuffer->WriteData<Vector4>(positions);
-	
+		size_t size = prevForceVal.size();
+		for(size_t i = 0; i < size; ++i)
+		{
+			prevForceVal[i] += Vector4(0.f, 0.f, 1000.f, 0.f);
+		}
+		particleForceBuffer->WriteData<Vector4>(prevForceVal);
+	}
 
 	compute->SendUniformFloat("d", d);
-	//compute->SendUniformFloat("tStep", dt);
 	compute->SendUniformFloat("wxMin", wxMin);
 	compute->SendUniformFloat("wxMax", wxMax);
 	compute->SendUniformFloat("wyMin", wyMin);
@@ -394,10 +331,6 @@ void Level10::Update(float dt)
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
-	bubbleTypeCheck.clear();
-	bubbleGeneratedColor.clear();
-	bubbleGeneratedPos.clear();
-	bubbleGeneratedRadius.clear();
 	//bubbleTypeCheck.reserve(pTotalNum);
 }
 
@@ -413,6 +346,7 @@ void Level10::UnLoad()
 	delete particlePos;
 	delete vertexBuffer;
 	delete colorBuffer;
+	delete particleForceBuffer;
 	//delete radiiBuffer;
 	//delete colorBufferBubble;
 	//delete radiiBufferBubble;

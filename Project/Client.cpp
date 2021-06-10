@@ -25,33 +25,33 @@ Client::Client(void)
 {
 	graphic = new Graphic();
 	input = new InputManager();
-	level1 = new Level1();
-	level2 = new Level2();
-	level3 = new Level3();
-	level4 = new Level4();
-	level5 = new Level5();
-	level6 = new Level6();
-	level7 = new Level7();
-	level8 = new Level8();
-	level9 = new Level9();
-	level10 = new Level10();
+	//level1 = new Level1();
+	//level2 = new Level2();
+	//level3 = new Level3();
+	//level4 = new Level4();
+	//level5 = new Level5();
+	//level6 = new Level6();
+	//level7 = new Level7();
+	//level8 = new Level8();
+	//level9 = new Level9();
+	//level10 = new Level10();
 	level11 = new Level11();
-	level1->SetNextPrevState(nullptr, level10);
-	level2->SetNextPrevState(level1, level3);
-	level3->SetNextPrevState(level2, level4);
-	level4->SetNextPrevState(level3, level5);
-	level5->SetNextPrevState(level4, level6);
-	level6->SetNextPrevState(level5, level7);
-	level7->SetNextPrevState(level6, level8);
-	level8->SetNextPrevState(level7, level9);
-	level9->SetNextPrevState(level8, level10);
-	level10->SetNextPrevState(level1, nullptr);
+	//level1->SetNextPrevState(nullptr, level10);
+	//level2->SetNextPrevState(level1, level3);
+	//level3->SetNextPrevState(level2, level4);
+	//level4->SetNextPrevState(level3, level5);
+	//level5->SetNextPrevState(level4, level6);
+	//level6->SetNextPrevState(level5, level7);
+	//level7->SetNextPrevState(level6, level8);
+	//level8->SetNextPrevState(level7, level9);
+	//level9->SetNextPrevState(level8, level10);
+	//level10->SetNextPrevState(level1, nullptr);
 	level11->SetNextPrevState(nullptr, nullptr);
 	
 	
 	graphic->InitUniformBlockMatrices();
 	
-	currState = level10;
+	currState = level11;
 	currState->Load();
 }
 
@@ -120,16 +120,16 @@ void Client::Set_Prev_Mousepos(Point p)
 Client::~Client(void)
 {
 	delete graphic;
-	delete level1;
-	delete level2;
-	delete level3;
-	delete level4;
-	delete level5;
-	delete level6;
-	delete level7;
-	delete level8;
-	delete level9;
-	delete level10;
+	//delete level1;
+	//delete level2;
+	//delete level3;
+	//delete level4;
+	//delete level5;
+	//delete level6;
+	//delete level7;
+	//delete level8;
+	//delete level9;
+	//delete level10;
 }
 
 void Client::Set_Selected_Null()

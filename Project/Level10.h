@@ -52,19 +52,11 @@ private:
 	std::vector<ParticleVal> particleVals;
 	std::vector<BubbleVec4> bubbleVec4Vals;
 	
-	std::vector<int> bubbleTypes;
-	std::vector<float> bubbleRadiuses;
-	std::vector<Vector4> bubblePoses;
-	std::vector<Vector4> bubbleVelocities;
-	std::vector<float> bubbleLifetimes;
-
-	std::vector<int> bubbleTypeCheck;
-	std::vector<Vector4> bubbleGeneratedPos;
-	std::vector<Vector4> bubbleGeneratedColor;
-	std::vector<float> bubbleGeneratedRadius;
+	
 
 	Buffer* particleValVec4Buffer;
 	Buffer* particleValBuffer;
+	Buffer* particleForceBuffer;
 	
 	Buffer* vertexBuffer;
 	Buffer* colorBuffer;
@@ -84,13 +76,8 @@ private:
 	Buffer* particleNeighbors;
 	Buffer* particleNeighborsCheckCount;
 
-	Buffer* bubbleType;
-	Buffer* bubbleRadius;
-	Buffer* bubbleVec4;
-	//Buffer* bubbleVel;
-	Buffer* bubbleLifetime;
 
-	float pointSize = 0.04f;
+	float pointSize = 0.03f;
 	float bubbleSize = 0.001f;
 	TgaTexture* tgaTexture;
 	int gfsCount;

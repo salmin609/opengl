@@ -48,6 +48,6 @@ void main()
     vec3 tempColor = diffuse * col + specular;
 
     //color = vec4(pointLight.color * pointLight.intensity * diffuse + ambLight.color * ambLight.intensity, 1);
-    color = vec4(tempColor + 0.5f, 1.0f);
+    color = vec4(tempColor + 0.2f, 1.0f);
     //color = vec4(col, 1);
 }

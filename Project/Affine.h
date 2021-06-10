@@ -183,6 +183,14 @@ struct Vector4
 	Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 	{
 	}
+
+	void operator+=(Vector4 val)
+	{
+		x += val.x;
+		y += val.y;
+		z += val.z;
+	}
+	
 	float x, y, z, w;
 };
 

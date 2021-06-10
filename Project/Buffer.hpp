@@ -12,6 +12,10 @@ public:
 
 	template <typename T>
 	void WriteData(const std::vector<T>& val);
+
+	template <typename T>
+	void WriteData(void* data);
+	
 	unsigned GetId();
 	
 
@@ -49,6 +53,30 @@ void Buffer::WriteData(const std::vector<T>& val)
 	for (int i = 0; i < sizeCheck; ++i)
 	{
 		writeVal[i] = val[i];
+	}
+	glUnmapBuffer(type);
+}
+
+template <typename T>
+void Buffer::WriteData(void* data)
+{
+	if (type == GL_SHADER_STORAGE_BUFFER)
+	{
+		BindStorage();
+	}
+	else if (type == GL_ARRAY_BUFFER)
+	{
+		Bind();
+	}
+
+	T* writeVal = static_cast<T*>(glMapBufferRange(type, 0, size,
+		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+
+	const int sizeCheck = size / sizeof(T);
+
+	for (int i = 0; i < sizeCheck; ++i)
+	{
+		writeVal[i] = reinterpret_cast<T*>(data)[i];
 	}
 	glUnmapBuffer(type);
 }

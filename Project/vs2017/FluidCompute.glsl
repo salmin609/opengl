@@ -16,7 +16,7 @@ struct ParticleNeighbors
 struct ParticleVec4
 {
 	vec4 velocity;
-	vec4 force;
+	//vec4 force;
 	vec4 predictedPos;
 };
 struct ParticleVal
@@ -47,27 +47,12 @@ layout(std430, binding = 2) buffer neighbors
 	ParticleNeighbors neighbor[];
 };
 
-layout(std430, binding = 3) buffer bubbleTypes
+layout(std430, binding = 3) buffer force
 {
-	int bubbleType[];
+	vec4 particleForce[];
 };
 
-layout(std430, binding = 4) buffer bubbleRadiuses
-{
-	float bubbleRadius[];
-};
-
-layout(std430, binding = 5) buffer bubbleVec4s
-{
-	BubbleVec4 bubbleVec4Val[];
-};
-
-layout(std430, binding = 6) buffer bubbleLifetimes
-{
-	float bubbleLifetime[];
-};
-
-layout(std430, binding = 7) buffer particlePoses
+layout(std430, binding = 4) buffer particlePoses
 {
 	vec4 particlePos[];
 };
@@ -76,7 +61,7 @@ layout(std430, binding = 7) buffer particlePoses
 const float PI = 3.1415926f;
 //uniform float tStep;
 const float tStep = 1.0f / 60;
-const float pMoveSpeed = 1.0f / 60;
+const float pMoveSpeed = 1.0f / 61;
 const float gravity = 9.8f;
 const float h = 0.14f;
 const float hsqr = h * h;
@@ -430,7 +415,7 @@ void PredictPosition(uint index)
 {
 	//vec4 posVal = pos[index];
 	vec4 posVal = particlePos[index];
-	vec4 forceVal = particleInfoVec4[index].force;
+	vec4 forceVal = particleForce[index];//vec4(particleForce[index], 1.f);
 	vec4 velVal =  particleInfoVec4[index].velocity;
 	vec4 predictedPosVal =  particleInfoVec4[index].predictedPos;
 
@@ -449,7 +434,7 @@ void PredictPosition(uint index)
 
 	particlePos[index]= posVal;
 	//particleInfoVec4[index].predictedPos = posVal;
-	particleInfoVec4[index].force = forceVal;
+	particleForce[index] = forceVal;//vec3(forceVal);
 }
 void ComputeDensity()
 {
@@ -486,6 +471,8 @@ void UpdateVelocityPos()
 	particleInfoVec4[index].velocity.x = (posVal.x - predictedPosVal.x) / pMoveSpeed;
 	particleInfoVec4[index].velocity.y = (posVal.y - predictedPosVal.y) / pMoveSpeed;
 	particleInfoVec4[index].velocity.z = (posVal.z - predictedPosVal.z) / pMoveSpeed;
+
+	//particleForce[index] = particleInfoVec4[index].velocity;
 
 	int neighborVal[neighborCount] = neighbor[index].neighborIndices;
 	uint neighborIndex = 0;
@@ -647,197 +634,6 @@ void ComputeDeltaP()
 	particlePos[index] = vec4(posVal, 1.f);
 	//particlePos[index] = vec4(posVal + clamp(delta_pi, -MAX_DELTA_PI, MAX_DELTA_PI), 1.f);
 }
-
-void GenerateBubble()
-{
-	uint index = gl_GlobalInvocationID.x;
-	vec4 posVal = particlePos[index];
-	vec4 velVal = particleInfoVec4[index].velocity;
-	float vel = float(sqrt(pow(velVal.x , 2) + pow(velVal.y , 2) + pow(velVal.z , 2)));
-
-	if(vel == 0.0f)
-		return;
-
-	float delta = vel * tStep;
-	float ita = 0.0f;
-	vec3 ni = GetNormal(int(index));
-
-	int neighborVal[neighborCount] = neighbor[index].neighborIndices;
-	uint neighborIndex = 0;
-
-	while(neighborVal[neighborIndex] != -1)
-	{
-		if(neighborIndex > neighborCount - 1)
-		{
-			break;
-		}
-		
-		int neighboringIndex = neighborVal[neighborIndex];
-
-		vec4 neighborPos = particlePos[neighboringIndex];
-		vec4 neighborVel = particleInfoVec4[neighboringIndex].velocity;
-		float dx = posVal.x - neighborPos.x;
-		float dy = posVal.y - neighborPos.y;
-		float dz = posVal.z - neighborPos.z;
-		float r = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
-
-		if(r == 0)
-		{
-			neighborIndex++;
-			continue;
-		}
-		if(h < r)
-		{
-			neighborIndex++;
-			continue;
-		}
-		float dvx = velVal.x - neighborVel.x;
-		float dvy = velVal.y - neighborVel.y;
-		float dvz = velVal.z - neighborVel.z;
-		float dv = sqrt(pow(dvx, 2) + pow(dvy, 2) + pow(dvz, 2));
-		ita+=dv*(1-(dx/r*dvx/dv+dy/r*dvy/dv+dz/r*dvz/dv))*(1-r/h);
-
-		neighborIndex++;
-	}
-
-	ita = Clamp(ita, minta, maxta);
-
-	float ik= 0.5 * mass * (pow(velVal.x ,2)+ pow(velVal.y ,2)+ pow(velVal.z ,2));
-
-	ik = Clamp(ik, mink, maxk);
-
-	int nd = int(ik * kta * ita * tStep) + 3;
-
-	for(int i = 0; i < nd; ++i)
-	{
-		int bubbleIndex = 0;
-		float posX = ((posVal.x - delta) + (posVal.x + tStep)) / 2;
-		float posY = ((posVal.y - delta) + (posVal.y + tStep)) / 2;
-		float posZ = ((posVal.z - delta) + (posVal.z + tStep)) / 2;
-		float velX = velVal.x / 2;
-		float velY = velVal.y / 2;
-		float velZ = velVal.z / 2;
-
-		float radius = 0.1f;
-		vec4 pos = vec4(posX, posY, posZ, 1);
-		vec4 vel = vec4(velX, velY, velZ, 1);
-		float lifeTime = ik * maxlifetime;
-		int type = BubbleTypeBubble;
-
-		while(bubbleType[bubbleIndex] != BubbleTypeNone)
-		{
-			if(bubbleIndex > pTotalCount)
-				break;
-
-			bubbleIndex++;
-		}
-
-		bubbleVec4Val[bubbleIndex].bubblePos = pos;
-		bubbleRadius[bubbleIndex] = radius;
-		bubbleVec4Val[bubbleIndex].bubbleVel = vel;
-		bubbleLifetime[bubbleIndex] = lifeTime;
-		bubbleType[bubbleIndex] = type;
-	}
-}
-void UpdateBubbles()
-{
-	uint index = gl_GlobalInvocationID.x;
-
-	BubbleVec4 bubbleVal = bubbleVec4Val[index];
-	float bubbleLifeVal = bubbleLifetime[index];
-	int bubbleTypeVal = bubbleType[index];
-
-	vec4 bubbleVelVal = bubbleVal.bubbleVel;
-	vec4 bubblePosVal = bubbleVal.bubblePos;
-
-	if(bubbleTypeVal == BubbleTypeNone)
-	{
-		return;
-	}
-
-	if(bubbleLifeVal < 0)
-	{
-		bubbleType[index] = BubbleTypeNone;
-		return;
-	}
-
-	if(bubbleTypeVal == BubbleTypeSpray)
-	{
-		bubbleVelVal.y += -gravity * tStep;
-		bubblePosVal.x += bubbleVelVal.x * tStep;
-		bubblePosVal.y += bubbleVelVal.y * tStep;
-		bubblePosVal.z += bubbleVelVal.z * tStep;
-	}
-	else if(bubbleTypeVal == BubbleTypeFoam)
-	{
-		vec3 v = GetVelocity(bubblePosVal.x, bubblePosVal.y, bubblePosVal.z);
-		bubblePosVal.x += v.x * tStep;
-		bubblePosVal.y += v.y * tStep;
-		bubblePosVal.z += v.z * tStep;
-	}
-	else if(bubbleTypeVal == BubbleTypeBubble)
-	{
-		vec3 v = GetVelocity(bubblePosVal.x, bubblePosVal.y, bubblePosVal.z);
-		bubbleVelVal.x += kd * (v.x - bubbleVelVal.x);
-		bubbleVelVal.y += kb * gravity * tStep * kd * (v.y - bubbleVelVal.y);
-		bubbleVelVal.z += kd * (v.z - bubbleVelVal.z);
-
-		bubblePosVal.x += bubbleVelVal.x * tStep;
-		bubblePosVal.y += bubbleVelVal.y * tStep;
-		bubblePosVal.z += bubbleVelVal.z * tStep;
-	}
-
-	if(bubblePosVal.x < wxMin)
-	{
-		bubblePosVal.x = wxMin;
-		bubbleVelVal.x *= -1;
-	}
-	else if(bubblePosVal.x > wxMax)
-	{
-		bubblePosVal.x = wxMax;
-		bubbleVelVal.x *= -1;
-	}
-
-	if(bubblePosVal.y < wyMin)
-	{
-		bubblePosVal.y = wyMin;
-		bubbleVelVal.y *= -1;
-	}
-	else if(bubblePosVal.y > wyMax)
-	{
-		bubblePosVal.y = wyMax;
-		bubbleVelVal.y *= -1;
-	}
-
-	if(bubblePosVal.z < wzMin)
-	{
-		bubblePosVal.z = wzMin;
-		bubbleVelVal.z *= -1;
-	}
-	else if(bubblePosVal.z > wzMax)
-	{
-		bubblePosVal.z = wzMax;
-		bubbleVelVal.z *= -1;
-	}
-
-	int density = GetDensity(bubblePosVal.x, bubblePosVal.y, bubblePosVal.z);
-
-	if(density < LIMIT1)
-	{
-		bubbleType[index] = BubbleTypeSpray;
-	}
-	else if(density < LIMIT2)
-	{
-		bubbleType[index] = BubbleTypeFoam;
-	}
-
-	bubbleLifetime[index] -= tStep;
-
-	bubbleVec4Val[index].bubblePos = bubblePosVal;
-	bubbleVec4Val[index].bubbleVel = bubbleVelVal;
-
-}
-
 
 
 void main()

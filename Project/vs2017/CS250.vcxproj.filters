@@ -208,6 +208,9 @@
     <Filter Include="Shaders\Geometry">
       <UniqueIdentifier>{1038f7f9-149d-4176-ac38-afe022c7a7d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cuda">
+      <UniqueIdentifier>{28942be9-feb4-4dff-a1fb-6068e3b3bb3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Camera.h">
@@ -408,6 +411,12 @@
     <ClInclude Include="..\Level11.h">
       <Filter>Engine\Hpp</Filter>
     </ClInclude>
+    <ClInclude Include="Test.cuh">
+      <Filter>cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SandParticle.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShadowVertex.glsl">
@@ -596,5 +605,16 @@
     <None Include="FluidVertex2.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="2DVertex.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="2DFragment.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Test.cu">
+      <Filter>cuda</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

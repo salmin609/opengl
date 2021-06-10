@@ -14,7 +14,6 @@ struct WaterParticle
 struct ParticleVec4
 {
 	Vector4 velocity;
-	Vector4 force;
 	Vector4 predictedPos;
 };
 

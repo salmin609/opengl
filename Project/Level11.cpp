@@ -1,286 +1,133 @@
 #include "Level11.h"
 #include <iostream>
 #include <GL/glew.h>
-#include "Buffer.hpp"
-#include "Camera.h"
-#include "CameraManager.h"
-#include "Client.h"
-#include "FluidCompute.h"
-#include "InputManager.h"
-#include "Projection.h"
-#include "RandomNumGenerator.h"
-#include "Shader.h"
 #include "Shader_Table.hpp"
-#include "TgaTexture.h"
-
+#include "Shader.h"
+#include "vs2017/Test.cuh"
+#include <cuda_runtime.h>
+#include "Buffer.hpp"
+#include "Client.h"
+#include "Graphic.h"
+#include "Projection.h"
 
 Level11::Level11()
 {
-	render = new Shader(shaderFluidVertex2.c_str(), shaderFluidFragment2.c_str());
-	compute = new Shader(shaderFluidCompute2.c_str());
-	boxRender = new Shader(shader_simple_vertex.c_str(), shader_simple_fragment.c_str());
-
-	std::vector positions = {
-		// YZ left
-		Vector4(-halfx, -halfy, -halfz, 1.0f), // 0
-		Vector4(-halfx, halfy, -halfz, 1.0f),  // 2
-		Vector4(-halfx, -halfy, halfz, 1.0f),  // 1
-
-		Vector4(-halfx, -halfy, halfz, 1.0f),  // 1
-		Vector4(-halfx, halfy, -halfz, 1.0f),  // 2
-		Vector4(-halfx, halfy, halfz, 1.0f),   // 3
-
-		// YZ right
-		Vector4(halfx, -halfy, -halfz, 1.0f), // 0
-		Vector4(halfx, -halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, halfy, -halfz, 1.0f),  // 2
-
-		Vector4(halfx, -halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, halfy, halfz, 1.0f),   // 3
-		Vector4(halfx, halfy, -halfz, 1.0f),  // 2
-
-		// XZ bottom
-		Vector4(-halfx, -halfy, -halfz, 1.0f), // 0
-		Vector4(-halfx, -halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, -halfy, -halfz, 1.0f),  // 2
-
-		Vector4(-halfx, -halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, -halfy, halfz, 1.0f),   // 3
-		Vector4(halfx, -halfy, -halfz, 1.0f),  // 2
-
-		// XZ top
-		Vector4(-halfx, halfy, -halfz, 1.0f), // 0
-		Vector4(halfx, halfy, -halfz, 1.0f),  // 2
-		Vector4(-halfx, halfy, halfz, 1.0f),  // 1
-
-		Vector4(-halfx, halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, halfy, -halfz, 1.0f),  // 2
-		Vector4(halfx, halfy, halfz, 1.0f),   // 3
-
-		// XY near
-		Vector4(-halfx, -halfy, -halfz, 1.0f), // 0
-		Vector4(halfx, -halfy, -halfz, 1.0f),  // 2
-		Vector4(-halfx, halfy, -halfz, 1.0f),  // 1
-
-		Vector4(-halfx, halfy, -halfz, 1.0f),  // 1
-		Vector4(halfx, -halfy, -halfz, 1.0f),  // 2
-		Vector4(halfx, halfy, -halfz, 1.0f),   // 3
-
-		// XZ far
-		Vector4(-halfx, -halfy, halfz, 1.0f), // 0
-		Vector4(-halfx, halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, -halfy, halfz, 1.0f),  // 2
-
-		Vector4(-halfx, halfy, halfz, 1.0f),  // 1
-		Vector4(halfx, halfy, halfz, 1.0f),   // 3
-		Vector4(halfx, -halfy, halfz, 1.0f),  // 2
-	};
-
-	std::vector normals = {
-		// YZ left
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(-1.0f, 0.0f, 0.0f, 0.0f),
-
-		// YZ right
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-		Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-
-		// XZ bottom
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, -1.0f, 0.0f, 0.0f),
-
-		// XZ top
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-
-		// XY near
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, -1.0f, 0.0f),
-
-		// XY far
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-		Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-	};
+	render = new Shader(shader2DVertex.c_str(), shader2DFragment.c_str());
 	
-	CheckIndices indices{0,0,0,0};
-	Vector4 vel = Vector4{};
-	Vector4 force = Vector4(0.f, -9.8f, 0.f, 0.f);
-	Vector4 prePos = Vector4{};
-	int id = 0;
+	sandParticles = new ParticleSand[NUMPARTICLES];
+	sandGrids = new ParticleGrid[NUMGRIDS];
+	lands = new Land[NUMLANDS];
 	
-	Neighbors neighbor;
-	for(int i = 0; i < neighborCount; ++i)
-	{
-		neighbor.neighbor[i] = -1;
-	}
+	memset(sandParticles, 0, particleMemSize);
+	memset(sandGrids, 0, gridMemSize);
+	memset(lands, 0, landMemSize);
 
-	int halfX = pxNum / 2;
-	int halfY = pyNum / 2;
-	int halfZ = pzNum / 2;
-
-	for(int i = 0; i < binCount; ++i)
-	{
-		particleNeighbors.push_back(neighbor);
-	}
+	cudaMalloc(&dSandParticles, particleMemSize);
+	cudaMalloc(&dSandGrids, gridMemSize);
+	cudaMalloc(&dLands, landMemSize);
 	
-	for(int i = -halfX; i < halfX; ++i)
-	{
-		for(int j = -halfY; j < halfY; ++j)
-		{
-			for(int k = -halfZ; k < halfZ; ++k)
-			{
-				Vector4 pos = Vector4(float(i) * pDist, float(j) * pDist, float(k) * pDist, 1.f);
-				
-				ParticleVec42 val;
-				val.pos = pos;
-				val.velocity = vel;
-				val.force = force;
-				val.predictedPos = prePos;
-
-				ParticleVal valVal;
-				valVal.lambda = 0.f;
-				valVal.density = 0.f;
-				valVal.id = id;
-				id++;
-				
-				particleVec4s.push_back(val);
-				particleVals.push_back(valVal);
-				particlePoses.push_back(val.pos);
-				particleDensities.push_back(valVal.density);
-				particleIndices.push_back(indices);
-			}
-		}
-	}
+	CopyFromHostToDevice();
+	Init(NUMPARTICLES, NUMGRIDS, dSandParticles, dSandGrids, dLands);
+	CopyFromDeviceToHost();
 	
-	compute->Use();
-	particleVec4Buffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(ParticleVec42) * pTotalNum, GL_DYNAMIC_DRAW, particleVec4s.data());
-	particleVec4Buffer->BindStorage(0);
-	particleValBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(ParticleVal) * pTotalNum, GL_DYNAMIC_DRAW, particleVals.data());
-	particleValBuffer->BindStorage(1);
-	particleNeighborBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Neighbors) * binCount, GL_DYNAMIC_DRAW, particleNeighbors.data());
-	particleNeighborBuffer->BindStorage(2);
-
-	particlePosBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(Vector4) * pTotalNum, GL_DYNAMIC_DRAW, particlePoses.data());
-	particlePosBuffer->BindStorage(3);
-
-	particleIndicesBuffer = new Buffer(GL_SHADER_STORAGE_BUFFER, sizeof(CheckIndices) * pTotalNum, GL_DYNAMIC_DRAW, particleIndices.data());
-	particleIndicesBuffer->BindStorage(4);
-
-	particleDensityBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(float) * pTotalNum, GL_DYNAMIC_DRAW, particleDensities.data());
-
-	boxPositionBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector4) * (unsigned)positions.size(), GL_STATIC_DRAW, positions.data());
-	boxNormalBuffer = new Buffer(GL_ARRAY_BUFFER, sizeof(Vector4) * (unsigned)normals.size(), GL_STATIC_DRAW, normals.data());
-	
+	sandPosBuffer = new Buffer(GL_ARRAY_BUFFER, particleMemSize, GL_STATIC_DRAW, sandParticles);
+	gridPosBuffer = new Buffer(GL_ARRAY_BUFFER, gridMemSize, GL_STATIC_DRAW, sandGrids);
+	landPosBuffer = new Buffer(GL_ARRAY_BUFFER, landMemSize, GL_STATIC_DRAW, lands);
 }
 
 Level11::~Level11()
 {
-	delete particleVec4Buffer;
-	delete particleValBuffer;
-	delete particleNeighborBuffer;
-	delete compute;
 	delete render;
+	delete sandPosBuffer;
+	delete[] sandParticles;
+	cudaFree(dSandParticles);
 }
 
 void Level11::Load()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_PROGRAM_POINT_SIZE);
-	glClearColor(1.f, 1.f, 1.f, 1.f);
-
+	//glClearColor(1.f, 1.f, 1.f, 1.f);
+	Graphic::objects.clear();
 }
 
 void Level11::Update(float dt)
 {
 	(dt);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BACK);
-	SetCamVariables();
+	const Camera cam = *CameraManager::instance->GetCamera();
+	Matrix ndcMat = CameraToNDC(cam);
+	Affine camMat = WorldToCamera(cam);
+	Matrix vp = ndcMat * camMat;
+	Point camEye = cam.Eye();
+	Vector4 camEyeVec4 = Vector4{ camEye.x, camEye.y, camEye.z, 1.f };
 
-	compute->Use();
-	particleVec4Buffer->BindStorage(0);
-	particleValBuffer->BindStorage(1);
-	particleNeighborBuffer->BindStorage(2);
-	particlePosBuffer->BindStorage(3);
-	particleIndicesBuffer->BindStorage(4);
+	timer -= dt;
 
-	//particleValBuffer->Check<ParticleVal>();
-	glDispatchCompute((pTotalNum / 128) + 1, 1, 1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-	//particleValBuffer->Check<ParticleVal>();
+	if (timer < 0.f)
+	{
+		SandUpdate(NUMPARTICLES, NUMGRIDS, dSandParticles, dSandGrids);
+		CopyFromDeviceToHost();
+		sandPosBuffer->WriteData<ParticleSand>(sandParticles);
+
+		timer = 0.05f;
+	}
+
+	sandPosBuffer->Check<ParticleSand>();
 	
-	//particleNeighborBuffer->Check<Neighbors>();
-	//particleIndicesBuffer->Check<CheckIndices>();
+	glEnable(GL_PROGRAM_POINT_SIZE);
+	glPointSize(10.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
 	
+	Vector3 colorWhite(1.f);
+	Vector3 colorYellow(0.7686274510f, 0.5686274510f, 0.0078431373f);
+	Vector3 colorGreen(0.f, 0.5f, 0.0f);
+	Vector3 colorRed(0.5f, 0.0f, 0.0f);
+
 	render->Use();
-	render->SendUniformMat("MVP", &mvp);
-	render->SendUniformMat("MV", &camMat);
-	render->SendUniformFloat("pointRadius", 0.5f);
-	render->SendUniformFloat("pointScale" , 1.f);
+	render->SendUniform3fv("color_val", &colorYellow, 1);
+	render->SendUniformMat("VP", &vp);
 
-	particlePosBuffer->Bind();
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	sandPosBuffer->Bind();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleSand), (GLvoid*)offsetof(ParticleSand, pos));
 	glEnableVertexAttribArray(0);
 
-	particleDensityBuffer->Bind();
-	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(1);
+	glDrawArrays(GL_POINTS, 0, NUMPARTICLES);
+
+	gridPosBuffer->Bind();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleGrid), (GLvoid*)offsetof(ParticleGrid, gridPos));
+	glEnableVertexAttribArray(0);
+
+	render->SendUniform3fv("color_val", &colorRed, 1);
 	
-	//glPointSize(0.5f);
-	glDrawArrays(GL_POINTS, 0, pTotalNum);
+	glDrawArrays(GL_POINTS, 0, NUMGRIDS);
 
-	Vector3 white = Vector3(0.2f, 0.2f, 0.2f);
-	boxRender->Use();
-	boxRender->SendUniformVec3("color_val", &white);
-	boxRender->SendUniformMat("to_ndc", &ndcMat);
-	boxRender->SendUniformMat("cam", &camMat);
-
-	boxPositionBuffer->Bind();
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vector4), (void*)0);
+	landPosBuffer->Bind();
+	landPosBuffer->Check<Land>();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)offsetof(Land, landPos));
 	glEnableVertexAttribArray(0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	render->SendUniform3fv("color_val", &colorGreen, 1);
+
+	glDrawArrays(GL_POINTS, 0, NUMLANDS);
 }
 
 void Level11::UnLoad()
 {
 }
 
-void Level11::SetCamVariables()
+void Level11::CopyFromDeviceToHost()
 {
-	const Camera cam = *CameraManager::instance->GetCamera();
-	ndcMat = CameraToNDC(cam);
-	camMat = WorldToCamera(cam);
-	mvp = ndcMat * camMat;
-	camEye = cam.Eye();
-	Vector4 camEyeVec4 = Vector4{ camEye.x, camEye.y, camEye.z, 1.f };
-	static Vector3  lightDir = Vector3{ 1.f, 0.f, 0.f };
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, Client::windowWidth, Client::windowHeight);
+	cudaMemcpy(sandParticles, dSandParticles, particleMemSize, cudaMemcpyDeviceToHost);
+	cudaMemcpy(sandGrids, dSandGrids, gridMemSize, cudaMemcpyDeviceToHost);
+	cudaMemcpy(lands , dLands, landMemSize, cudaMemcpyDeviceToHost);
+}
+
+void Level11::CopyFromHostToDevice()
+{
+	cudaMemcpy(dSandParticles, sandParticles, particleMemSize, cudaMemcpyHostToDevice);
+	cudaMemcpy(dSandGrids, sandGrids, gridMemSize, cudaMemcpyHostToDevice);
+	cudaMemcpy(dLands, lands, landMemSize, cudaMemcpyHostToDevice);
 }
