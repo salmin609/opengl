@@ -17,9 +17,16 @@ struct ParticleGrid
 	int particleIndex;
 };
 
+struct SpawnerPos 
+{
+	Vector2 pos;
+	int currGridIndex;
+};
+
 struct Land 
 {
 	Vector2 landPos;
+	int currGridIndex;
 };
 
 struct ParticleSand

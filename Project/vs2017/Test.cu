@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include "Affine.h"
 #include <atomic>
-const int width = 50;
+#include <vector>
+const int width = 100;
 const int height = 10;
-const int gridWidth = 100;
-const int gridHeight = 100;
+const int gridWidth = 800;
+const int gridHeight = 800;
 const dim3 threadsPerBlock(16, 16);
 const int blockSize = 256;
-__constant__ float gap = 0.05f;
+__constant__ float gap = 0.01f;
 #define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 
 inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort = true)
@@ -28,7 +29,7 @@ __global__ void SetGrid(ParticleGrid* grid)
 {
 	const int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	
-	float xPos = ((index % gridWidth) * gap);
+	float xPos = -5 + ((index % gridWidth) * gap);
 	float yPos = ((index / gridHeight) * gap);
 
 	grid[index].gridPos.x = xPos;
@@ -37,58 +38,34 @@ __global__ void SetGrid(ParticleGrid* grid)
 	grid[index].status = Empty;
 }
 
-__global__ void SetLand(ParticleGrid* grid, Land* land)
+__global__ void SetSpawner(ParticleGrid* grid, SpawnerPos* spawnerPos, int startIndex, int width, int i)
 {
-	const int index = threadIdx.x + (blockIdx.x * blockDim.x);
-	ParticleGrid& currGrid = grid[index];
-	int landStartIndex = gridWidth * 5 + 10;
-	int landWidth = 50;
+	int gridIndex = startIndex + threadIdx.x + (i * gridWidth);
+	ParticleGrid& currGrid = grid[gridIndex];
+	int iIndex = i * width;
+
+	//currGrid.status = FilledWithLand;
+	spawnerPos[iIndex + threadIdx.x].pos = currGrid.gridPos;
+	spawnerPos[iIndex + threadIdx.x].currGridIndex = currGrid.index;
+}
+
+__global__ void SetLand(ParticleGrid* grid, Land* land, int landStartIndex, int landWidth, int i)
+{
+
+	int index = landStartIndex + threadIdx.x;
 	int ogLandStartIndex = landStartIndex;
-	if (index > landStartIndex && index < landStartIndex + landWidth)
-	{
-		currGrid.status = FilledWithLand;
-		land[index - ogLandStartIndex].landPos = currGrid.gridPos;
-	}
+	ParticleGrid& currGrid = grid[index];
+	int iIndex = i * landWidth;
 
-	landStartIndex += gridWidth;
-	ogLandStartIndex += landWidth;
-	if (index > landStartIndex && index < landStartIndex + landWidth)
-	{
-		currGrid.status = FilledWithLand;
-		land[index - ogLandStartIndex].landPos = currGrid.gridPos;
-	}
+	currGrid.status = FilledWithLand;
+	land[iIndex + threadIdx.x].landPos = currGrid.gridPos;
 
-	landStartIndex += gridWidth;
-	ogLandStartIndex += landWidth;
-
-	if (index > landStartIndex && index < landStartIndex + landWidth)
-	{
-		currGrid.status = FilledWithLand;
-		land[index - ogLandStartIndex].landPos = currGrid.gridPos;
-	}
-
-	landStartIndex += gridWidth;
-	ogLandStartIndex += landWidth;
-
-	if (index > landStartIndex && index < landStartIndex + landWidth)
-	{
-		currGrid.status = FilledWithLand;
-		land[index - ogLandStartIndex].landPos = currGrid.gridPos;
-	}
-
-	/*if (isInside)
-	{
-		
-	}*/
 }
 
 __global__ void CheckGridPos(ParticleSand* particles, ParticleGrid* grids)
 {
 	const int index = threadIdx.x + (blockIdx.x * blockDim.x);
-	
-	printf("index : %d\n", index);
-
-	const int startIndex = gridWidth * 10 + 5;
+	const int startIndex = gridWidth * 500 + 400;
 
 	const int widthVal = index % width;
 	const int heightVal = index / width;
@@ -99,6 +76,50 @@ __global__ void CheckGridPos(ParticleSand* particles, ParticleGrid* grids)
 	particles[index].pos = grids[startIndex + heightInGrid + widthVal].gridPos;
 
 }
+
+__global__ void SpawnerMove(ParticleGrid* grids, SpawnerPos* spawnerPos, int dir)
+{
+	const int index = threadIdx.x + (blockIdx.x * blockDim.x);
+	const int currGridIndex = spawnerPos[index].currGridIndex;
+
+	//printf("currGrid : %d", currGridIndex);
+
+	const int destGridIndex = currGridIndex + dir;
+
+	SpawnerPos& spawner = spawnerPos[index];
+
+	spawner.currGridIndex = destGridIndex;
+	spawner.pos = grids[destGridIndex].gridPos;
+}
+
+__global__ void Spawn(ParticleSand* particle, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex)
+{
+	int index = lastIndex + threadIdx.x;
+
+	ParticleSand& part = particle[index];
+	SpawnerPos& spawner = spawners[threadIdx.x];
+	ParticleGrid& gridInfo = grid[spawner.currGridIndex];
+
+	part.pos = spawner.pos;
+	part.currGrid = &grid[spawner.currGridIndex];
+	gridInfo.status = FilledWithSand;
+}
+
+__global__ void SpawnLand(Land* lands, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex)
+{
+	int index = lastIndex + threadIdx.x + (blockIdx.x * blockDim.x);
+
+	Land& land = lands[index];
+	SpawnerPos& spawner = spawners[threadIdx.x];
+	ParticleGrid& gridInfo = grid[spawner.currGridIndex];
+
+	land.landPos = spawner.pos;
+	land.currGridIndex = spawner.currGridIndex;
+	gridInfo.status = FilledWithLand;
+}
+
+
+
 
 __global__ void MoveDown(ParticleSand* particles, ParticleGrid* grids, int particleNum)
 {
@@ -112,49 +133,59 @@ __global__ void MoveDown(ParticleSand* particles, ParticleGrid* grids, int parti
 	ParticleGrid& currGrid = *particle.currGrid;
 
 	const int gridIndex = currGrid.index;
+	int gridDownIndex = gridIndex - gridWidth;
+	int gridLeftDownIndex = gridIndex - (gridWidth - 1);
+	int gridRightDownIndex = gridIndex - (gridWidth + 1);
 
-	const int downGridIndex = gridIndex - gridWidth;
-	const int downDoubleGridIndex = downGridIndex - gridWidth;
-	ParticleGrid& destGrid = grids[downGridIndex];
-	ParticleGrid& destDoubleGrid = grids[downDoubleGridIndex];
-	
-	
-	if(destGrid.status == Empty)
+	if (gridIndex < gridWidth)
 	{
-		particle.pos = destGrid.gridPos;
-		particle.currGrid = &destGrid;
-
-		currGrid.status = Empty;
-		destGrid.status = FilledWithSand;
+		gridDownIndex = gridIndex;
+		gridLeftDownIndex = gridIndex;
+		gridRightDownIndex = gridIndex;
 	}
-	else if(destGrid.status == FilledWithSand && destDoubleGrid.status == FilledWithLand)
+	if (gridIndex % gridWidth == 0)
 	{
-		bool isIndexOdd = index % 2;
-		int destGridIndex;
-		
-		if (isIndexOdd)
-		{
-			destGridIndex = gridIndex - 1;
+		gridLeftDownIndex = gridIndex;
+	}
+	if (gridIndex % gridWidth == gridWidth - 1)
+	{
+		gridRightDownIndex = gridIndex;
+	}
 
-			if (gridIndex % gridWidth == 0)
-			{
-				return;
-			}
-		}
-		else
-		{
-			destGridIndex = gridIndex + 1;
+	if (gridDownIndex <= 0 || gridDownIndex >= 256 * 2000 ||
+		gridLeftDownIndex <= 0 || gridLeftDownIndex >= 256 * 2000 ||
+		gridRightDownIndex <= 0 || gridRightDownIndex >= 256 * 2000)
+	{
+		return;
+	}
 
-			if (gridIndex % gridWidth == gridWidth - 1)
-			{
-				return;
-			}
-		}
-		ParticleGrid& newDestGrid = grids[destGridIndex];
-		particle.pos = newDestGrid.gridPos;
-		particle.currGrid = &newDestGrid;
+	ParticleGrid& downGrid = grids[gridDownIndex];
+	ParticleGrid& leftDownGrid = grids[gridLeftDownIndex];
+	ParticleGrid& rightDownGrid = grids[gridRightDownIndex];
+
+	if (downGrid.status == Empty)
+	{
+		particle.pos = downGrid.gridPos;
+		particle.currGrid = &downGrid;
+
 		currGrid.status = Empty;
-		newDestGrid.status = FilledWithSand;
+		downGrid.status = FilledWithSand;
+	}
+	else if (leftDownGrid.status == Empty)
+	{
+		particle.pos = leftDownGrid.gridPos;
+		particle.currGrid = &leftDownGrid;
+
+		currGrid.status = Empty;
+		leftDownGrid.status = FilledWithSand;
+	}
+	else if (rightDownGrid.status == Empty)
+	{
+		particle.pos = rightDownGrid.gridPos;
+		particle.currGrid = &rightDownGrid;
+
+		currGrid.status = Empty;
+		rightDownGrid.status = FilledWithSand;
 	}
 }
 void SandUpdate(int particleNum, int gridNum, ParticleSand* particle, ParticleGrid* grid)
@@ -164,12 +195,77 @@ void SandUpdate(int particleNum, int gridNum, ParticleSand* particle, ParticleGr
 	gpuErrchk(cudaPeekAtLastError());
 }
 
-void Init(int particleNum, int gridNum, ParticleSand* particle, ParticleGrid* grid, Land* land)
+void AddSandsInSpawnerPos(ParticleSand* particle, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex)
+{
+	Spawn << <1, blockSize >> > (particle, grid, spawners, lastIndex);
+}
+void AddLandsInSpawnerPos(Land* lands, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex)
+{
+	SpawnLand << <1, blockSize >> > (lands, grid, spawners, lastIndex);
+}
+
+void MoveSpawner(ParticleGrid* grid, SpawnerPos* spawners, int dir, int spawnerCount)
+{
+	SpawnerMove << <1, spawnerCount >> > (grid, spawners, dir);
+}
+
+
+
+void SetLands(std::vector<int>& landStartRandomIndices, ParticleSand* particle, ParticleGrid* grid, Land* land)
+{
+	size_t vecSize = landStartRandomIndices.size();
+	int landCount = 1;
+	int landWidth = 50;
+	int landStartIndex = gridWidth * 100 + 200;
+
+	for (size_t i = 0; i < vecSize; ++i)
+	{
+		SetLand << <landCount, landWidth >> > (grid, land, landStartRandomIndices[i], landWidth, i);
+	}
+
+}
+__global__ void LoadLand(Land* lands, ParticleGrid* grid, int* indices, int lastIndex)
+{
+	int index = threadIdx.x + (blockIdx.x * blockDim.x);
+
+	if (index >= lastIndex)
+	{
+		printf("over");
+		return;
+	}
+	int gridIndex = indices[index];
+	lands[index].landPos = grid[gridIndex].gridPos;
+	lands[index].currGridIndex = grid[gridIndex].index;
+	grid[gridIndex].status = FilledWithLand;
+}
+
+void LoadLands(int* landGridIndices, ParticleGrid* grid, Land* land, int landsNum)
+{
+	int landBlockCount = landsNum / blockSize;
+
+	if (landBlockCount < 0)
+		landBlockCount = 1;
+
+	LoadLand << <landBlockCount, blockSize>> > (land, grid, landGridIndices, landsNum);
+	gpuErrchk(cudaPeekAtLastError());
+}
+
+void Init(int particleNum, int gridNum, int spawnerNum, ParticleSand* particle, ParticleGrid* grid, Land* land, SpawnerPos* spawners)
 {
 	int particleGridCount = particleNum / blockSize;
 	int gridCount = gridNum / blockSize;
+	
+	int spawnerStartIndex = gridWidth * 300 + 500;
 
 	SetGrid << <gridCount, blockSize >> > (grid);
-	SetLand << <gridCount, blockSize >> > (grid, land);
 	CheckGridPos << <particleGridCount, blockSize >> > (particle, grid);
+
+	int spawnerWidth = sqrt(spawnerNum);
+	int spwanerCount = 1;
+
+	for (int i = 0; i < spawnerWidth; ++i)
+	{
+		SetSpawner << <spwanerCount, spawnerWidth >> > (grid, spawners, spawnerStartIndex, spawnerWidth, i);
+	}
+	gpuErrchk(cudaPeekAtLastError());
 }

@@ -307,6 +307,7 @@
     <None Include="tracePrepareFragment.glsl" />
     <None Include="tracePrepareVertex.glsl" />
     <None Include="traceVertex.glsl" />
+    <None Include="VertexOnePoint.glsl" />
     <None Include="Vertexshader.glsl" />
     <None Include="VertexShaderInstance.glsl" />
     <None Include="Vertexshader_Texture.glsl" />

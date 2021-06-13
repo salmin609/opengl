@@ -611,6 +611,9 @@
     <None Include="2DFragment.glsl">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="VertexOnePoint.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="Test.cu">

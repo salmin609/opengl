@@ -25,9 +25,11 @@ private:
 	void CopyFromDeviceToHost();
 	void CopyFromHostToDevice();
 	Shader* render;
+	Shader* renderOnePoint;
 	Buffer* sandPosBuffer;
 	Buffer* gridPosBuffer;
 	Buffer* landPosBuffer;
+	Buffer* spawnerPosBuffer;
 	
 	ParticleSand* sandParticles;
 	ParticleSand* dSandParticles;
@@ -35,15 +37,22 @@ private:
 	ParticleGrid* dSandGrids;
 	Land* lands;
 	Land* dLands;
+	int* dLoadedLands;
+	int* loadedLands;
+	SpawnerPos* spawnerPos;
+	SpawnerPos* dSpawnerPos;
 
 	float timer = 1.f;
 	
-	const int NUMPARTICLES = 256 * 4;
-	const int particleMemSize = NUMPARTICLES * sizeof(ParticleSand);
+	int NUMPARTICLES = 256 * 30;
+	int particleMemSize = NUMPARTICLES * sizeof(ParticleSand);
 	
-	const int NUMGRIDS = 256 * 20;
-	const int gridMemSize = NUMGRIDS * sizeof(ParticleGrid);
+	int NUMGRIDS = 256 * 2000;
+	int gridMemSize = NUMGRIDS * sizeof(ParticleGrid);
 
-	const int NUMLANDS = 256 * 4;
-	const int landMemSize = NUMLANDS * sizeof(Land);
+	int NUMLANDS = 256 * 4;
+	int landMemSize = NUMLANDS * sizeof(Land);
+
+	int NUMSPAWNERS = 256 * 1;
+	int spawnerMemSize = NUMSPAWNERS * sizeof(SpawnerPos);
 };
