@@ -188,12 +188,37 @@ __global__ void MoveDown(ParticleSand* particles, ParticleGrid* grids, int parti
 		rightDownGrid.status = FilledWithSand;
 	}
 }
+__global__ void DeleteLand(Land* lands, ParticleGrid* grids, SpawnerPos* spawners)
+{
+	int index = threadIdx.x + (blockDim.x * blockIdx.x);
+
+	SpawnerPos& spawnerInfo = spawners[index];
+	ParticleGrid& gridInfo = grids[spawnerInfo.currGridIndex];
+
+	if(gridInfo.status == FilledWithLand)
+	{
+		Land& landInfo = lands[gridInfo.landIndex];
+
+		landInfo.currGridIndex = 0;
+		landInfo.landPos = grids[landInfo.currGridIndex].gridPos;
+		
+		gridInfo.status = Empty;
+		gridInfo.landIndex = 0;
+	}
+}
+
+void DeleteLands(Land* lands, ParticleGrid* grids, SpawnerPos* spawners)
+{
+	DeleteLand << <1, 256 >> > (lands, grids, spawners);
+}
+
 void SandUpdate(int particleNum, int gridNum, ParticleSand* particle, ParticleGrid* grid)
 {
 	int gridCount = particleNum / blockSize;
 	MoveDown << <gridCount, blockSize>> > (particle, grid, particleNum);
 	gpuErrchk(cudaPeekAtLastError());
 }
+
 
 void AddSandsInSpawnerPos(ParticleSand* particle, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex)
 {
@@ -224,19 +249,24 @@ void SetLands(std::vector<int>& landStartRandomIndices, ParticleSand* particle, 
 	}
 
 }
-__global__ void LoadLand(Land* lands, ParticleGrid* grid, int* indices, int lastIndex)
+__global__ void LoadLand(Land* lands, ParticleGrid* grids, int* indices, int lastIndex)
 {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
-
+	
 	if (index >= lastIndex)
 	{
 		printf("over");
 		return;
 	}
-	int gridIndex = indices[index];
-	lands[index].landPos = grid[gridIndex].gridPos;
-	lands[index].currGridIndex = grid[gridIndex].index;
-	grid[gridIndex].status = FilledWithLand;
+	const int gridIndex = indices[index];
+
+	Land& land = lands[index];
+	ParticleGrid& grid = grids[gridIndex];
+	land.landPos = grid.gridPos;
+	land.currGridIndex = grid.index;
+	
+	grid.status = FilledWithLand;
+	grid.landIndex = index;
 }
 
 void LoadLands(int* landGridIndices, ParticleGrid* grid, Land* land, int landsNum)

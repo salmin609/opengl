@@ -15,6 +15,7 @@ struct ParticleGrid
 	int index;
 	GridStatus status;
 	int particleIndex;
+	int landIndex;
 };
 
 struct SpawnerPos 

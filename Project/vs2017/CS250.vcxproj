@@ -118,6 +118,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\CudaMemoryManager.cpp" />
     <ClCompile Include="..\DrawingManager.cpp" />
     <ClCompile Include="..\FluidCompute.cpp" />
     <ClCompile Include="..\FluidGrid.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="..\CameraManager.h" />
     <ClInclude Include="..\Client.h" />
     <ClInclude Include="..\CubeMesh.h" />
+    <ClInclude Include="..\CudaBuffer.hpp" />
     <ClInclude Include="..\DebugApi.h" />
     <ClInclude Include="..\DrawingManager.h" />
     <ClInclude Include="..\FluidCompute.h" />

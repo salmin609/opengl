@@ -155,6 +155,7 @@
     <ClCompile Include="..\Level11.cpp">
       <Filter>Engine\Cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\CudaMemoryManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -415,6 +416,9 @@
       <Filter>cuda</Filter>
     </ClInclude>
     <ClInclude Include="..\SandParticle.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CudaBuffer.hpp">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

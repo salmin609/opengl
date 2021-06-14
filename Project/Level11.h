@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Affine.h"
+#include "CudaBuffer.hpp"
 #include "State.h"
 #include "SandParticle.h"
 
@@ -21,6 +22,7 @@ public:
 	void Load() override;
 	void Update(float dt) override;
 	void UnLoad() override;
+	void LoadMap();
 private:
 	void CopyFromDeviceToHost();
 	void CopyFromHostToDevice();
@@ -30,17 +32,12 @@ private:
 	Buffer* gridPosBuffer;
 	Buffer* landPosBuffer;
 	Buffer* spawnerPosBuffer;
-	
-	ParticleSand* sandParticles;
-	ParticleSand* dSandParticles;
-	ParticleGrid* sandGrids;
-	ParticleGrid* dSandGrids;
-	Land* lands;
-	Land* dLands;
-	int* dLoadedLands;
-	int* loadedLands;
-	SpawnerPos* spawnerPos;
-	SpawnerPos* dSpawnerPos;
+
+	CudaBuffer<ParticleSand>* sandParticle;
+	CudaBuffer<ParticleGrid>* sandGrid;
+	CudaBuffer<Land>* land;
+	CudaBuffer<SpawnerPos>* spawnerPos;
+	CudaBuffer<int>* loadedLands;
 
 	float timer = 1.f;
 	

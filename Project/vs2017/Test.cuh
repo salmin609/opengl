@@ -11,4 +11,5 @@ void AddSandsInSpawnerPos(ParticleSand* particle, ParticleGrid* grid, SpawnerPos
 void AddLandsInSpawnerPos(Land* lands, ParticleGrid* grid, SpawnerPos* spawners, int lastIndex);
 void MoveSpawner(ParticleGrid* grid, SpawnerPos* spawners, int dir, int spawnerCount);
 void LoadLands(int* landGridIndices, ParticleGrid* grid, Land* land, int landsNum);
+void DeleteLands(Land* lands, ParticleGrid* grids, SpawnerPos* spawners);
 #endif
