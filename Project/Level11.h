@@ -32,16 +32,22 @@ private:
 	Buffer* gridPosBuffer;
 	Buffer* landPosBuffer;
 	Buffer* spawnerPosBuffer;
+	Buffer* waterPosBuffer;
+	Buffer* firstContiPosBuffer;
+	Buffer* secondContiPosBuffer;
 
 	CudaBuffer<ParticleSand>* sandParticle;
 	CudaBuffer<ParticleGrid>* sandGrid;
 	CudaBuffer<Land>* land;
 	CudaBuffer<SpawnerPos>* spawnerPos;
 	CudaBuffer<int>* loadedLands;
+	CudaBuffer<ParticleWater>* waterParticle;
+	CudaBuffer<SpawnerPos>* firstContinuouslySpawn;
+	CudaBuffer<SpawnerPos>* secondContinuouslySpawn;
 
 	float timer = 1.f;
 	
-	int NUMPARTICLES = 256 * 30;
+	int NUMPARTICLES = 0;
 	int particleMemSize = NUMPARTICLES * sizeof(ParticleSand);
 	
 	int NUMGRIDS = 256 * 2000;
@@ -50,6 +56,14 @@ private:
 	int NUMLANDS = 256 * 4;
 	int landMemSize = NUMLANDS * sizeof(Land);
 
-	int NUMSPAWNERS = 256 * 1;
+	int NUMSPAWNERS = 64;
 	int spawnerMemSize = NUMSPAWNERS * sizeof(SpawnerPos);
+
+	int NUMWATERS = 0;
+	int waterMemSize = NUMWATERS * sizeof(ParticleWater);
+
+	int NUMCONTISPAWNERS = 256;
+	int contiSpawnerMemSize = NUMCONTISPAWNERS * sizeof(SpawnerPos);
+
+	bool isFirst = true;
 };

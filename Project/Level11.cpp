@@ -23,10 +23,14 @@ Level11::Level11()
 	sandGrid = new CudaBuffer<ParticleGrid>(gridMemSize);
 	land = new CudaBuffer<Land>(landMemSize);
 	spawnerPos = new CudaBuffer<SpawnerPos>(spawnerMemSize);
+	waterParticle = new CudaBuffer<ParticleWater>(waterMemSize);
+	firstContinuouslySpawn = new CudaBuffer<SpawnerPos>(contiSpawnerMemSize);
+	secondContinuouslySpawn = new CudaBuffer<SpawnerPos>(contiSpawnerMemSize);
 	
 	CopyFromHostToDevice();
-	Init(NUMPARTICLES, NUMGRIDS, NUMSPAWNERS, sandParticle->GetDeviceMemoryPtr(), 
-		sandGrid->GetDeviceMemoryPtr(), land->GetDeviceMemoryPtr(), spawnerPos->GetDeviceMemoryPtr());
+	Init(NUMPARTICLES, NUMGRIDS, NUMSPAWNERS, NUMCONTISPAWNERS, sandParticle->GetDeviceMemoryPtr(), 
+		sandGrid->GetDeviceMemoryPtr(), land->GetDeviceMemoryPtr(), spawnerPos->GetDeviceMemoryPtr(),
+		firstContinuouslySpawn->GetDeviceMemoryPtr(), secondContinuouslySpawn->GetDeviceMemoryPtr());
 	CopyFromDeviceToHost();
 	LoadMap();
 
@@ -34,7 +38,12 @@ Level11::Level11()
 	gridPosBuffer = new Buffer(GL_ARRAY_BUFFER, gridMemSize, GL_STATIC_DRAW, sandGrid->GetHostMemoryPtr());
 	landPosBuffer = new Buffer(GL_ARRAY_BUFFER, landMemSize, GL_STATIC_DRAW, land->GetHostMemoryPtr());
 	spawnerPosBuffer = new Buffer(GL_ARRAY_BUFFER, spawnerMemSize, GL_STATIC_DRAW, spawnerPos->GetHostMemoryPtr());
+	waterPosBuffer = new Buffer(GL_ARRAY_BUFFER, waterMemSize, GL_STATIC_DRAW, waterParticle->GetHostMemoryPtr());
+	firstContiPosBuffer = new Buffer(GL_ARRAY_BUFFER, contiSpawnerMemSize, GL_STATIC_DRAW, firstContinuouslySpawn->GetHostMemoryPtr());
+	secondContiPosBuffer = new Buffer(GL_ARRAY_BUFFER, contiSpawnerMemSize, GL_STATIC_DRAW, secondContinuouslySpawn->GetHostMemoryPtr());
 
+	//firstContiPosBuffer->Check<Vector2>();
+	//secondContiPosBuffer->Check<Vector2>();
 }
 
 Level11::~Level11()
@@ -46,6 +55,10 @@ Level11::~Level11()
 	delete sandGrid;
 	delete sandParticle;
 	delete land;
+	delete waterParticle;
+	delete waterPosBuffer;
+	delete firstContinuouslySpawn;
+	delete secondContinuouslySpawn;
 }
 
 void Level11::Load()
@@ -69,6 +82,8 @@ void Level11::Update(float dt)
 	Vector4 camEyeVec4 = Vector4{ camEye.x, camEye.y, camEye.z, 1.f };
 
 
+
+	
 	if (InputManager::instance->IsPressed('z'))
 	{
 		sandParticle->Realloc(NUMSPAWNERS);
@@ -93,6 +108,18 @@ void Level11::Update(float dt)
 		delete landPosBuffer;
 		landPosBuffer = new Buffer(GL_ARRAY_BUFFER, land->GetMemorySize(), GL_STATIC_DRAW, land->GetHostMemoryPtr());
 	}
+	if(InputManager::instance->IsPressed('b'))
+	{
+		waterParticle->Realloc(NUMSPAWNERS);
+		NUMWATERS = waterParticle->GetIndicesNum();
+
+		AddWatersInSpawnerPos(waterParticle->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr(),
+			spawnerPos->GetDeviceMemoryPtr(), waterParticle->GetLastIndexBeforeRealloc());
+		
+		waterParticle->CopyDeviceToHost();
+		delete waterPosBuffer;
+		waterPosBuffer = new Buffer(GL_ARRAY_BUFFER, waterParticle->GetMemorySize(), GL_STATIC_DRAW, waterParticle->GetHostMemoryPtr());
+	}
 	if (InputManager::instance->IsPressed('c'))
 	{
 		land->CopyDeviceToHost();
@@ -111,7 +138,7 @@ void Level11::Update(float dt)
 		DeleteLands(land->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr(), spawnerPos->GetDeviceMemoryPtr());
 	}
 
-	int speed = 16;
+	int speed = 8;
 	if (InputManager::instance->IsPressed('j'))
 	{
 		//left
@@ -133,11 +160,42 @@ void Level11::Update(float dt)
 		MoveSpawner(sandGrid->GetDeviceMemoryPtr(), spawnerPos->GetDeviceMemoryPtr(), 800 * speed, NUMSPAWNERS);
 	}
 
-	SandUpdate(NUMPARTICLES, NUMGRIDS, sandParticle->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr());
+	if(timer < 0.f)
+	{
+		CudaBuffer<SpawnerPos>* spawner;
+
+		if (isFirst)
+			spawner = firstContinuouslySpawn;
+		else
+			spawner = secondContinuouslySpawn;
+
+		sandParticle->Realloc(NUMCONTISPAWNERS);
+		NUMPARTICLES = sandParticle->GetIndicesNum();
+		AddSandsInSpawnerPos(sandParticle->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr()
+			, spawner->GetDeviceMemoryPtr(), sandParticle->GetLastIndexBeforeRealloc());
+
+		sandParticle->CopyDeviceToHost();
+
+		delete sandPosBuffer;
+		sandPosBuffer = new Buffer(GL_ARRAY_BUFFER, sandParticle->GetMemorySize(), GL_STATIC_DRAW, sandParticle->GetHostMemoryPtr());
+		
+		timer = 0.1f;
+	}
+	timer -= dt;
+
+
+	
+	SimulationUpdate(NUMPARTICLES, NUMGRIDS, NUMWATERS,
+		sandParticle->GetDeviceMemoryPtr(), waterParticle->GetDeviceMemoryPtr(),
+		sandGrid->GetDeviceMemoryPtr());
+
 	CopyFromDeviceToHost();
+
+	
 	sandPosBuffer->WriteData<ParticleSand>(sandParticle->GetHostMemoryPtr());
 	spawnerPosBuffer->WriteData<SpawnerPos>(spawnerPos->GetHostMemoryPtr());
 	landPosBuffer->WriteData<Land>(land->GetHostMemoryPtr());
+	waterPosBuffer->WriteData<ParticleWater>(waterParticle->GetHostMemoryPtr());
 
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glPointSize(10.f);
@@ -149,6 +207,7 @@ void Level11::Update(float dt)
 	Vector3 colorYellow(0.859375f, 0.75f, 0.54296875f);
 	Vector3 colorGreen(0.f, 0.5f, 0.0f);
 	Vector3 colorRed(0.5f, 0.0f, 0.0f);
+	Vector3 colorBlue(0.8313725490f, 0.9450980392f, 0.9764705882f);
 
 	render->Use();
 	render->SendUniformFloat("pointSize", 1.0f);
@@ -176,6 +235,30 @@ void Level11::Update(float dt)
 	render->SendUniform3fv("color_val", &colorRed, 1);
 
 	glDrawArrays(GL_POINTS, 0, NUMSPAWNERS);
+
+	waterPosBuffer->Bind();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleWater), (GLvoid*)offsetof(ParticleWater, pos));
+	glEnableVertexAttribArray(0);
+
+	render->SendUniform3fv("color_val", &colorBlue, 1);
+
+	glDrawArrays(GL_POINTS, 0, NUMWATERS);
+
+	firstContiPosBuffer->Bind();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(SpawnerPos), (GLvoid*)offsetof(SpawnerPos, pos));
+	glEnableVertexAttribArray(0);
+
+	render->SendUniform3fv("color_val", &colorBlue, 1);
+	glDrawArrays(GL_POINTS, 0, NUMCONTISPAWNERS);
+
+	secondContiPosBuffer->Bind();
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(SpawnerPos), (GLvoid*)offsetof(SpawnerPos, pos));
+	glEnableVertexAttribArray(0);
+
+	render->SendUniform3fv("color_val", &colorRed, 1);
+	glDrawArrays(GL_POINTS, 0, NUMCONTISPAWNERS);
+
+	isFirst = !isFirst;
 }
 
 void Level11::UnLoad()
@@ -186,26 +269,30 @@ void Level11::LoadMap()
 {
 	std::vector<Vertex> vertexDatas;
 	int check = 0;
-	BinaryFileManager::LoadDataFile("sand", vertexDatas, check);
-
-	delete land;
-
-	NUMLANDS = static_cast<int>(vertexDatas.size());
-
-	const int size = NUMLANDS * sizeof(int);
-	loadedLands = new CudaBuffer<int>(size);
-	int* loadedLandHost = loadedLands->GetHostMemoryPtr();
-
-	for (int i = 0; i < NUMLANDS; ++i)
+	bool isLoaded = BinaryFileManager::LoadDataFile("sand", vertexDatas, check);
+	
+	if(isLoaded)
 	{
-		loadedLandHost[i] = static_cast<int>(vertexDatas[i].position.x);
-	}
-	loadedLands->CopyHostToDevice();
-	landMemSize = NUMLANDS * sizeof(Land);
-	land = new CudaBuffer<Land>(landMemSize);
+		delete land;
 
-	LoadLands(loadedLands->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr(), land->GetDeviceMemoryPtr(), NUMLANDS);
-	land->CopyDeviceToHost();
+		NUMLANDS = static_cast<int>(vertexDatas.size());
+
+		const int size = NUMLANDS * sizeof(int);
+		loadedLands = new CudaBuffer<int>(size);
+		int* loadedLandHost = loadedLands->GetHostMemoryPtr();
+
+		for (int i = 0; i < NUMLANDS; ++i)
+		{
+			loadedLandHost[i] = static_cast<int>(vertexDatas[i].position.x);
+		}
+		loadedLands->CopyHostToDevice();
+		landMemSize = NUMLANDS * sizeof(Land);
+		land = new CudaBuffer<Land>(landMemSize);
+
+		LoadLands(loadedLands->GetDeviceMemoryPtr(), sandGrid->GetDeviceMemoryPtr(), land->GetDeviceMemoryPtr(), NUMLANDS);
+		land->CopyDeviceToHost();
+	}
+
 }
 
 void Level11::CopyFromDeviceToHost()
@@ -214,6 +301,9 @@ void Level11::CopyFromDeviceToHost()
 	sandGrid->CopyDeviceToHost();
 	land->CopyDeviceToHost();
 	spawnerPos->CopyDeviceToHost();
+	waterParticle->CopyDeviceToHost();
+	firstContinuouslySpawn->CopyDeviceToHost();
+	secondContinuouslySpawn->CopyDeviceToHost();
 }
 
 void Level11::CopyFromHostToDevice()
@@ -222,4 +312,7 @@ void Level11::CopyFromHostToDevice()
 	sandGrid->CopyHostToDevice();
 	land->CopyHostToDevice();
 	spawnerPos->CopyHostToDevice();
+	waterParticle->CopyHostToDevice();
+	firstContinuouslySpawn->CopyHostToDevice();
+	secondContinuouslySpawn->CopyHostToDevice();
 }

@@ -65,7 +65,7 @@ void BinaryFileManager::SaveBinFile(std::string fileName, std::vector<Vertex> ve
 	}
 }
 
-void BinaryFileManager::LoadDataFile(std::string fileName, std::vector<Vertex>& verticesInfo, int& faceCount)
+bool BinaryFileManager::LoadDataFile(std::string fileName, std::vector<Vertex>& verticesInfo, int& faceCount)
 {
 	std::string posPath = "bin/" + fileName + "position.dat";
 	std::string normalPath = "bin/" + fileName + "normal.dat";
@@ -77,9 +77,9 @@ void BinaryFileManager::LoadDataFile(std::string fileName, std::vector<Vertex>& 
 
 	float tempVal = 0.f;
 	
-	if(posIn.is_open())
+	if (posIn.is_open())
 	{
-		while(!posIn.eof())
+		while (!posIn.eof())
 		{
 			Point val;
 			posIn.read(reinterpret_cast<char*>(&tempVal), sizeof(float));
@@ -96,6 +96,8 @@ void BinaryFileManager::LoadDataFile(std::string fileName, std::vector<Vertex>& 
 		}
 		posIn.close();
 	}
+	else
+		return false;
 
 	if(normalIn.is_open())
 	{
@@ -135,4 +137,5 @@ void BinaryFileManager::LoadDataFile(std::string fileName, std::vector<Vertex>& 
 		}
 		textureIn.close();
 	}
+	return true;
 }
